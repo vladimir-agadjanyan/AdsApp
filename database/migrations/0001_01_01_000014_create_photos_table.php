@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('photo_report_id')
                 ->constrained()
-                ->restrictOnDelete();
+                ->cascadeOnDelete();
             $table->string('original_name');
             $table->string('file_path');
             $table->string('mime_type');

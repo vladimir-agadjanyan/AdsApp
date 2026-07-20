@@ -16,12 +16,11 @@ return new class extends Migration
             $table->foreignId('counterparty_id')
                 ->constrained()
                 ->restrictOnDelete();
-            $table->string('number');
-            $table->date('date');
+            $table->string('number', 100);
+            $table->date('contract_date');
             $table->date('start_date');
             $table->date('end_date');
-            $table->decimal('total_amount', 15, 2)->nullable();
-            $table->text('comment')->nullable();
+            $table->text('note')->nullable();
             $table->foreignId('created_by')
                 ->constrained('users')
                 ->restrictOnDelete();

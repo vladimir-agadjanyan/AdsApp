@@ -17,6 +17,8 @@ class DatabaseSeeder extends Seeder
             AdvertisingTypeSeeder::class,
             ObjectStatusSeeder::class,
             PhotoReportStatusSeeder::class,
+            RegionSeeder::class,
+            CitySeeder::class,
         ]);
     }
 }

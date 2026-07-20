@@ -15,23 +15,23 @@ class Contract extends Model
     protected $fillable = [
         'counterparty_id',
         'number',
-        'date',
+        'contract_date',
         'start_date',
         'end_date',
-        'total_amount',
-        'comment',
+        'note',
         'created_by',
 
+    ];
+
+    protected $casts = [
+        'contract_date' => 'date',
+        'start_date'    => 'date',
+        'end_date'      => 'date',
     ];
 
     public function counterparty(): BelongsTo
     {
         return $this->belongsTo(Counterparty::class);
-    }
-
-    public function contractFiles(): HasMany
-    {
-        return $this->hasMany(ContractFile::class);
     }
 
     public function advertisingObjects(): HasMany
@@ -41,6 +41,11 @@ class Contract extends Model
 
     public function createdBy(): BelongsTo
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'created_by');
+    }
+
+    public function files(): HasMany
+    {
+        return $this->hasMany(ContractFile::class);
     }
 }

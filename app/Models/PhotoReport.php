@@ -14,27 +14,34 @@ class PhotoReport extends Model
 {
     protected $fillable = [
         'advertising_object_id',
+        'photo_report_status_id',
         'created_by',
-        'status_id',
         'comment',
         'checked_by',
         'checked_at',
         'review_comment',
     ];
 
+    protected function casts(): array
+    {
+        return [
+            'checked_at' => 'datetime',
+        ];
+    }
+
     public function advertisingObject(): BelongsTo
     {
         return $this->belongsTo(AdvertisingObject::class);
     }
 
+    public function photoReportStatus(): BelongsTo
+    {
+        return $this->belongsTo(PhotoReportStatus::class);
+    }
+
     public function createdBy(): BelongsTo
     {
         return $this->belongsTo(User::class, 'created_by');
-    }
-
-    public function status(): BelongsTo
-    {
-        return $this->belongsTo(PhotoReportStatus::class);
     }
 
     public function checkedBy(): BelongsTo

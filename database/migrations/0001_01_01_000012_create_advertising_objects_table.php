@@ -27,14 +27,15 @@ return new class extends Migration
                 ->constrained()
                 ->restrictOnDelete();
             $table->string('address');
-            $table->decimal('latitude', 10, 7);
-            $table->decimal('longitude', 10, 7);
-            $table->decimal('width', 5, 2);
-            $table->decimal('height', 5, 2);
-            $table->foreignId('status_id')
+            $table->decimal('latitude', 10, 7)->nullable();
+            $table->decimal('longitude', 10, 7)->nullable();
+            $table->foreignId('object_status_id')
                 ->constrained('object_statuses')
                 ->restrictOnDelete();
-            $table->text('notes')->nullable();
+            $table->foreignId('created_by')
+                ->constrained('users')
+                ->restrictOnDelete();
+            $table->text('note')->nullable();
             $table->timestamps();
         });
     }

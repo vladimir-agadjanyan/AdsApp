@@ -11,6 +11,7 @@ use App\Models\City;
 use App\Models\ObjectStatus;
 use App\Models\PhotoReport;
 use App\Models\Region;
+use App\Models\User;
 
 class AdvertisingObject extends Model
 {
@@ -19,14 +20,13 @@ class AdvertisingObject extends Model
         'advertising_type_id',
         'region_id',
         'city_id',
+        'object_status_id',
+        'created_by',
         'name',
         'address',
         'latitude',
         'longitude',
-        'width',
-        'height',
-        'status_id',
-        'notes',
+        'note',
     ];
 
     public function contract(): BelongsTo
@@ -49,13 +49,18 @@ class AdvertisingObject extends Model
         return $this->belongsTo(AdvertisingType::class);
     }
 
-    public function status(): BelongsTo
+    public function photoReports(): HasMany
+    {
+        return $this->hasMany(PhotoReport::class);
+    }
+
+    public function objectStatus(): BelongsTo
     {
         return $this->belongsTo(ObjectStatus::class);
     }
 
-    public function photoReports(): HasMany
+    public function createdBy(): BelongsTo
     {
-        return $this->hasMany(PhotoReport::class);
+        return $this->belongsTo(User::class, 'created_by');
     }
 }

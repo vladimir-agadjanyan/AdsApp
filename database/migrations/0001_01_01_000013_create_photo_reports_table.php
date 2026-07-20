@@ -19,7 +19,7 @@ return new class extends Migration
             $table->foreignId('created_by')
                 ->constrained('users')
                 ->restrictOnDelete();
-            $table->foreignId('status_id')
+            $table->foreignId('photo_report_status_id')
                 ->constrained('photo_report_statuses')
                 ->restrictOnDelete();
             $table->text('comment')->nullable();
