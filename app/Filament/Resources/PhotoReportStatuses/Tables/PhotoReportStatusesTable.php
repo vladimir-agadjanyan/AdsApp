@@ -18,11 +18,7 @@ class PhotoReportStatusesTable
                 TextColumn::make('name')
                     ->label('Название статуса')
                     ->searchable()
-                    ->sortable()
-                    ->url(fn ($record) => route(
-                        'filament.admin.resources.photo-report-statuses.edit',
-                        $record
-                    )),
+                    ->sortable(),
 
                 ColorColumn::make('color')
                     ->label('Цвет'),

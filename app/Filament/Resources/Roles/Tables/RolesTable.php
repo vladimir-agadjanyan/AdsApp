@@ -1,40 +1,39 @@
 <?php
 
-namespace App\Filament\Resources\AdvertisingTypes\Tables;
+namespace App\Filament\Resources\Roles\Tables;
 
+use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteAction;
+use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 
-class AdvertisingTypesTable
+class RolesTable
 {
     public static function configure(Table $table): Table
     {
         return $table
             ->columns([
+                TextColumn::make('id')
+                    ->label('#')
+                    ->sortable(),
+
                 TextColumn::make('name')
-                    ->label('Название типа рекламы')
+                    ->label('Название')
                     ->searchable()
                     ->sortable(),
 
                 TextColumn::make('description')
                     ->label('Описание')
-                    ->limit(60)
-                    ->placeholder('—'),
+                    ->limit(50)
+                    ->searchable(),
 
                 TextColumn::make('created_at')
-                    ->label('Создан')
+                    ->label('Создана')
                     ->dateTime('d.m.Y H:i')
                     ->sortable(),
-
-                TextColumn::make('updated_at')
-                    ->label('Изменен')
-                    ->dateTime('d.m.Y H:i')
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
             ])
-            ->defaultSort('name')
             ->filters([
                 //
             ])
@@ -43,7 +42,9 @@ class AdvertisingTypesTable
                 DeleteAction::make(),
             ])
             ->toolbarActions([
-                //
+                BulkActionGroup::make([
+                    DeleteBulkAction::make(),
+                ]),
             ]);
     }
 }

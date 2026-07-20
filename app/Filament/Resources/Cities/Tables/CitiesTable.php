@@ -18,11 +18,7 @@ class CitiesTable
                 TextColumn::make('name')
                     ->label('Название города')
                     ->searchable()
-                    ->sortable()
-                    ->url(fn ($record) => route(
-                        'filament.admin.resources.cities.edit',
-                        $record
-                    )),
+                    ->sortable(),
                 TextColumn::make('region.name')
                     ->label('Регион')
                     ->searchable()

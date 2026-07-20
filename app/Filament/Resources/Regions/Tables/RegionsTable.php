@@ -17,11 +17,7 @@ class RegionsTable
                 TextColumn::make('name')
                     ->label('Название региона')
                     ->searchable()
-                    ->sortable()
-                    ->url(fn ($record) => route(
-                        'filament.admin.resources.regions.edit',
-                        $record
-                )),
+                    ->sortable(),
                 TextColumn::make('created_at')
                     ->label('Создан')
                     ->dateTime('d.m.Y H:i')

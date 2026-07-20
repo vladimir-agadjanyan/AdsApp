@@ -18,10 +18,7 @@ class CounterpartiesTable
                 TextColumn::make('name')
                     ->label('Название организации')
                     ->searchable()
-                    ->sortable()
-                    ->url(fn ($record) => route(
-                        'filament.admin.resources.counterparties.edit',
-                        $record)),
+                    ->sortable(),
                 TextColumn::make('inn')
                     ->label('ИНН')
                     ->searchable()

@@ -10,6 +10,11 @@ class EditPhotoReportStatus extends EditRecord
 {
     protected static string $resource = PhotoReportStatusResource::class;
 
+    protected function getRedirectUrl(): string
+    {
+        return $this->getResource()::getUrl('index');
+    }
+
     protected function getHeaderActions(): array
     {
         return [

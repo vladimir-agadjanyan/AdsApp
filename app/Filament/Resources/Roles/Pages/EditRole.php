@@ -1,14 +1,14 @@
 <?php
 
-namespace App\Filament\Resources\Cities\Pages;
+namespace App\Filament\Resources\Roles\Pages;
 
-use App\Filament\Resources\Cities\CityResource;
+use App\Filament\Resources\Roles\RoleResource;
 use Filament\Actions\DeleteAction;
 use Filament\Resources\Pages\EditRecord;
 
-class EditCity extends EditRecord
+class EditRole extends EditRecord
 {
-    protected static string $resource = CityResource::class;
+    protected static string $resource = RoleResource::class;
 
     protected function getRedirectUrl(): string
     {
