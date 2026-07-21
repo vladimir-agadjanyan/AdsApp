@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Http\Controllers\Controller;
 use App\Models\Contract;
+use App\Http\Controllers\Controller;
 use App\Http\Resources\ContractResource;
 use App\Http\Requests\StoreContractRequest;
 use App\Http\Requests\UpdateContractRequest;
@@ -52,10 +52,7 @@ class ContractController extends Controller
             ->setStatusCode(201);
     }
 
-    public function update(
-        UpdateContractRequest $request,
-        Contract $contract
-    ): ContractResource {
+    public function update(UpdateContractRequest $request, Contract $contract): ContractResource {
         $data = $request->validated();
 
         $contract->update($data);
@@ -71,7 +68,7 @@ class ContractController extends Controller
     public function destroy(Contract $contract): JsonResponse
     {
         $contract->delete();
-    
+
         return response()->json(null, 204);
     }
 }

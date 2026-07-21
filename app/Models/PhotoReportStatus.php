@@ -16,6 +16,6 @@ class PhotoReportStatus extends Model
 
     public function photoReports(): HasMany
     {
-        return $this->hasMany(PhotoReport::class, 'status_id');
+        return $this->hasMany(PhotoReport::class, 'photo_report_status_id');
     }
 }
