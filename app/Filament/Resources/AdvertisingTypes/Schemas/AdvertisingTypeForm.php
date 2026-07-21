@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\AdvertisingTypes\Schemas;
 
 use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Textarea;
 use Filament\Schemas\Schema;
 
 class AdvertisingTypeForm
@@ -16,7 +17,7 @@ class AdvertisingTypeForm
                     ->required()
                     ->maxLength(255),
 
-                TextInput::make('description')
+                Textarea::make('description')
                     ->label('Описание')
                     ->rows(3)
                     ->columnSpanFull(),
