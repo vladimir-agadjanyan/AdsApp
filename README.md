@@ -1,58 +1,190 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# AdsApp
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+AdsApp — система управления наружной рекламой, предназначенная для учета договоров, рекламных объектов, фотоотчетов и контроля их размещения.
 
-## About Laravel
+---
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## Возможности
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+### REST API
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+- Аутентификация через Laravel Sanctum
+- Управление договорами
+- Управление рекламными объектами
+- Управление фотоотчетами
+- Загрузка фотографий
+- Получение фотографий
+- Удаление фотографий
 
-## Learning Laravel
+### Административная панель
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+Реализована на Filament.
 
-In addition, [Laracasts](https://laracasts.com) contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+Доступные справочники:
 
-You can also watch bite-sized lessons with real-world projects on [Laravel Learn](https://laravel.com/learn), where you will be guided through building a Laravel application from scratch while learning PHP fundamentals.
+- Пользователи
+- Роли
+- Регионы
+- Города
+- Контрагенты
+- Типы рекламы
+- Статусы объектов
+- Статусы фотоотчетов
 
-## Agentic Development
+---
 
-Laravel's predictable structure and conventions make it ideal for AI coding agents like Claude Code, Cursor, and GitHub Copilot. Install [Laravel Boost](https://laravel.com/docs/ai) to supercharge your AI workflow:
+## Архитектура
+
+Проект состоит из двух независимых компонентов.
+
+- **REST API** — реализует бизнес-логику приложения и предоставляет интерфейс для мобильного приложения, веб-клиента или внешних интеграций.
+- **Filament** — административная панель для управления пользователями и справочниками.
+
+Фотографии хранятся в файловой системе Laravel.
+
+Для аутентификации API используется **Laravel Sanctum**.
+
+---
+
+## Технологии
+
+- PHP 8.3
+- Laravel 13
+- MySQL 8.4
+- Docker
+- Filament 5
+- Laravel Sanctum
+
+---
+
+## Запуск проекта
+
+Все сервисы запускаются через Docker Compose.
 
 ```bash
-composer require laravel/boost --dev
+git clone <repository>
 
-php artisan boost:install
+cd AdsApp
+
+cp .env.example .env
+
+docker compose up -d
+
+docker compose exec app composer install
+
+docker compose exec app php artisan key:generate
+
+docker compose exec app php artisan migrate
+
+docker compose exec app php artisan storage:link
 ```
 
-Boost provides your agent 15+ tools and skills that help agents build Laravel applications while following best practices.
+---
 
-## Contributing
+## Проверка качества кода
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+```bash
+docker compose exec app composer check
+```
 
-## Code of Conduct
+Выполняются проверки:
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+- PHPStan
+- PHPUnit
 
-## Security Vulnerabilities
+---
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+## Структура API
+
+### Authentication
+
+```text
+POST   /api/login
+GET    /api/me
+POST   /api/logout
+```
+
+### Contracts
+
+```text
+GET        Получение списка
+GET/{id}   Получение договора
+POST       Создание договора
+PUT        Обновление договора
+DELETE     Удаление договора
+```
+
+### Advertising Objects
+
+```text
+GET        Получение списка
+GET/{id}   Получение объекта
+POST       Создание объекта
+PUT        Обновление объекта
+DELETE     Удаление объекта
+```
+
+### Photo Reports
+
+```text
+GET        Получение списка
+GET/{id}   Получение фотоотчета
+POST       Создание фотоотчета
+PUT        Обновление фотоотчета
+DELETE     Удаление фотоотчета
+```
+
+### Photos
+
+```text
+GET        Получение списка
+GET/{id}   Получение фотографии
+POST       Загрузка фотографии
+DELETE     Удаление фотографии
+```
+
+---
+
+## Хранение файлов
+
+Фотографии сохраняются в:
+
+```text
+storage/app/public/photo-reports
+```
+
+После выполнения команды
+
+```bash
+php artisan storage:link
+```
+
+они доступны по адресу
+
+```text
+/storage/photo-reports
+```
+
+---
+
+## Административная панель
+
+Административная панель доступна по адресу:
+
+```text
+/admin
+```
+
+Реализована на **Filament**.
+
+---
 
 ## License
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+This project is licensed under the MIT License.
+
+---
+
+## Автор
+
+**Владимир Агаджанян**
