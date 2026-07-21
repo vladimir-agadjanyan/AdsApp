@@ -14,16 +14,16 @@ return new class extends Migration
         Schema::create('notifications', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')
-            ->constrained()
-            ->restrictOnDelete();
+                ->constrained()
+                ->restrictOnDelete();
             $table->foreignId('advertising_object_id')
-            ->nullable()
-            ->constrained()
-            ->nullOnDelete();
-        $table->foreignId('contract_id')
-            ->nullable()
-            ->constrained()
-            ->nullOnDelete();
+                ->nullable()
+                ->constrained()
+                ->nullOnDelete();
+            $table->foreignId('contract_id')
+                ->nullable()
+                ->constrained()
+                ->nullOnDelete();
             $table->string('title');
             $table->text('message');
             $table->boolean('is_read')->default(false);

@@ -17,6 +17,6 @@ class ObjectStatus extends Model
 
     public function advertisingObjects(): HasMany
     {
-        return $this->hasMany(AdvertisingObject::class, 'status_id');
+        return $this->hasMany(AdvertisingObject::class, 'object_status_id');
     }
 }

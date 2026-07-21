@@ -25,8 +25,8 @@ class ContractFile extends Model
 
     public function uploadedBy(): BelongsTo
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'uploaded_by');
     }
 
-    
+
 }
