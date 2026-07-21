@@ -2,31 +2,35 @@
 
 namespace App\Filament\Resources\Regions;
 
-use App\Models\Region;
-
 use App\Filament\Resources\Regions\Pages\CreateRegion;
 use App\Filament\Resources\Regions\Pages\EditRegion;
 use App\Filament\Resources\Regions\Pages\ListRegions;
 use App\Filament\Resources\Regions\Schemas\RegionForm;
 use App\Filament\Resources\Regions\Tables\RegionsTable;
-
+use App\Models\Region;
 use BackedEnum;
-use UnitEnum;
-
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
+use UnitEnum;
 
 class RegionResource extends Resource
 {
     protected static ?string $model = Region::class;
+
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedMapPin;
+
     protected static ?string $recordTitleAttribute = 'name';
+
     protected static ?string $navigationLabel = 'Регионы';
+
     protected static ?string $modelLabel = 'Регион';
+
     protected static ?string $pluralModelLabel = 'Регионы';
+
     protected static string|UnitEnum|null $navigationGroup = 'Справочники';
+
     protected static ?int $navigationSort = 2;
 
     public static function form(Schema $schema): Schema

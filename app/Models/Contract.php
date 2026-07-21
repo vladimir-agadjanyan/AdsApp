@@ -5,10 +5,6 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use App\Models\AdvertisingObject;
-use App\Models\Counterparty;
-use App\Models\ContractFile;
-use App\Models\User;
 
 class Contract extends Model
 {
@@ -25,8 +21,8 @@ class Contract extends Model
 
     protected $casts = [
         'contract_date' => 'date',
-        'start_date'    => 'date',
-        'end_date'      => 'date',
+        'start_date' => 'date',
+        'end_date' => 'date',
     ];
 
     public function counterparty(): BelongsTo

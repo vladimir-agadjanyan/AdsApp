@@ -8,6 +8,7 @@ use App\Http\Resources\PhotoResource;
 use App\Models\Photo;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Http\Response;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 
 class PhotoController extends Controller
@@ -29,8 +30,7 @@ class PhotoController extends Controller
      */
     public function store(StorePhotoRequest $request): PhotoResource
     {
-        /** @var \Illuminate\Http\UploadedFile $file */
-
+        /** @var UploadedFile $file */
         $file = $request->file('photo');
 
         $path = $file->store('photo-reports', 'public');

@@ -1,13 +1,15 @@
 // Variebles
 @import "variables";
 @import "mixins";
-@import "base";
 
 // Bootstrap
 @import "bootstrap/scss/bootstrap";
-@import "bootstrap-icons/font/bootstrap-icons";
+
+// Base
+@import "base";
 
 // layout
-@import "layout/header";
-@import "layout/footer";
-@import "layout/sidebar";
+@import "layouts/app";
+@import "layouts/header";
+@import "layouts/footer";
+@import "layouts/sidebar";

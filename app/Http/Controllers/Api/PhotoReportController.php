@@ -61,7 +61,8 @@ class PhotoReportController extends Controller
         return new PhotoReportResource($photoReport);
     }
 
-    public function update(UpdatePhotoReportRequest $request, PhotoReport $photoReport): PhotoReportResource {
+    public function update(UpdatePhotoReportRequest $request, PhotoReport $photoReport): PhotoReportResource
+    {
         $photoReport->update($request->validated());
 
         $photoReport->load([

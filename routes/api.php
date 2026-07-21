@@ -4,8 +4,8 @@ use App\Http\Controllers\Api\AdvertisingObjectController;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\ContractController;
 use App\Http\Controllers\Api\PhotoController;
-use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\PhotoReportController;
+use Illuminate\Support\Facades\Route;
 
 Route::post('/login', [AuthController::class, 'login']);
 

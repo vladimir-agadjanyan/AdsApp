@@ -1,0 +1,82 @@
+.sidebar {
+    width: $sidebar-width;
+    min-height: 100vh;
+
+    display: flex;
+    flex-direction: column;
+
+    background: $sidebar-bg;
+    border-right: 1px solid $border-color;
+}
+
+.sidebar-header {
+    padding: $spacing-lg;
+    border-bottom: 1px solid $border-color;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: $spacing-sm;
+
+    color: $app-primary;
+    text-decoration: none;
+
+    font-size: $font-size-xl;
+    font-weight: 700;
+
+    transition: $transition-base;
+
+    &:hover {
+        color: $app-primary-dark;
+    }
+
+    i {
+        font-size: 1.4rem;
+    }
+}
+
+.sidebar-nav {
+    display: flex;
+    flex-direction: column;
+    gap: .35rem;
+
+    padding: $spacing-md;
+}
+
+.sidebar-link {
+    display: flex;
+    align-items: center;
+    gap: .85rem;
+
+    padding: .85rem 1rem;
+
+    border-radius: $radius-md;
+
+    color: $text-muted;
+    text-decoration: none;
+
+    transition: $transition-base;
+
+    i {
+        width: 20px;
+        text-align: center;
+        font-size: 1rem;
+        color: inherit;
+    }
+
+    span {
+        font-weight: 500;
+    }
+
+    &:hover {
+        background: #FAF8FF;
+        color: $app-primary;
+    }
+
+    &.active {
+        background: #F3EEFF;
+        color: $app-primary;
+        font-weight: 600;
+    }
+}

@@ -7,41 +7,42 @@
     box-sizing: border-box;
     margin: 0;
     padding: 0;
-  }
+}
 
-  /* HTML и Body */
-  html, body {
+/* HTML и Body */
+html,
+body {
     height: 100%;
-    font-family: $font-family-base; // из variables.scss
+    font-family: $font-family-base;
     font-size: 16px;
     line-height: 1.6;
-    background-color: $content-bg;     // из variables.scss
-    color: $body-color;             // из variables.scss
-  }
+    background-color: $content-bg;
+    color: $body-color;
+}
 
-  /* Типографика */
-  h1, h2, h3, h4, h5, h6 {
+/* Типографика */
+h1, h2, h3, h4, h5, h6 {
     font-weight: 600;
     margin-bottom: .5rem;
-  }
+}
 
-  p {
+p {
     margin-bottom: 1rem;
-  }
+}
 
-  /* Ссылки */
-  a {
-    color: $primary;
+/* Ссылки */
+a {
+    color: $link-color;
     text-decoration: none;
 
     &:hover {
-      text-decoration: underline;
+        text-decoration: underline;
     }
-  }
+}
 
-  /* Изображения */
-  img {
+/* Изображения */
+img {
     max-width: 100%;
     height: auto;
     display: block;
-  }
+}

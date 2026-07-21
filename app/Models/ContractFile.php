@@ -4,8 +4,6 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use App\Models\Contract;
-use App\Models\User;
 
 class ContractFile extends Model
 {
@@ -27,6 +25,4 @@ class ContractFile extends Model
     {
         return $this->belongsTo(User::class, 'uploaded_by');
     }
-
-
 }

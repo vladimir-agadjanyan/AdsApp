@@ -2,8 +2,8 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Seeder;
 use App\Models\AdvertisingType;
+use Illuminate\Database\Seeder;
 
 class AdvertisingTypeSeeder extends Seeder
 {
@@ -40,7 +40,7 @@ class AdvertisingTypeSeeder extends Seeder
             [
                 'name' => 'Пиллар',
                 'description' => 'Реклама на пилларе',
-            ]
+            ],
 
         ];
 

@@ -2,14 +2,14 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Models\Contract;
 use App\Http\Controllers\Controller;
-use App\Http\Resources\ContractResource;
 use App\Http\Requests\StoreContractRequest;
 use App\Http\Requests\UpdateContractRequest;
-use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
-use Illuminate\Http\Request;
+use App\Http\Resources\ContractResource;
+use App\Models\Contract;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Facades\Auth;
 
 class ContractController extends Controller
@@ -52,7 +52,8 @@ class ContractController extends Controller
             ->setStatusCode(201);
     }
 
-    public function update(UpdateContractRequest $request, Contract $contract): ContractResource {
+    public function update(UpdateContractRequest $request, Contract $contract): ContractResource
+    {
         $data = $request->validated();
 
         $contract->update($data);

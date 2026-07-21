@@ -5,13 +5,6 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use App\Models\AdvertisingType;
-use App\Models\Contract;
-use App\Models\City;
-use App\Models\ObjectStatus;
-use App\Models\PhotoReport;
-use App\Models\Region;
-use App\Models\User;
 
 class AdvertisingObject extends Model
 {

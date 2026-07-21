@@ -2,14 +2,10 @@
 
 namespace App\Models;
 
-use App\Models\AdvertisingObject;
-use App\Models\PhotoReportStatus;
-use App\Models\Photo;
-use App\Models\User;
-use Illuminate\Support\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Carbon;
 
 /**
  * @property Carbon|null $checked_at

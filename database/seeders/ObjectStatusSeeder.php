@@ -2,8 +2,8 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Seeder;
 use App\models\ObjectStatus;
+use Illuminate\Database\Seeder;
 
 class ObjectStatusSeeder extends Seeder
 {

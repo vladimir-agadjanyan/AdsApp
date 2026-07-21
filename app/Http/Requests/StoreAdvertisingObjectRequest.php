@@ -3,9 +3,9 @@
 namespace App\Http\Requests;
 
 use App\Models\City;
-use Illuminate\Validation\Validator;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Validator;
 
 class StoreAdvertisingObjectRequest extends FormRequest
 {

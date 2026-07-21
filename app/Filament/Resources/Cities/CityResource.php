@@ -2,32 +2,35 @@
 
 namespace App\Filament\Resources\Cities;
 
-use App\Models\City;
-
 use App\Filament\Resources\Cities\Pages\CreateCity;
 use App\Filament\Resources\Cities\Pages\EditCity;
 use App\Filament\Resources\Cities\Pages\ListCities;
 use App\Filament\Resources\Cities\Schemas\CityForm;
 use App\Filament\Resources\Cities\Tables\CitiesTable;
-
+use App\Models\City;
 use BackedEnum;
-use UnitEnum;
-
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
+use UnitEnum;
 
 class CityResource extends Resource
 {
     protected static ?string $model = City::class;
+
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedMapPin;
+
     protected static ?string $recordTitleAttribute = 'name';
 
     protected static ?string $navigationLabel = 'Города';
+
     protected static ?string $modelLabel = 'Город';
+
     protected static ?string $pluralModelLabel = 'Города';
+
     protected static string|UnitEnum|null $navigationGroup = 'Справочники';
+
     protected static ?int $navigationSort = 3;
 
     public static function form(Schema $schema): Schema

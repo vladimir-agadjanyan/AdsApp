@@ -17,11 +17,17 @@ use Filament\Tables\Table;
 class RoleResource extends Resource
 {
     protected static ?string $model = Role::class;
+
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
+
     protected static ?string $recordTitleAttribute = 'name';
+
     protected static string|\UnitEnum|null $navigationGroup = 'Администрирование';
+
     protected static ?string $navigationLabel = 'Роли';
+
     protected static ?string $modelLabel = 'Роль';
+
     protected static ?string $pluralModelLabel = 'Роли';
 
     public static function form(Schema $schema): Schema

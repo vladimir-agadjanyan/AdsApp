@@ -2,8 +2,6 @@
 
 namespace App\Http\Resources;
 
-use App\Http\Resources\CounterpartyResource;
-use App\Http\Resources\UserResource;
 use App\Models\Contract;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
@@ -11,12 +9,13 @@ use Illuminate\Http\Resources\Json\JsonResource;
 class ContractResource extends JsonResource
 {
     /**
-    * @mixin Contract
-    */
+     * @mixin Contract
+     */
     public function toArray(Request $request): array
     {
-        /** @var \App\Models\Contract $contract */
+        /** @var Contract $contract */
         $contract = $this->resource;
+
         return [
             'id' => $contract->id,
             'number' => $contract->number,
