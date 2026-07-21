@@ -29,6 +29,14 @@ class AdvertisingObject extends Model
         'note',
     ];
 
+    protected function casts(): array
+    {
+        return [
+            'latitude' => 'float',
+            'longitude' => 'float',
+        ];
+    }
+
     public function contract(): BelongsTo
     {
         return $this->belongsTo(Contract::class);
