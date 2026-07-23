@@ -1,0 +1,19 @@
+.dashboard-card__link {
+    display: inline-flex;
+    align-items: center;
+
+    gap: .25rem;
+
+    font-size: .875rem;
+    font-weight: 500;
+
+    color: $primary;
+
+    text-decoration: none;
+
+    transition: color .2s ease;
+}
+
+.dashboard-card__link:hover {
+    color: darken($primary, 10%);
+}
