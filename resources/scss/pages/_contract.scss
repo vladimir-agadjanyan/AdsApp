@@ -1,0 +1,34 @@
+/*
+|--------------------------------------------------------------------------
+| Contracts Page
+|--------------------------------------------------------------------------
+*/
+
+.contracts-page {
+
+    .btn-filters {
+        background: #f8f9fc;
+        border: 1px solid #e9ecef;
+        color: $text-color;
+        border-radius: .5rem;
+        padding: .5rem .875rem;
+        display: inline-flex;
+        align-items: center;
+        gap: .4rem;
+        transition: all .2s ease;
+
+        &:hover {
+            background: #f3f5f8;
+            border-color: #dfe4ea;
+        }
+    }
+
+    .table tbody tr {
+        transition: background-color .15s ease;
+    }
+
+    .table tbody tr:hover {
+        background: #fafbff;
+    }
+}
+

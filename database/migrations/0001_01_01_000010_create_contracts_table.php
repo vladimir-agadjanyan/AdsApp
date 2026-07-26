@@ -18,6 +18,7 @@ return new class extends Migration
                 ->restrictOnDelete();
             $table->string('number', 100);
             $table->date('contract_date');
+            $table->decimal('amount', 15, 2)->default(0)->comment('Стоимость договора');
             $table->date('start_date');
             $table->date('end_date');
             $table->text('note')->nullable();

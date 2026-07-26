@@ -13,7 +13,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/me', [AuthController::class, 'me']);
     Route::post('/logout', [AuthController::class, 'logout']);
 
-    Route::apiResource('contracts', ContractController::class);
+    Route::apiResource('contracts', ContractController::class)->names('api.contracts');
 
     Route::apiResource('advertising-objects', AdvertisingObjectController::class);
 

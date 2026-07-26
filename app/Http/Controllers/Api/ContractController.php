@@ -2,26 +2,36 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Filters\ContractFilter;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\StoreContractRequest;
-use App\Http\Requests\UpdateContractRequest;
+use App\Http\Requests\Contract\ContractIndexRequest;
+use App\Http\Requests\Contract\StoreContractRequest;
+use App\Http\Requests\Contract\UpdateContractRequest;
 use App\Http\Resources\ContractResource;
 use App\Models\Contract;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Facades\Auth;
 
+
 class ContractController extends Controller
 {
-    public function index(Request $request): AnonymousResourceCollection
+    public function index(ContractIndexRequest $request): AnonymousResourceCollection
     {
-        $contracts = Contract::with([
+        $filter = new ContractFilter($request);
+
+        $contracts = Contract::query();
+
+        $contracts = $filter->apply($contracts);
+
+        $contracts->with([
             'counterparty',
             'createdBy',
-        ])->paginate();
+        ]);
 
-        return ContractResource::collection($contracts);
+        return ContractResource::collection(
+            $contracts->paginate()
+        );
     }
 
     public function show(Contract $contract): ContractResource

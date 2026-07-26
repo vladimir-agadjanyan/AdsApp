@@ -14,11 +14,18 @@ class DatabaseSeeder extends Seeder
         $this->call([
             RoleSeeder::class,
             AdminUserSeeder::class,
+
             AdvertisingTypeSeeder::class,
             ObjectStatusSeeder::class,
             PhotoReportStatusSeeder::class,
+
             RegionSeeder::class,
             CitySeeder::class,
+
+            CounterpartySeeder::class,
+            ContractSeeder::class,
+            ContractAddendumSeeder::class,
+
         ]);
     }
 }

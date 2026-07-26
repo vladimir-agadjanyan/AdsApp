@@ -22,16 +22,14 @@ class ContractResource extends JsonResource
             'contract_date' => $contract->contract_date->toDateString(),
             'start_date' => $contract->start_date->toDateString(),
             'end_date' => $contract->end_date->toDateString(),
+            'status' => $contract->status,
             'note' => $contract->note,
-
             'counterparty' => CounterpartyResource::make(
                 $this->whenLoaded('counterparty')
             ),
-
             'created_by' => UserResource::make(
                 $this->whenLoaded('createdBy')
             ),
-
             'created_at' => $contract->created_at?->toDateTimeString(),
             'updated_at' => $contract->updated_at?->toDateTimeString(),
         ];
