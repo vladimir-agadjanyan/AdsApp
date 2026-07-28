@@ -13,7 +13,6 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Facades\Auth;
 
-
 class ContractController extends Controller
 {
     public function index(ContractIndexRequest $request): AnonymousResourceCollection

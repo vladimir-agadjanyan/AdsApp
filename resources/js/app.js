@@ -7,4 +7,8 @@ import './map';
 
 import Chart from 'chart.js/auto';
 
+import { Livewire, Alpine } from '../../vendor/livewire/livewire/dist/livewire.esm';
+
+Livewire.start();
+
 window.Chart = Chart;

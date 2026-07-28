@@ -3,17 +3,21 @@
 namespace App\Livewire\ContractAddendums;
 
 use App\Models\ContractAddendum;
-use Livewire\Component;
 use Illuminate\Validation\Rule;
+use Livewire\Component;
 
 class Edit extends Component
 {
     public ContractAddendum $contractAddendum;
 
     public string $number = '';
+
     public ?string $signed_at = null;
+
     public ?string $end_date = null;
+
     public ?string $note = null;
+
     public ?float $amount_change = null;
 
     public function mount(ContractAddendum $contractAddendum): void
@@ -75,6 +79,7 @@ class Edit extends Component
             'amount_change' => 'изменение суммы',
         ];
     }
+
     protected function messages(): array
     {
         return [

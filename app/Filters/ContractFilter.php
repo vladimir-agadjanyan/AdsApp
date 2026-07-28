@@ -7,8 +7,7 @@ use Illuminate\Http\Request;
 
 class ContractFilter
 {
-    public function __construct(protected Request $request) {
-    }
+    public function __construct(protected Request $request) {}
 
     public function apply(Builder $query): Builder
     {

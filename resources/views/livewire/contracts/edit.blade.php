@@ -226,6 +226,10 @@
 
         @endforelse
 
+    <hr class="my-4">
+
+    <livewire:contracts.documents :contract="$contract" />
+
     <div class="card border-primary mt-4">
 
         <div class="card-header">
@@ -279,44 +283,44 @@
         </div>
 
     </div>
-</div>
+    </div>
 
-<div class="card-footer d-flex justify-content-end gap-2">
+    <div class="card-footer d-flex justify-content-end gap-2">
 
-    <a
-        href="{{ route('contracts.index') }}"
-        class="btn btn-secondary"
-        wire:navigate
-    >
-        Отмена
-    </a>
-
-    <button
-        type="button"
-        class="btn btn-primary"
-        wire:click="update"
-        wire:loading.attr="disabled"
-    >
-        <span
-            wire:loading.remove
-            wire:target="update"
+        <a
+            href="{{ route('contracts.index') }}"
+            class="btn btn-secondary"
+            wire:navigate
         >
-            Сохранить изменения
-        </span>
+            Отмена
+        </a>
 
-        <span
-            wire:loading
-            wire:target="update"
+        <button
+            type="button"
+            class="btn btn-primary"
+            wire:click="update"
+            wire:loading.attr="disabled"
         >
             <span
-                class="spinner-border spinner-border-sm me-1"
-                role="status"
-            ></span>
+                wire:loading.remove
+                wire:target="update"
+            >
+                Сохранить изменения
+            </span>
 
-            Сохранение...
-        </span>
-    </button>
+            <span
+                wire:loading
+                wire:target="update"
+            >
+                <span
+                    class="spinner-border spinner-border-sm me-1"
+                    role="status"
+                ></span>
 
-</div>
+                Сохранение...
+            </span>
+        </button>
+
+    </div>
 
 </div>

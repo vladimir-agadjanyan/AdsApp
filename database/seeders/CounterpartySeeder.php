@@ -2,10 +2,8 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
-use Illuminate\Database\Seeder;
 use App\Models\Counterparty;
-
+use Illuminate\Database\Seeder;
 
 class CounterpartySeeder extends Seeder
 {

@@ -15,14 +15,26 @@ return new class extends Migration
             $table->id();
             $table->foreignId('contract_id')
                 ->constrained()
+                ->cascadeOnUpdate()
                 ->cascadeOnDelete();
+
+            $table->foreignId('contract_addendum_id')
+                ->nullable()
+                ->constrained()
+                ->cascadeOnUpdate()
+                ->nullOnDelete();
+
             $table->string('original_name');
             $table->string('file_path');
             $table->string('mime_type');
             $table->unsignedBigInteger('file_size');
+
             $table->foreignId('uploaded_by')
+                ->nullable()
                 ->constrained('users')
-                ->restrictOnDelete();
+                ->cascadeOnUpdate()
+                ->nullOnDelete();
+
             $table->timestamps();
         });
     }

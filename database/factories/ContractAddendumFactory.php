@@ -29,7 +29,7 @@ class ContractAddendumFactory extends Factory
 
         return [
             'contract_id' => $contract->id,
-            'number' => 'ДС-' . fake()->unique()->numerify('#####'),
+            'number' => 'ДС-'.fake()->unique()->numerify('#####'),
             'signed_at' => $signedAt,
             'end_date' => fake()->dateTimeBetween($signedAt, '+1 year'),
             'amount_change' => $amountChange,

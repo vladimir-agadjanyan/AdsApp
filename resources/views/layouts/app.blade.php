@@ -14,29 +14,26 @@
     @vite([
         'resources/js/app.js',
     ])
-
-    @livewireStyles
 </head>
 
 <body class="bg-body-tertiary">
 
-<div class="wrapper">
+    <div class="wrapper">
 
-    @include('components.sidebar')
+        @include('components.sidebar')
 
-    <div class="main">
+        <div class="main">
 
-        @include('components.header')
+            @include('components.header')
 
-        <main class="content p-4">
-            {{ $slot }}
-        </main>
+            <main class="content p-4">
+                {{ $slot }}
+            </main>
+
+        </div>
 
     </div>
 
-</div>
-
-@livewireScripts
-
+    @livewireScriptConfig
 </body>
 </html>

@@ -4,8 +4,8 @@ namespace Tests\Feature\Api\Contract;
 
 use App\Models\Contract;
 use App\Models\User;
-use Laravel\Sanctum\Sanctum;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Laravel\Sanctum\Sanctum;
 use Tests\TestCase;
 
 class ShowContractTest extends TestCase

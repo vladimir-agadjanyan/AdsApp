@@ -9,7 +9,6 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-
 /**
  * @property \Illuminate\Support\Carbon|null $contract_date
  * @property \Illuminate\Support\Carbon|null $start_date
@@ -20,7 +19,6 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property string $note
  * @property float $amount
  */
-
 class Contract extends Model
 {
     use HasFactory;
@@ -40,9 +38,9 @@ class Contract extends Model
     {
         return [
             'contract_date' => 'date',
-            'start_date'    => 'date',
-            'end_date'      => 'date',
-            'amount'        => 'decimal:2',
+            'start_date' => 'date',
+            'end_date' => 'date',
+            'amount' => 'decimal:2',
         ];
     }
 
@@ -89,10 +87,10 @@ class Contract extends Model
     public function getStatusLabelAttribute(): string
     {
         return match ($this->status) {
-            'active'    => 'Активный',
-            'expiring'  => 'Истекает',
-            'expired'   => 'Истёк',
-            default    => 'Неизвестно',
+            'active' => 'Активный',
+            'expiring' => 'Истекает',
+            'expired' => 'Истёк',
+            default => 'Неизвестно',
 
         };
     }
@@ -100,10 +98,10 @@ class Contract extends Model
     public function getStatusClassAttribute(): string
     {
         return match ($this->status) {
-            'active'    => 'success',
-            'expiring'  => 'warning',
-            'expired'   => 'danger',
-            default    => 'secondary',
+            'active' => 'success',
+            'expiring' => 'warning',
+            'expired' => 'danger',
+            default => 'secondary',
         };
     }
 

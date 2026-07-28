@@ -3,8 +3,8 @@
 namespace App\Livewire\Contracts;
 
 use App\Models\Contract;
-use App\Models\Counterparty;
 use App\Models\ContractAddendum;
+use App\Models\Counterparty;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Validation\Rule;
 use Livewire\Component;
@@ -16,11 +16,17 @@ class Edit extends Component
     public Collection $counterparties;
 
     public string $number = '';
+
     public ?int $counterparty_id = null;
+
     public ?string $contract_date = null;
+
     public ?string $start_date = null;
+
     public ?string $end_date = null;
+
     public ?string $amount = null;
+
     public ?string $note = null;
 
     protected function rules(): array
@@ -111,20 +117,20 @@ class Edit extends Component
     public function deleteAddendum(int $id): void
     {
         $contractAddendum = ContractAddendum::findOrFail($id);
-    
+
         if ($contractAddendum->contract_id !== $this->contract->id) {
             abort(404);
         }
-    
+
         $number = $contractAddendum->number;
-    
+
         $contractAddendum->delete();
-    
+
         $this->contract->load([
             'counterparty',
             'addendums',
         ]);
-    
+
         session()->flash(
             'success',
             "Дополнительное соглашение №{$number} успешно удалено."

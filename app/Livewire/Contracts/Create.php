@@ -4,19 +4,39 @@ namespace App\Livewire\Contracts;
 
 use App\Models\Contract;
 use App\Models\Counterparty;
+use App\Services\ContractFileService;
 use Illuminate\Database\Eloquent\Collection;
+use Livewire\Attributes\Validate;
 use Livewire\Component;
+use Livewire\WithFileUploads;
 
 class Create extends Component
 {
+    use WithFileUploads;
+
     public Collection $counterparties;
 
     public string $number = '';
+
     public ?int $counterparty_id = null;
+
     public ?string $contract_date = null;
+
     public ?string $start_date = null;
+
     public ?string $end_date = null;
+
     public ?string $note = null;
+
+    #[Validate([
+        'documents.*' => [
+            'nullable',
+            'file',
+            'max:10240',
+            'mimes:pdf,doc,docx,xls,xlsx,jpg,jpeg,png',
+        ],
+    ])]
+    public array $documents = [];
 
     public function mount(): void
     {
@@ -37,14 +57,22 @@ class Create extends Component
         ];
     }
 
-    public function save(): void
+    public function save(ContractFileService $contractFileService): void
     {
         $validated = $this->validate();
 
-        Contract::create([
+        $contract = Contract::create([
             ...$validated,
-            'created_by' => 1,
+            'created_by' => auth()->id(),
         ]);
+
+        foreach ($this->documents as $document) {
+            $contractFileService->upload(
+                contract: $contract,
+                file: $document,
+                uploadedBy: auth()->id(),
+            );
+        }
 
         session()->flash(
             'success',

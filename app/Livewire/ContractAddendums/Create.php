@@ -10,10 +10,15 @@ use Livewire\Component;
 class Create extends Component
 {
     public Contract $contract;
+
     public string $number = '';
+
     public ?string $signed_at = null;
+
     public ?string $end_date = null;
+
     public string $amount_change = '0';
+
     public ?string $note = null;
 
     public function mount(Contract $contract): void

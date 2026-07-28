@@ -19,7 +19,7 @@ class ContractFactory extends Factory
 
         return [
             'counterparty_id' => Counterparty::factory(),
-            'number' => 'Д-' . fake()->unique()->numerify('2026-####'),
+            'number' => 'Д-'.fake()->unique()->numerify('2026-####'),
             'contract_date' => $contractDate,
             'start_date' => $startDate,
             'end_date' => $endDate,

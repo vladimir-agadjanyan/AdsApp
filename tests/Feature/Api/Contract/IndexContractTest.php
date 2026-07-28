@@ -2,11 +2,10 @@
 
 namespace Tests\Feature\Api\Contract;
 
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
-use Tests\TestCase;
-use App\Models\User;
 use App\Models\Contract;
+use App\Models\User;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\TestCase;
 
 class IndexContractTest extends TestCase
 {
@@ -37,11 +36,11 @@ class IndexContractTest extends TestCase
     public function test_it_returns_expected_structure(): void
     {
         Contract::factory()->create();
-    
+
         $response = $this->getJson('/api/contracts');
-    
+
         $response->assertOk();
-    
+
         $response->assertJsonStructure([
             'data' => [
                 '*' => [

@@ -361,4 +361,95 @@
 
     </div>
 
+    <div class="card mb-4">
+
+        <div class="card-header">
+            <h4 class="mb-0">
+                Документы
+            </h4>
+        </div>
+
+        <div class="card-body">
+
+            @if($contract->files->isEmpty())
+
+                <div class="alert alert-light border text-center mb-0">
+                    Документы отсутствуют.
+                </div>
+
+            @else
+
+                <div class="table-responsive">
+
+                    <table class="table table-hover align-middle">
+
+                        <thead>
+
+                            <tr>
+                                <th width="90">Тип</th>
+                                <th>Название</th>
+                                <th>Размер</th>
+                                <th>Загрузил</th>
+                                <th>Дата</th>
+                                <th width="120"></th>
+                            </tr>
+
+                        </thead>
+
+                        <tbody>
+
+                            @foreach($contract->files as $file)
+
+                                <tr>
+
+                                    <td>
+                                        <span class="badge bg-secondary">
+                                            {{ $file->extension }}
+                                        </span>
+                                    </td>
+
+                                    <td>
+                                        <i class="bi bi-file-earmark me-2"></i>
+                                        {{ $file->original_name }}
+                                    </td>
+
+                                    <td>
+                                        {{ $file->human_file_size }}
+                                    </td>
+
+                                    <td>
+                                        {{ $file->uploadedBy?->name ?? '—' }}
+                                    </td>
+
+                                    <td>
+                                        {{ $file->created_at->format('d.m.Y H:i') }}
+                                    </td>
+
+                                    <td class="text-end">
+
+                                        <button
+                                            class="btn btn-outline-primary btn-sm"
+                                            wire:click="download({{ $file->id }})"
+                                        >
+                                            <i class="bi bi-download"></i>
+                                        </button>
+
+                                    </td>
+
+                                </tr>
+
+                            @endforeach
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            @endif
+
+        </div>
+
+    </div>
+
 </div>

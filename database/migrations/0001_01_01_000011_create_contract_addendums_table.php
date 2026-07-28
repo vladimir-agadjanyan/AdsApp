@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('number');
             $table->decimal('amount_change', 15, 2)->default(0)->comment('Изменение стоимости');
             $table->date('signed_at');
-            $table->date('end_date');
+            $table->date('end_date')->nullable();
             $table->text('note')->nullable();
 
             $table->foreignId('created_by')
