@@ -9,7 +9,7 @@
 
     <nav class="sidebar-nav">
 
-        <a href="{{ route('dashboard') }}"class="sidebar-link {{ request()->routeIs('dashboard') ? 'active' : '' }}">
+        <a href="{{ route('dashboard') }}" class="sidebar-link {{ request()->routeIs('dashboard') ? 'active' : '' }}">
              <i class="bi bi-grid-1x2"></i>
              <span>Панель управления</span>
         </a>
@@ -19,7 +19,7 @@
              Договоры
          </a>
 
-        <a href="#" class="sidebar-link">
+        <a href="{{ route('counterparties.index') }}"  class="sidebar-link {{ request()->routeIs('counterparties.*') ? 'active' : '' }}">
             <i class="bi bi-buildings"></i>
             <span>Контрагенты</span>
         </a>

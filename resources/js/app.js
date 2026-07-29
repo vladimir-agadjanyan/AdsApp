@@ -11,7 +11,4 @@ import { Livewire } from '../../vendor/livewire/livewire/dist/livewire.esm';
 window.Chart = Chart;
 globalThis.Chart = Chart;
 
-console.log('window.Chart', window.Chart);
-console.log('globalThis.Chart', globalThis.Chart);
-
 Livewire.start();

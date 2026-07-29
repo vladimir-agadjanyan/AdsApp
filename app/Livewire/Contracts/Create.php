@@ -15,17 +15,11 @@ class Create extends Component
     use WithFileUploads;
 
     public Collection $counterparties;
-
     public string $number = '';
-
     public ?int $counterparty_id = null;
-
     public ?string $contract_date = null;
-
     public ?string $start_date = null;
-
     public ?string $end_date = null;
-
     public ?string $note = null;
 
     #[Validate([

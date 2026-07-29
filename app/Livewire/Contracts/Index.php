@@ -6,22 +6,24 @@ use App\Models\Contract;
 use App\Models\Counterparty;
 use Livewire\Component;
 use Livewire\WithPagination;
+use App\Services\ContractService;
+
+use RuntimeException;
+
 
 class Index extends Component
 {
     use WithPagination;
 
     public string $search = '';
-
     public ?int $counterpartyId = null;
-
     public ?string $status = null;
-
     public ?string $contractDateFrom = null;
-
     public ?string $contractDateTo = null;
-
     public string $paginationTheme = 'bootstrap';
+    public ?Contract $contractToDelete = null;
+
+public bool $showDeleteModal = false;
 
     public function create(): void
     {
@@ -44,18 +46,39 @@ class Index extends Component
         $this->resetPage();
     }
 
-    public function delete(int $id): void
+    public function delete(ContractService $service): void
     {
-        $contract = Contract::with(['addendums', 'files'])->findOrFail($id);
+        if (! $this->contractToDelete) {
+            return;
+        }
 
-        $number = $contract->number;
+        try {
+            $service->delete($this->contractToDelete);
 
-        $contract->delete();
+            session()->flash(
+                'success',
+                'Договор успешно удален.'
+            );
+        } catch (RuntimeException $e) {
+            session()->flash(
+                'error',
+                $e->getMessage()
+            );
+        }
 
-        session()->flash(
-            'success',
-            "Договор №{$number} успешно удален."
-        );
+        $this->cancelDelete();
+    }
+
+    public function confirmDelete(Contract $contract): void
+    {
+        $this->contractToDelete = $contract;
+        $this->showDeleteModal = true;
+    }
+
+    public function cancelDelete(): void
+    {
+        $this->showDeleteModal = false;
+        $this->contractToDelete = null;
     }
 
     public function render()

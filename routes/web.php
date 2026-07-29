@@ -9,6 +9,10 @@ use App\Livewire\Contracts\Edit as ContractEdit;
 use App\Livewire\Contracts\Index as ContractIndex;
 use App\Livewire\Contracts\Show as ContractShow;
 use App\Livewire\Dashboard\Index;
+use App\Livewire\Counterparties\Index as CounterpartiesIndex;
+use App\Livewire\Counterparties\Create as CounterpartiesCreate;
+use App\Livewire\Counterparties\Edit as CounterpartiesEdit;
+
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
@@ -32,6 +36,10 @@ Route::middleware('auth')->group(function () {
     Route::get('/contracts/{contract}/edit', ContractEdit::class)->name('contracts.edit');
     Route::get('/contracts/{contract}/addendums/create', ContractAddendumCreate::class)->name('contract-addendums.create');
     Route::get('/contract-addendums/{contractAddendum}/edit', ContractAddendumEdit::class)->name('contract-addendums.edit');
+
+    Route::get('/counterparties', CounterpartiesIndex::class)->name('counterparties.index');
+    Route::get('/counterparties/create', CounterpartiesCreate::class)->name('counterparties.create');
+    Route::get('/counterparties/{counterparty}/edit', CounterpartiesEdit::class)->name('counterparties.edit');
 
 
     Route::post('/logout', function () {
