@@ -6,9 +6,12 @@ import 'leaflet/dist/leaflet.css';
 import './map';
 
 import Chart from 'chart.js/auto';
-
-import { Livewire, Alpine } from '../../vendor/livewire/livewire/dist/livewire.esm';
-
-Livewire.start();
+import { Livewire } from '../../vendor/livewire/livewire/dist/livewire.esm';
 
 window.Chart = Chart;
+globalThis.Chart = Chart;
+
+console.log('window.Chart', window.Chart);
+console.log('globalThis.Chart', globalThis.Chart);
+
+Livewire.start();
