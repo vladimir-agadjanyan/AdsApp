@@ -15,9 +15,9 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::apiResource('contracts', ContractController::class)->names('api.contracts');
 
-    Route::apiResource('advertising-objects', AdvertisingObjectController::class);
+    Route::apiResource('advertising-objects', AdvertisingObjectController::class)->names('api.advertising-objects');
 
-    Route::apiResource('photo-reports', PhotoReportController::class);
+    Route::apiResource('photo-reports', PhotoReportController::class)->names('api.photo-reports');
 
     Route::apiResource('photos', PhotoController::class)->middleware('auth:sanctum');
 });

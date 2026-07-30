@@ -27,86 +27,101 @@
             </div>
         </div>
     </div>
-    {{-- Кнопка фильтров --}}
-    <div class="mb-4">
-        <button type="button" class="btn btn-filters d-inline-flex align-items-center" @click="showFilters = !showFilters">
-            <i class="bi me-2" :class="showFilters ? 'bi-chevron-up' : 'bi-chevron-down'"></i>
-            Фильтры
-        </button>
-    </div>
     {{-- Фильтры --}}
-    <div x-show="showFilters" x-transition.duration.200ms x-cloak class="card border-0 bg-light mb-4">
-        <div class="card-body">
-            <div class="row g-3">
-                <div class="col-lg-4">
-                    <label class="form-label">
-                        Контрагент
-                    </label>
-                    <select class="form-select" wire:model.live="counterpartyId">
-                        <option value="">
-                            Все контрагенты
+    <x-filters-panel>
+
+        <div class="row g-3">
+
+            <div class="col-lg-4">
+                <label class="form-label">
+                    Контрагент
+                </label>
+
+                <select
+                    class="form-select"
+                    wire:model.live="counterpartyId"
+                >
+                    <option value="">
+                        Все контрагенты
+                    </option>
+
+                    @foreach($counterparties as $counterparty)
+                        <option value="{{ $counterparty->id }}">
+                            {{ $counterparty->name }}
                         </option>
-                        @foreach($counterparties as $counterparty)
-                            <option value="{{ $counterparty->id }}">
-                                {{ $counterparty->name }}
-                            </option>
-                        @endforeach
-                    </select>
-                </div>
-                <div class="col-lg-3">
-                    <label class="form-label">
-                        Статус
-                    </label>
-                    <select class="form-select"  wire:model.live="status">
-                        <option value="">
-                            Все статусы
-                        </option>
-                        <option value="active">
-                            Активные
-                        </option>
-                        <option value="expiring">
-                            Истекают
-                        </option>
-                        <option value="expired">
-                            Истекли
-                        </option>
-                    </select>
-                </div>
+                    @endforeach
+                </select>
             </div>
-            <div class="row g-3 mt-3">
-                <div class="col-lg-3">
-                    <label class="form-label">
-                        Дата договора от
-                    </label>
-                    <input
-                        type="date"
-                        class="form-control"
-                        wire:model.live="contractDateFrom"
-                    >
-                </div>
-                <div class="col-lg-3">
-                    <label class="form-label">
-                        Дата договора до
-                    </label>
-                    <input
-                        type="date"
-                        class="form-control"
-                        wire:model.live="contractDateTo"
-                    >
-                </div>
-                <div class="col-lg-3 d-flex align-items-end">
-                    <button
-                        type="button"
-                        class="btn btn-outline-secondary"
-                        wire:click="resetFilters"
-                    >
-                        <i class="bi bi-arrow-clockwise me-1"></i>
-                        Сбросить
-                    </button>
-                </div>
+
+            <div class="col-lg-3">
+                <label class="form-label">
+                    Статус
+                </label>
+
+                <select
+                    class="form-select"
+                    wire:model.live="status"
+                >
+                    <option value="">
+                        Все статусы
+                    </option>
+
+                    <option value="active">
+                        Активные
+                    </option>
+
+                    <option value="expiring">
+                        Истекают
+                    </option>
+
+                    <option value="expired">
+                        Истекли
+                    </option>
+                </select>
             </div>
+
         </div>
-    </div>
+
+        <div class="row g-3 mt-3">
+
+            <div class="col-lg-3">
+                <label class="form-label">
+                    Дата договора от
+                </label>
+
+                <input
+                    type="date"
+                    class="form-control"
+                    wire:model.live="contractDateFrom"
+                >
+            </div>
+
+            <div class="col-lg-3">
+                <label class="form-label">
+                    Дата договора до
+                </label>
+
+                <input
+                    type="date"
+                    class="form-control"
+                    wire:model.live="contractDateTo"
+                >
+            </div>
+
+            <div class="col-lg-3 d-flex align-items-end">
+                <button
+                    type="button"
+                    class="btn btn-outline-secondary"
+                    wire:click="resetFilters"
+                >
+                    <i class="bi bi-arrow-clockwise me-1"></i>
+                    Сбросить
+                </button>
+            </div>
+
+        </div>
+
+    </x-filters-panel>
     {{-- Таблица --}}
     <div class="table-responsive">
         <table class="table table-hover align-middle mb-0">

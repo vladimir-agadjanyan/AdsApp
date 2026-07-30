@@ -18,11 +18,11 @@ class AdminUserSeeder extends Seeder
 
         User::firstOrCreate(
             [
-                'email' => 'admin@adsapp.local',
+                'email' => 'admin@admin.com',
             ],
             [
                 'name' => 'Администратор',
-                'password' => Hash::make('Admin123!'),
+                'password' => Hash::make('12345678'),
                 'role_id' => $adminRole->id,
             ]
         );

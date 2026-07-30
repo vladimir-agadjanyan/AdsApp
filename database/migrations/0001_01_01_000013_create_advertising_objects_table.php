@@ -20,9 +20,6 @@ return new class extends Migration
             $table->foreignId('advertising_type_id')
                 ->constrained()
                 ->restrictOnDelete();
-            $table->foreignId('region_id')
-                ->constrained()
-                ->restrictOnDelete();
             $table->foreignId('city_id')
                 ->constrained()
                 ->restrictOnDelete();

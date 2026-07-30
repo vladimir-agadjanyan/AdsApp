@@ -26,6 +26,8 @@ class DatabaseSeeder extends Seeder
             ContractSeeder::class,
             ContractAddendumSeeder::class,
 
+            AdvertisingObjectSeeder::class,
+
         ]);
     }
 }

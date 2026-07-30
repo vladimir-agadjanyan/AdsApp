@@ -10,14 +10,15 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
+ * @property int $counterparty_id
+ * @property string $number
+ * @property string $note
+ * @property float $amount
  * @property \Illuminate\Support\Carbon|null $contract_date
  * @property \Illuminate\Support\Carbon|null $start_date
  * @property \Illuminate\Support\Carbon|null $end_date
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
- * @property string $number
- * @property string $note
- * @property float $amount
  */
 class Contract extends Model
 {

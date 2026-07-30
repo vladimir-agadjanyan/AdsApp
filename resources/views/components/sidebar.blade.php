@@ -24,7 +24,7 @@
             <span>Контрагенты</span>
         </a>
 
-        <a href="#" class="sidebar-link">
+        <a href="{{ route('advertising-objects.index') }}"  class="sidebar-link {{ request()->routeIs('advertising-objects.*') ? 'active' : '' }}">
             <i class="bi bi-geo-alt"></i>
             <span>Объекты</span>
         </a>
