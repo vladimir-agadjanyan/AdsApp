@@ -6,12 +6,15 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Carbon;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 /**
  * @property Carbon|null $checked_at
  */
 class PhotoReport extends Model
 {
+    use HasFactory;
+
     protected $fillable = [
         'advertising_object_id',
         'photo_report_status_id',
@@ -49,6 +52,9 @@ class PhotoReport extends Model
         return $this->belongsTo(User::class, 'checked_by');
     }
 
+    /**
+     * @return HasMany<Photo, $this>
+     */
     public function photos(): HasMany
     {
         return $this->hasMany(Photo::class);

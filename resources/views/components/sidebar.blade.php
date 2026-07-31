@@ -29,7 +29,7 @@
             <span>Объекты</span>
         </a>
 
-        <a href="#" class="sidebar-link">
+        <a href="{{ route('photo-reports.index') }}"  class="sidebar-link {{ request()->routeIs('advertising-objects.*') ? 'active' : '' }}">
             <i class="bi bi-camera"></i>
             <span>Фотоотчеты</span>
         </a>

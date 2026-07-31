@@ -3,6 +3,8 @@
 namespace App\Services;
 
 use App\Models\AdvertisingObject;
+use DomainException;
+
 
 class AdvertisingObjectService
 {
@@ -20,7 +22,12 @@ class AdvertisingObjectService
 
     public function delete(AdvertisingObject $advertisingObject): void
     {
-        
+        if ($advertisingObject->photoReports()->exists()) {
+            throw new DomainException(
+                'Невозможно удалить рекламный объект, так как по нему существуют фотоотчеты.'
+            );
+        }
+
         $advertisingObject->delete();
     }
 }

@@ -18,6 +18,10 @@ use App\Livewire\AdvertisingObjects\Create as AdvertisingObjectsCreate;
 use App\Livewire\AdvertisingObjects\Edit as AdvertisingObjectsEdit;
 use App\Livewire\AdvertisingObjects\Delete as AdvertisingObjectsDelete;
 
+use App\Livewire\PhotoReports\Index as PhotoReportsIndex;
+use App\Livewire\PhotoReports\Create as PhotoReportsCreate;
+use App\Livewire\PhotoReports\Show as PhotoReportsShow;
+
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
@@ -50,6 +54,10 @@ Route::middleware('auth')->group(function () {
     Route::get('/advertising-objects', AdvertisingObjectsIndex::class)->name('advertising-objects.index');
     Route::get('/advertising-objects/create', AdvertisingObjectsCreate::class)->name('advertising-objects.create');
     Route::get('/advertising-objects/{advertisingObject}/edit', AdvertisingObjectsEdit::class)->name('advertising-objects.edit');
+
+    Route::get('/photo-reports', PhotoReportsIndex::class)->name('photo-reports.index');
+    Route::get('/photo-reports/create', PhotoReportsCreate::class)->name('photo-reports.create');
+    Route::get('/photo-reports/{photoReport}', PhotoReportsShow::class)->name('photo-reports.show');
 
     Route::post('/logout', function () {
         Auth::logout();

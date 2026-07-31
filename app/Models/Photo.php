@@ -5,6 +5,13 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
+/**
+ * @property string $file_path
+ * @property string $original_name
+ * @property string $mime_type
+ * @property int $file_size
+ * @property int $sort_order
+ */
 class Photo extends Model
 {
     protected $fillable = [

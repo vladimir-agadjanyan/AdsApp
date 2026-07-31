@@ -34,7 +34,10 @@ class PhotoReportStatusSeeder extends Seeder
         ];
 
         foreach ($statuses as $status) {
-            PhotoReportStatus::create($status);
+            PhotoReportStatus::updateOrCreate(
+                ['name' => $status['name']],
+                $status,
+            );
         }
     }
 }

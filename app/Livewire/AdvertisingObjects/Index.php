@@ -9,6 +9,8 @@ use App\Models\Counterparty;
 use App\Models\ObjectStatus;
 use App\Models\Region;
 use App\Services\AdvertisingObjectService;
+use DomainException;
+
 
 use Livewire\Component;
 use Livewire\WithPagination;
@@ -24,6 +26,7 @@ class Index extends Component
     public ?int $objectStatusId = null;
     public ?int $regionId = null;
     public ?int $cityId = null;
+    public bool $showDeleteModal = false;
 
     public ?AdvertisingObject $advertisingObjectToDelete = null;
 
@@ -48,18 +51,37 @@ class Index extends Component
 
     public function confirmDelete(AdvertisingObject $advertisingObject): void
     {
-        // dd($advertisingObject->id);
-
         $this->advertisingObjectToDelete = $advertisingObject;
+        $this->showDeleteModal = true;
     }
 
-    public function delete(AdvertisingObject $advertisingObject, AdvertisingObjectService $advertisingObjectService): void {
-        $advertisingObjectService->delete($advertisingObject);
+    public function cancelDelete(): void
+    {
+        $this->showDeleteModal = false;
+        $this->advertisingObjectToDelete = null;
+    }
 
-        session()->flash(
-            'success',
-            'Рекламный объект успешно удален.'
-        );
+    public function delete(AdvertisingObjectService $service): void
+    {
+        if (! $this->advertisingObjectToDelete) {
+            return;
+        }
+
+        try {
+            $service->delete($this->advertisingObjectToDelete);
+
+            session()->flash(
+                'success',
+                'Рекламный объект успешно удален.'
+            );
+        } catch (DomainException $e) {
+            session()->flash(
+                'error',
+                $e->getMessage()
+            );
+        }
+
+        $this->cancelDelete();
 
         $this->resetPage();
     }

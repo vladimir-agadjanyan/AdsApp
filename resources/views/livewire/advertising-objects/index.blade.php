@@ -184,12 +184,9 @@
                                 <i class="bi bi-pencil"></i>
                             </a>
 
-                            <button
-                            wire:click="delete({{ $object->id }})"
-                            class="btn btn-sm btn-outline-danger"
-                        >
-                            <i class="bi bi-trash"></i>
-                        </button>
+                            <button type="button" class="btn btn-sm btn-outline-danger" wire:click="confirmDelete({{ $object->id }})">
+                                <i class="bi bi-trash"></i>
+                            </button>
 
                         </div>
 
@@ -212,6 +209,72 @@
         </table>
 
     </div>
+
+    @if ($showDeleteModal)
+        <div class="modal fade show d-block" tabindex="-1" style="background: rgba(0, 0, 0, .5);">
+            <div class="modal-dialog">
+                <div class="modal-content">
+
+                    <div class="modal-header">
+                        <h5 class="modal-title">
+                            Удалить рекламный объект
+                        </h5>
+
+                        <button
+                            type="button"
+                            class="btn-close"
+                            wire:click="cancelDelete"
+                        ></button>
+                    </div>
+
+                    <div class="modal-body">
+
+                        <p class="mb-2">
+                            Вы действительно хотите удалить рекламный объект:
+                        </p>
+
+                        <p class="fw-semibold mb-3">
+                            {{ $advertisingObjectToDelete?->name }}
+                        </p>
+
+                        @if ($advertisingObjectToDelete?->contract?->counterparty)
+                            <p class="text-muted mb-3">
+                                Контрагент:
+                                {{ $advertisingObjectToDelete->contract->counterparty->name }}
+                            </p>
+                        @endif
+
+                        <div class="alert alert-warning mb-0">
+                            Действие необратимо.
+                        </div>
+
+                    </div>
+
+                    <div class="modal-footer">
+
+                        <button
+                            type="button"
+                            class="btn btn-secondary"
+                            wire:click="cancelDelete"
+                        >
+                            Отмена
+                        </button>
+
+                        <button
+                            type="button"
+                            class="btn btn-danger"
+                            wire:click="delete"
+                        >
+                            <i class="bi bi-trash me-1"></i>
+                            Удалить
+                        </button>
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    @endif
 
     <x-pagination :paginator="$advertisingObjects"/>
 

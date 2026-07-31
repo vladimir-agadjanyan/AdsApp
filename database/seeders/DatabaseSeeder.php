@@ -28,6 +28,7 @@ class DatabaseSeeder extends Seeder
 
             AdvertisingObjectSeeder::class,
 
+            PhotoReportSeeder::class,
         ]);
     }
 }

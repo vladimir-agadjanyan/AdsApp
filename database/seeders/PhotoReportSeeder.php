@@ -2,7 +2,9 @@
 
 namespace Database\Seeders;
 
+use App\Models\PhotoReport;
 use Illuminate\Database\Seeder;
+
 
 class PhotoReportSeeder extends Seeder
 {
@@ -11,6 +13,8 @@ class PhotoReportSeeder extends Seeder
      */
     public function run(): void
     {
-        //
+        PhotoReport::factory()
+        ->count(100)
+        ->create();
     }
 }
