@@ -199,7 +199,7 @@
                                 <i class="bi bi-pencil"></i>
                             </a>
 
-                            <button type="button" class="btn btn-sm btn-outline-danger"  wire:click="confirmDelete({{ $photoReport->id }})" title="Удалить">
+                            <button type="button" class="btn btn-sm btn-outline-danger" wire:click="confirmDelete({{ $photoReport->id }})" title="Удалить">
                                 <i class="bi bi-trash"></i>
                             </button>
 
