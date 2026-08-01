@@ -166,13 +166,17 @@
 
                 <tr>
 
-                    <td>{{ $object->name }}</td>
+                    <td>
+                        <a href="{{ route('advertising-objects.show', $object) }}" wire:navigate>
+                            {{ $object->name }}
+                        </a>
+                    </td>
                     <td>{{ $object->contract->counterparty->name }}</td>
                     <td>{{ $object->city->region->name }}</td>
                     <td>{{ $object->city->name }}</td>
                     <td>{{ $object->advertisingType->name }}</td>
                     <td>
-                        <span class="badge bg-success">
+                        <span class="badge text-bg-{{ $object->objectStatus->color }}">
                             {{ $object->objectStatus->name }}
                         </span>
                     </td>

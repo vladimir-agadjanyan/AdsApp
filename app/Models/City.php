@@ -17,11 +17,17 @@ class City extends Model
         'region_id',
     ];
 
+    /**
+     * @return BelongsTo<Region, $this>
+     */
     public function region(): BelongsTo
     {
         return $this->belongsTo(Region::class);
     }
 
+    /**
+     * @return HasMany<AdvertisingObject, $this>
+     */
     public function advertisingObjects(): HasMany
     {
         return $this->hasMany(AdvertisingObject::class);

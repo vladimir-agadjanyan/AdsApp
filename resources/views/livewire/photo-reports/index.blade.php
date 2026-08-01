@@ -149,9 +149,9 @@
 
             <thead>
                 <tr>
-                    <th>Дата отправки</th>
-                    <th>Город</th>
                     <th>Рекламный объект</th>
+                    <th>Город</th>
+                    <th>Дата отправки</th>
                     <th class="text-center">Фото</th>
                     <th>Статус</th>
                     <th width="120">Действия</th>
@@ -165,7 +165,9 @@
                 <tr>
 
                     <td>
-                        {{ $photoReport->created_at->format('d.m.Y') }}
+                        <a href="{{ route('photo-reports.show', $photoReport) }}" wire:navigate>
+                            {{ $photoReport->advertisingObject->name }}
+                        </a>
                     </td>
 
                     <td>
@@ -173,7 +175,7 @@
                     </td>
 
                     <td>
-                        {{ $photoReport->advertisingObject->name }}
+                        {{ $photoReport->created_at->format('d.m.Y') }}
                     </td>
 
                     <td class="text-center">
@@ -189,17 +191,17 @@
 
                     <td>
 
-                        <div class="btn-group">
-
-                            <a href="{{ route('photo-reports.show', $photoReport) }}"  class="btn btn-sm btn-outline-primary">
+                            <a href="{{ route('photo-reports.show', $photoReport) }}" wire:navigate class="btn btn-sm btn-outline-primary" title="Просмотр">
                                 <i class="bi bi-eye"></i>
                             </a>
 
-                            <button type="button" class="btn btn-sm btn-outline-danger" wire:click="confirmDelete({{ $photoReport->id }})">
+                            <a href="{{ route('photo-reports.edit', $photoReport) }}" wire:navigate class="btn btn-sm btn-outline-primary" title="Редактировать">
+                                <i class="bi bi-pencil"></i>
+                            </a>
+
+                            <button type="button" class="btn btn-sm btn-outline-danger"  wire:click="confirmDelete({{ $photoReport->id }})" title="Удалить">
                                 <i class="bi bi-trash"></i>
                             </button>
-
-                        </div>
 
                     </td>
 

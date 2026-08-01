@@ -32,11 +32,17 @@ class PhotoReport extends Model
         ];
     }
 
+    /**
+     * @return BelongsTo<AdvertisingObject, $this>
+     */
     public function advertisingObject(): BelongsTo
     {
         return $this->belongsTo(AdvertisingObject::class);
     }
 
+    /**
+     * @return BelongsTo<PhotoReportStatus, $this>
+     */
     public function photoReportStatus(): BelongsTo
     {
         return $this->belongsTo(PhotoReportStatus::class);

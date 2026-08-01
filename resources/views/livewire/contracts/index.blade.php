@@ -154,6 +154,9 @@
                             </span>
                         </td>
                         <td class="text-start m-auto">
+                            <a href="{{ route('contracts.show', $contract) }}" wire:navigate class="btn btn-sm btn-outline-primary" title="Просмотр">
+                                <i class="bi bi-eye"></i>
+                            </a>
                             <a href="{{ route('contracts.edit', $contract) }}" wire:navigate class="btn btn-sm btn-outline-primary">
                                 <i class="bi bi-pencil"></i>
                             </a>

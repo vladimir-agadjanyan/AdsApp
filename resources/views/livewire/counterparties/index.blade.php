@@ -1,5 +1,5 @@
 <div class="counterparties-page">
-    
+
     <x-alerts />
 
     {{-- Заголовок --}}
@@ -44,12 +44,20 @@
                 <tbody>
                     @forelse($counterparties as $counterparty)
                         <tr>
-                            <td>{{ $counterparty->name }}</td>
+                            <td>
+                                <a href="{{ route('counterparties.show', $counterparty) }}" wire:navigate>
+                                    {{ $counterparty->name }}
+                                </a>
+                            </td>
                             <td>{{ $counterparty->inn }}</td>
                             <td>{{ $counterparty->phone }}</td>
                             <td>{{ $counterparty->contact_person }}</td>
                             <td>-</td>
                             <td>
+                                <a href="{{ route('counterparties.show', $counterparty) }}" wire:navigate class="btn btn-sm btn-outline-primary" title="Просмотр">
+                                    <i class="bi bi-eye"></i>
+                                </a>
+
                                 <a href="{{ route('counterparties.edit', $counterparty) }}" wire:navigate class="btn btn-sm btn-outline-primary">
                                     <i class="bi bi-pencil"></i>
                                 </a>

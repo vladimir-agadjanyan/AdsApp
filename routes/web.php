@@ -11,16 +11,20 @@ use App\Livewire\ContractAddendums\Create as ContractAddendumCreate;
 use App\Livewire\ContractAddendums\Edit as ContractAddendumEdit;
 use App\Livewire\Counterparties\Index as CounterpartiesIndex;
 use App\Livewire\Counterparties\Create as CounterpartiesCreate;
+use App\Livewire\Counterparties\Show as CounterpartiesShow;
 use App\Livewire\Counterparties\Edit as CounterpartiesEdit;
 
 use App\Livewire\AdvertisingObjects\Index as AdvertisingObjectsIndex;
 use App\Livewire\AdvertisingObjects\Create as AdvertisingObjectsCreate;
+use App\Livewire\AdvertisingObjects\Show as AdvertisingObjectsShow;
 use App\Livewire\AdvertisingObjects\Edit as AdvertisingObjectsEdit;
 use App\Livewire\AdvertisingObjects\Delete as AdvertisingObjectsDelete;
 
 use App\Livewire\PhotoReports\Index as PhotoReportsIndex;
 use App\Livewire\PhotoReports\Create as PhotoReportsCreate;
 use App\Livewire\PhotoReports\Show as PhotoReportsShow;
+use App\Livewire\PhotoReports\Edit as PhotoReportsEdit;
+
 
 
 use Illuminate\Support\Facades\Route;
@@ -49,15 +53,18 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/counterparties', CounterpartiesIndex::class)->name('counterparties.index');
     Route::get('/counterparties/create', CounterpartiesCreate::class)->name('counterparties.create');
+    Route::get('/counterparties/{counterparty}', CounterpartiesShow::class)->name('counterparties.show');
     Route::get('/counterparties/{counterparty}/edit', CounterpartiesEdit::class)->name('counterparties.edit');
 
     Route::get('/advertising-objects', AdvertisingObjectsIndex::class)->name('advertising-objects.index');
     Route::get('/advertising-objects/create', AdvertisingObjectsCreate::class)->name('advertising-objects.create');
+    Route::get('/advertising-objects/{advertisingObject}', AdvertisingObjectsShow::class)->name('advertising-objects.show');
     Route::get('/advertising-objects/{advertisingObject}/edit', AdvertisingObjectsEdit::class)->name('advertising-objects.edit');
 
     Route::get('/photo-reports', PhotoReportsIndex::class)->name('photo-reports.index');
     Route::get('/photo-reports/create', PhotoReportsCreate::class)->name('photo-reports.create');
     Route::get('/photo-reports/{photoReport}', PhotoReportsShow::class)->name('photo-reports.show');
+    Route::get('/photo-reports/{photoReport}/edit', PhotoReportsEdit::class)->name('photo-reports.edit');
 
     Route::post('/logout', function () {
         Auth::logout();
