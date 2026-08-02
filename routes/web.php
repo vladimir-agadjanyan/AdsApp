@@ -7,8 +7,7 @@ use App\Livewire\Contracts\Create as ContractCreate;
 use App\Livewire\Contracts\Edit as ContractEdit;
 use App\Livewire\Contracts\Index as ContractIndex;
 use App\Livewire\Contracts\Show as ContractShow;
-use App\Livewire\ContractAddendums\Create as ContractAddendumCreate;
-use App\Livewire\ContractAddendums\Edit as ContractAddendumEdit;
+
 use App\Livewire\Counterparties\Index as CounterpartiesIndex;
 use App\Livewire\Counterparties\Create as CounterpartiesCreate;
 use App\Livewire\Counterparties\Show as CounterpartiesShow;
@@ -18,7 +17,6 @@ use App\Livewire\AdvertisingObjects\Index as AdvertisingObjectsIndex;
 use App\Livewire\AdvertisingObjects\Create as AdvertisingObjectsCreate;
 use App\Livewire\AdvertisingObjects\Show as AdvertisingObjectsShow;
 use App\Livewire\AdvertisingObjects\Edit as AdvertisingObjectsEdit;
-use App\Livewire\AdvertisingObjects\Delete as AdvertisingObjectsDelete;
 
 use App\Livewire\PhotoReports\Index as PhotoReportsIndex;
 use App\Livewire\PhotoReports\Create as PhotoReportsCreate;
@@ -30,7 +28,6 @@ use App\Livewire\PhotoReports\Edit as PhotoReportsEdit;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 
-use App\Http\Controllers\Auth\AuthenticatedSessionController;
 
 
 Route::middleware('guest')->group(function () {
@@ -47,9 +44,6 @@ Route::middleware('auth')->group(function () {
     Route::get('/contracts/create', ContractCreate::class)->name('contracts.create');
     Route::get('/contracts/{contract}', ContractShow::class)->name('contracts.show');
     Route::get('/contracts/{contract}/edit', ContractEdit::class)->name('contracts.edit');
-
-    Route::get('/contracts/{contract}/addendums/create', ContractAddendumCreate::class)->name('contract-addendums.create');
-    Route::get('/contract-addendums/{contractAddendum}/edit', ContractAddendumEdit::class)->name('contract-addendums.edit');
 
     Route::get('/counterparties', CounterpartiesIndex::class)->name('counterparties.index');
     Route::get('/counterparties/create', CounterpartiesCreate::class)->name('counterparties.create');

@@ -62,7 +62,8 @@ class Contract extends Model
 
     public function files(): HasMany
     {
-        return $this->hasMany(ContractFile::class);
+        return $this->hasMany(ContractFile::class)
+            ->whereNull('contract_addendum_id');
     }
 
     public function addendums(): HasMany

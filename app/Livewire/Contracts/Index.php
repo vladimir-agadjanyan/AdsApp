@@ -4,15 +4,15 @@ namespace App\Livewire\Contracts;
 
 use App\Models\Contract;
 use App\Models\Counterparty;
+use App\Services\Contract\ContractService;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Livewire\Component;
 use Livewire\WithPagination;
-use App\Services\ContractService;
-
 use RuntimeException;
-
 
 class Index extends Component
 {
+    use AuthorizesRequests;
     use WithPagination;
 
     public string $search = '';
@@ -22,12 +22,11 @@ class Index extends Component
     public ?string $contractDateTo = null;
     public string $paginationTheme = 'bootstrap';
     public ?Contract $contractToDelete = null;
+    public bool $showDeleteModal = false;
 
-public bool $showDeleteModal = false;
-
-    public function create(): void
+    public function mount(): void
     {
-        //
+        $this->authorize('viewAny', Contract::class);
     }
 
     public function resetFilters(): void
@@ -39,6 +38,8 @@ public bool $showDeleteModal = false;
             'contractDateFrom',
             'contractDateTo',
         ]);
+
+        $this->resetPage();
     }
 
     public function updatedSearch(): void
@@ -46,14 +47,36 @@ public bool $showDeleteModal = false;
         $this->resetPage();
     }
 
-    public function delete(ContractService $service): void
+    public function confirmDelete(Contract $contract): void
     {
+        $this->authorize('delete', $contract);
+
+        $this->contractToDelete = $contract;
+        $this->showDeleteModal = true;
+    }
+
+    public function cancelDelete(): void
+    {
+        $this->showDeleteModal = false;
+        $this->contractToDelete = null;
+    }
+
+    public function delete(
+        ContractService $service
+    ): void {
         if (! $this->contractToDelete) {
             return;
         }
 
+        $this->authorize(
+            'delete',
+            $this->contractToDelete
+        );
+
         try {
-            $service->delete($this->contractToDelete);
+            $service->delete(
+                $this->contractToDelete
+            );
 
             session()->flash(
                 'success',
@@ -69,39 +92,64 @@ public bool $showDeleteModal = false;
         $this->cancelDelete();
     }
 
-    public function confirmDelete(Contract $contract): void
-    {
-        $this->contractToDelete = $contract;
-        $this->showDeleteModal = true;
-    }
-
-    public function cancelDelete(): void
-    {
-        $this->showDeleteModal = false;
-        $this->contractToDelete = null;
-    }
-
     public function render()
     {
         $contracts = Contract::query()
             ->with('counterparty')
+
             ->when($this->search, function ($query) {
                 $query->where(function ($query) {
-                    $query->where('number', 'like', "%{$this->search}%")
-                        ->orWhereHas('counterparty', function ($query) {
-                            $query->where('name', 'like', "%{$this->search}%");
-                        });
+                    $query
+                        ->where(
+                            'number',
+                            'like',
+                            "%{$this->search}%"
+                        )
+                        ->orWhereHas(
+                            'counterparty',
+                            function ($query) {
+                                $query->where(
+                                    'name',
+                                    'like',
+                                    "%{$this->search}%"
+                                );
+                            }
+                        );
                 });
             })
-            ->when($this->counterpartyId, function ($query) {
-                $query->where('counterparty_id', $this->counterpartyId);
-            })
-            ->when($this->contractDateFrom, function ($query) {
-                $query->whereDate('contract_date', '>=', $this->contractDateFrom);
-            })
-            ->when($this->contractDateTo, function ($query) {
-                $query->whereDate('contract_date', '<=', $this->contractDateTo);
-            })
+
+            ->when(
+                $this->counterpartyId,
+                function ($query) {
+                    $query->where(
+                        'counterparty_id',
+                        $this->counterpartyId
+                    );
+                }
+            )
+
+            ->when(
+                $this->contractDateFrom,
+                function ($query) {
+                    $query->whereDate(
+                        'contract_date',
+                        '>=',
+                        $this->contractDateFrom
+                    );
+                }
+            )
+
+            ->when(
+                $this->contractDateTo,
+                function ($query) {
+                    $query->whereDate(
+                        'contract_date',
+                        '<=',
+                        $this->contractDateTo
+                    );
+                }
+            )
+
             ->when($this->status, function ($query) {
                 match ($this->status) {
                     'active' => $query->active(),
@@ -110,12 +158,16 @@ public bool $showDeleteModal = false;
                     default => null,
                 };
             })
+
             ->latest()
             ->paginate(15);
 
         return view('livewire.contracts.index', [
             'contracts' => $contracts,
-            'counterparties' => Counterparty::orderBy('name')->get(),
+
+            'counterparties' => Counterparty::query()
+                ->orderBy('name')
+                ->get(),
         ]);
     }
 }

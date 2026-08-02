@@ -4,7 +4,7 @@ namespace App\Livewire\Contracts;
 
 use App\Models\Contract;
 use App\Models\ContractFile;
-use App\Services\ContractFileService;
+use App\Services\Contract\ContractFileService;
 use Livewire\Attributes\Validate;
 use Livewire\Component;
 use Livewire\WithFileUploads;
@@ -16,12 +16,10 @@ class Documents extends Component
     public Contract $contract;
 
     #[Validate([
-        'documents.*' => [
-            'nullable',
-            'file',
-            'max:10240',
-            'mimes:pdf,doc,docx,xls,xlsx,jpg,jpeg,png',
-        ],
+        'nullable',
+        'file',
+        'max:10240',
+        'mimes:pdf,doc,docx,xls,xlsx,jpg,jpeg,png',
     ])]
     public $document;
 
@@ -29,31 +27,49 @@ class Documents extends Component
     {
         $this->validate();
 
-        try {
-            $contractFileService->upload(
-                contract: $this->contract,
-                file: $this->document,
-                uploadedBy: auth()->id(),
-            );
+        $contractFileService->upload(
+            contract: $this->contract,
+            file: $this->document,
+            uploadedBy: auth()->id(),
+        );
 
-            $this->reset('document');
+        $this->reset('document');
 
-            session()->flash('success', 'Файл успешно загружен.');
-        } catch (\Throwable $e) {
-            throw $e;
-        }
+        $this->contract->load('files.uploadedBy');
+
+        session()->flash(
+            'success',
+            'Файл успешно загружен.'
+        );
     }
 
     public function download(ContractFile $file)
     {
-        return app(ContractFileService::class)->download($file);
+        abort_unless(
+            $file->contract_id === $this->contract->id,
+            404
+        );
+
+        return app(ContractFileService::class)
+            ->download($file);
     }
 
     public function delete(ContractFile $file): void
     {
-        app(ContractFileService::class)->delete($file);
+        abort_unless(
+            $file->contract_id === $this->contract->id,
+            404
+        );
 
-        session()->flash('success', 'Файл удалён.');
+        app(ContractFileService::class)
+            ->delete($file);
+
+        $this->contract->load('files.uploader');
+
+        session()->flash(
+            'success',
+            'Файл удалён.'
+        );
     }
 
     public function render()

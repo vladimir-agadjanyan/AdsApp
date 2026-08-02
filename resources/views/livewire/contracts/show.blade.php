@@ -1,31 +1,41 @@
-<div class="card mb-4">
+<div class="contracts-show-page">
 
-    <div class="card-header d-flex justify-content-between align-items-center">
+    <x-alerts />
 
-        <h3 class="mb-0">
-            Договор № {{ $contract->number }}
-        </h3>
+    {{-- Заголовок --}}
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <div class="d-flex align-items-center gap-3">
+
+            <h2 class="section-title mb-0">
+                Договор № {{ $contract->number }}
+            </h2>
+
+            <span class="badge bg-{{ $contract->statusClass }}">
+                {{ $contract->statusLabel }}
+            </span>
+
+        </div>
 
         <div class="d-flex gap-2">
 
-            <span class="badge {{ $contract->status_class }}">
-                {{ $contract->status_label }}
-            </span>
-
-            <a
-                href="{{ route('contracts.edit', $contract) }}"
-                class="btn btn-primary"
-                wire:navigate
-            >
-                <i class="bi bi-pencil-square me-1"></i>
-                Редактировать
-            </a>
+            @can('update', $contract)
+                <a
+                    href="{{ route('contracts.edit', $contract) }}"
+                    wire:navigate
+                    class="btn btn-primary"
+                >
+                    <i class="bi bi-pencil me-1"></i>
+                    Редактировать
+                </a>
+            @endcan
 
             <a
                 href="{{ route('contracts.index') }}"
-                class="btn btn-secondary"
                 wire:navigate
+                class="btn btn-outline-secondary"
             >
+                <i class="bi bi-arrow-left me-1"></i>
                 Назад
             </a>
 
@@ -33,407 +43,354 @@
 
     </div>
 
-    <div class="card-body">
 
-        <div class="row g-4">
+    {{-- Основная информация --}}
+    <div class="card shadow-sm mb-4">
 
-            <div class="col-md-6">
+        <div class="card-header">
+            <strong>Основная информация</strong>
+        </div>
 
-                <label class="form-label fw-semibold">
-                    Контрагент
-                </label>
+        <div class="table-responsive">
 
-                <div class="form-control-plaintext border rounded px-3 py-2 bg-light">
-                    {{ $contract->counterparty->name }}
-                </div>
+            <table class="table table-hover align-middle mb-0">
 
-            </div>
+                <tbody>
 
-            <div class="col-md-3">
+                    <tr>
+                        <th
+                            class="table-light"
+                            style="width: 260px;"
+                        >
+                            Контрагент
+                        </th>
 
-                <label class="form-label fw-semibold">
-                    Дата договора
-                </label>
+                        <td>
+                            {{ $contract->counterparty->name }}
+                        </td>
+                    </tr>
 
-                <div class="form-control-plaintext border rounded px-3 py-2 bg-light">
-                    {{ $contract->contract_date?->format('d.m.Y') }}
-                </div>
+                    <tr>
+                        <th class="table-light">
+                            Дата договора
+                        </th>
 
-            </div>
+                        <td>
+                            {{ $contract->contract_date?->format('d.m.Y') ?? '—' }}
+                        </td>
+                    </tr>
 
-            <div class="col-md-3">
+                    <tr>
+                        <th class="table-light">
+                            Начало действия
+                        </th>
 
-                <label class="form-label fw-semibold">
-                    Стоимость договора
-                </label>
+                        <td>
+                            {{ $contract->start_date?->format('d.m.Y') ?? '—' }}
+                        </td>
+                    </tr>
 
-                <div class="form-control-plaintext border rounded px-3 py-2 bg-light">
-                    {{ number_format($contract->amount, 0, ',', ' ') }} сум
-                </div>
+                    <tr>
+                        <th class="table-light">
+                            Окончание действия
+                        </th>
 
-            </div>
+                        <td>
+                            {{ $contract->end_date?->format('d.m.Y') ?? '—' }}
+                        </td>
+                    </tr>
 
-            <div class="col-md-6">
+                    <tr>
+                        <th class="table-light">
+                            Стоимость договора
+                        </th>
 
-                <label class="form-label fw-semibold">
-                    Начало действия
-                </label>
+                        <td class="fw-semibold">
+                            {{ number_format(
+                                (float) $contract->amount,
+                                0,
+                                '.',
+                                ' '
+                            ) }}
+                            сум
+                        </td>
+                    </tr>
 
-                <div class="form-control-plaintext border rounded px-3 py-2 bg-light">
-                    {{ $contract->start_date?->format('d.m.Y') }}
-                </div>
+                    <tr>
+                        <th class="table-light">
+                            Статус
+                        </th>
 
-            </div>
+                        <td>
+                            <span class="badge bg-{{ $contract->statusClass }}">
+                                {{ $contract->statusLabel }}
+                            </span>
+                        </td>
+                    </tr>
 
-            <div class="col-md-6">
+                    <tr>
+                        <th class="table-light">
+                            Примечание
+                        </th>
 
-                <label class="form-label fw-semibold">
-                    Окончание действия
-                </label>
+                        <td>
+                            {{ $contract->note ?: '—' }}
+                        </td>
+                    </tr>
 
-                <div class="form-control-plaintext border rounded px-3 py-2 bg-light">
-                    {{ $contract->end_date?->format('d.m.Y') }}
-                </div>
 
-            </div>
+                    {{-- Документы основного договора --}}
+                    <tr>
+                        <th class="table-light">
+                            Документы договора
+                        </th>
 
-            <div class="col-12">
+                        <td>
+                            @if($contract->files->isEmpty())
 
-                <label class="form-label fw-semibold">
-                    Примечание
-                </label>
+                                <span class="text-muted">
+                                    Документы не прикреплены.
+                                </span>
 
-                <div class="border rounded p-3 bg-light" style="min-height: 90px;">
+                            @else
 
-                    @if($contract->note)
+                                <div class="d-flex flex-column gap-2">
 
-                        {{ $contract->note }}
+                                    @foreach($contract->files as $file)
 
-                    @else
+                                        <div class="border rounded px-3 py-2">
 
-                        <span class="text-muted">Примечание отсутствует.</span>
+                                            <div class="fw-semibold">
 
-                    @endif
+                                                <button
+                                                    type="button"
+                                                    class="btn btn-link p-0 fw-semibold text-decoration-none"
+                                                    wire:click="openDocument({{ $file->id }})"
+                                                >
+                                                    {{ $file->original_name }}
+                                                </button>
 
-                </div>
+                                            </div>
 
-            </div>
+                                            <div class="small text-muted mt-1">
+                                                Загружен:
+                                                {{ $file->created_at?->format('d.m.Y H:i') ?? '—' }}
+
+                                                @if($file->file_size)
+                                                    ·
+                                                    {{ number_format(
+                                                        $file->file_size / 1024,
+                                                        1
+                                                    ) }}
+                                                    КБ
+                                                @endif
+                                            </div>
+
+                                        </div>
+
+                                    @endforeach
+
+                                </div>
+
+                            @endif
+                        </td>
+                    </tr>
+
+                </tbody>
+
+            </table>
 
         </div>
 
     </div>
 
-    <div class="card mb-4">
 
-        <div class="card-header d-flex justify-content-between align-items-center">
+    {{-- Дополнительные соглашения --}}
+    <div class="card shadow-sm mb-4">
 
-            <div>
-
-                <h4 class="mb-1">
-                    Дополнительные соглашения
-                </h4>
-
-                <small class="text-muted">
-                    Список дополнительных соглашений к договору
-                </small>
-
-            </div>
-
-            <a
-                href="{{ route('contract-addendums.create', ['contract' => $contract]) }}"
-                class="btn btn-primary btn-sm"
-                wire:navigate
-            >
-                <i class="bi bi-plus-lg me-1"></i>
-                Добавить
-            </a>
-
+        <div class="card-header">
+            <strong>Дополнительные соглашения</strong>
         </div>
 
-        <div class="card-body">
+        <div class="card-body p-0">
 
-            @forelse($contract->addendums as $addendum)
+            @if($contract->addendums->isEmpty())
 
-                <div class="card mb-3 shadow-sm">
+                <div class="text-center text-muted py-5">
 
-                    <div class="card-body">
-
-                        <div class="row g-4">
-
-                            <div class="col-md-3">
-
-                                <label class="form-label fw-semibold">
-                                    № соглашения
-                                </label>
-
-                                <div class="form-control-plaintext border rounded px-3 py-2 bg-light">
-                                    {{ $addendum->number }}
-                                </div>
-
-                            </div>
-
-                            <div class="col-md-3">
-
-                                <label class="form-label fw-semibold">
-                                    Дата подписания
-                                </label>
-
-                                <div class="form-control-plaintext border rounded px-3 py-2 bg-light">
-                                    {{ $addendum->signed_at?->format('d.m.Y') }}
-                                </div>
-
-                            </div>
-
-                            <div class="col-md-3">
-
-                                <label class="form-label fw-semibold">
-                                    Действует до
-                                </label>
-
-                                <div class="form-control-plaintext border rounded px-3 py-2 bg-light">
-                                    {{ $addendum->end_date?->format('d.m.Y') }}
-                                </div>
-
-                            </div>
-
-                            <div class="col-md-3">
-
-                                <label class="form-label fw-semibold">
-                                    Изменение стоимости
-                                </label>
-
-                                <div class="form-control-plaintext border rounded px-3 py-2 bg-light">
-
-                                    @if($addendum->amount_change > 0)
-
-                                        <span class="text-success fw-bold">
-                                            {{ $addendum->formatted_amount_change }} сум
-                                        </span>
-
-                                    @elseif($addendum->amount_change < 0)
-
-                                        <span class="text-danger fw-bold">
-                                            {{ $addendum->formatted_amount_change }} сум
-                                        </span>
-
-                                    @else
-
-                                        {{ $addendum->formatted_amount_change }} сум
-
-                                    @endif
-
-                                </div>
-
-                            </div>
-
-                            <div class="col-12">
-
-                                <label class="form-label fw-semibold">
-                                    Примечание
-                                </label>
-
-                                <div class="border rounded p-3 bg-light" style="min-height:80px;">
-
-                                    @if($addendum->note)
-
-                                        {{ $addendum->note }}
-
-                                    @else
-
-                                        <span class="text-muted">
-                                            Примечание отсутствует.
-                                        </span>
-
-                                    @endif
-
-                                </div>
-
-                            </div>
-
-                        </div>
-
-                        <div class="d-flex justify-content-end gap-2 mt-3">
-
-                            <a
-                                href="{{ route('contract-addendums.edit', $addendum) }}"
-                                class="btn btn-outline-primary btn-sm"
-                                wire:navigate
-                            >
-                                <i class="bi bi-pencil-square me-1"></i>
-                                Редактировать
-                            </a>
-
-                            <button type="button" class="btn btn-outline-danger btn-sm" wire:click="deleteAddendum({{ $addendum->id }})"
-                                wire:confirm="Вы действительно хотите удалить дополнительное соглашение №{{ $addendum->number }}? Это действие необратимо."
-                            >
-                                <i class="bi bi-trash me-1"></i>
-                                Удалить
-                            </button>
-
-                        </div>
-
-                    </div>
-
-                </div>
-
-            @empty
-
-                <div class="alert alert-light border text-center mb-0">
+                    <i class="bi bi-file-earmark-text fs-1 d-block mb-3"></i>
 
                     Дополнительные соглашения отсутствуют.
 
-                </div>
-
-            @endforelse
-
-        </div>
-
-    </div>
-
-    <div class="card">
-
-        <div class="card-header">
-
-            <h4 class="mb-0">
-                Финансовая информация
-            </h4>
-
-        </div>
-
-        <div class="card-body">
-
-            <div class="row">
-
-                <div class="col-md-8">
-
-                    <div class="mb-3 d-flex justify-content-between">
-
-                        <span>
-                            Стоимость договора
-                        </span>
-
-                        <strong>
-                            {{ number_format($contract->amount, 0, ',', ' ') }} сум
-                        </strong>
-
-                    </div>
-
-                    <div class="mb-3 d-flex justify-content-between">
-
-                        <span>
-                            Изменения по соглашениям
-                        </span>
-
-                        <strong class="{{ $contract->addendums_amount >= 0 ? 'text-success' : 'text-danger' }}">
-
-                            @if($contract->addendums_amount > 0)
-                                +
-                            @endif
-
-                            {{ number_format($contract->addendums_amount, 0, ',', ' ') }} сум
-
-                        </strong>
-
-                    </div>
-
-                    <hr>
-
-                    <div class="d-flex justify-content-between align-items-center">
-
-                        <h4 class="mb-0">
-                            Итоговая стоимость
-                        </h4>
-
-                        <h3 class="mb-0">
-
-                            {{ number_format($contract->total_amount, 0, ',', ' ') }}
-                            сум
-
-                        </h3>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-        </div>
-
-    </div>
-
-    <div class="card mb-4">
-
-        <div class="card-header">
-            <h4 class="mb-0">
-                Документы
-            </h4>
-        </div>
-
-        <div class="card-body">
-
-            @if($contract->files->isEmpty())
-
-                <div class="alert alert-light border text-center mb-0">
-                    Документы отсутствуют.
                 </div>
 
             @else
 
                 <div class="table-responsive">
 
-                    <table class="table table-hover align-middle">
+                    <table class="table table-hover align-middle mb-0">
 
-                        <thead>
+                        <thead class="table-light">
 
                             <tr>
-                                <th width="90">Тип</th>
-                                <th>Название</th>
-                                <th>Размер</th>
-                                <th>Загрузил</th>
-                                <th>Дата</th>
-                                <th width="120"></th>
+
+                                <th>
+                                    № соглашения
+                                </th>
+
+                                <th>
+                                    Дата подписания
+                                </th>
+
+                                <th>
+                                    Действует до
+                                </th>
+
+                                <th class="text-end">
+                                    Изменение суммы
+                                </th>
+
+                                <th>
+                                    Примечание
+                                </th>
+
+                                <th style="min-width: 300px;">
+                                    Документы
+                                </th>
+
                             </tr>
 
                         </thead>
 
                         <tbody>
 
-                            @foreach($contract->files as $file)
+                            @foreach($contract->addendums as $addendum)
 
                                 <tr>
 
-                                    <td>
-                                        <span class="badge bg-secondary">
-                                            {{ $file->extension }}
-                                        </span>
+                                    {{-- Номер --}}
+                                    <td class="fw-semibold">
+                                        {{ $addendum->number }}
                                     </td>
 
+
+                                    {{-- Дата подписания --}}
                                     <td>
-                                        <i class="bi bi-file-earmark me-2"></i>
-                                        {{ $file->original_name }}
+                                        {{ $addendum->signed_at?->format('d.m.Y') ?? '—' }}
                                     </td>
 
+
+                                    {{-- Дата окончания --}}
                                     <td>
-                                        {{ $file->human_file_size }}
+                                        {{ $addendum->end_date?->format('d.m.Y') ?? '—' }}
                                     </td>
 
-                                    <td>
-                                        {{ $file->uploadedBy?->name ?? '—' }}
-                                    </td>
 
-                                    <td>
-                                        {{ $file->created_at->format('d.m.Y H:i') }}
-                                    </td>
-
+                                    {{-- Изменение суммы --}}
                                     <td class="text-end">
 
-                                        <button
-                                            class="btn btn-outline-primary btn-sm"
-                                            wire:click="download({{ $file->id }})"
-                                        >
-                                            <i class="bi bi-download"></i>
-                                        </button>
+                                        @if((float) $addendum->amount_change > 0)
 
+                                            <span class="text-success fw-semibold">
+
+                                                +
+
+                                                {{ number_format(
+                                                    (float) $addendum->amount_change,
+                                                    0,
+                                                    '.',
+                                                    ' '
+                                                ) }}
+
+                                                сум
+
+                                            </span>
+
+                                        @elseif((float) $addendum->amount_change < 0)
+
+                                            <span class="text-danger fw-semibold">
+
+                                                {{ number_format(
+                                                    (float) $addendum->amount_change,
+                                                    0,
+                                                    '.',
+                                                    ' '
+                                                ) }}
+
+                                                сум
+
+                                            </span>
+
+                                        @else
+
+                                            <span class="text-muted">
+                                                0 сум
+                                            </span>
+
+                                        @endif
+
+                                    </td>
+
+
+                                    {{-- Примечание --}}
+                                    <td>
+                                        {{ $addendum->note ?: '—' }}
+                                    </td>
+
+
+                                    {{-- Документы соглашения --}}
+                                    <td>
+                                    
+                                        @if($addendum->files->isEmpty())
+                                    
+                                            <span class="text-muted">
+                                                —
+                                            </span>
+                                        
+                                        @else
+                                        
+                                            <div class="d-flex flex-column gap-2">
+                                            
+                                                @foreach($addendum->files as $file)
+                                            
+                                                    <div class="border rounded px-2 py-2">
+                                                    
+                                                        <div class="fw-semibold text-truncate">
+                                                        
+                                                            <button
+                                                                type="button"
+                                                                class="btn btn-link p-0 fw-semibold text-decoration-none text-start"
+                                                                wire:click="openDocument({{ $file->id }})"
+                                                                title="{{ $file->original_name }}"
+                                                            >
+                                                                {{ $file->original_name }}
+                                                            </button>
+                                                        
+                                                        </div>
+                                                    
+                                                        <div class="small text-muted mt-1">
+                                                        
+                                                            {{ $file->created_at?->format('d.m.Y H:i') ?? '—' }}
+                                                        
+                                                            @if($file->file_size)
+                                                                ·
+                                                                {{ number_format(
+                                                                    $file->file_size / 1024,
+                                                                    1
+                                                                ) }}
+                                                                КБ
+                                                            @endif
+                                                                
+                                                        </div>
+                                                    
+                                                    </div>
+                                                
+                                                @endforeach
+                                                
+                                            </div>
+                                        
+                                        @endif
+                                        
                                     </td>
 
                                 </tr>
@@ -447,6 +404,117 @@
                 </div>
 
             @endif
+
+        </div>
+
+    </div>
+
+
+    {{-- Финансовая информация --}}
+    <div class="card shadow-sm mb-4">
+
+        <div class="card-header">
+            <strong>Финансовая информация</strong>
+        </div>
+
+        <div class="table-responsive">
+
+            <table class="table align-middle mb-0">
+
+                <tbody>
+
+                    <tr>
+
+                        <th
+                            class="table-light"
+                            style="width: 260px;"
+                        >
+                            Стоимость договора
+                        </th>
+
+                        <td class="text-end fw-semibold">
+
+                            {{ number_format(
+                                (float) $contract->amount,
+                                0,
+                                '.',
+                                ' '
+                            ) }}
+
+                            сум
+
+                        </td>
+
+                    </tr>
+
+
+                    <tr>
+
+                        <th class="table-light">
+                            Изменения по соглашениям
+                        </th>
+
+                        <td class="text-end">
+
+                            @if($contract->addendumsAmount > 0)
+                                <span class="text-success fw-semibold">
+                                    + {{ number_format( $contract->addendumsAmount,  0, '.',  ' ' ) }} сум
+                                </span>
+                            @elseif($contract->addendumsAmount < 0)
+                                <span class="text-danger fw-semibold">
+
+                                    {{ number_format(
+                                        $contract->addendumsAmount,
+                                        0,
+                                        '.',
+                                        ' '
+                                    ) }}
+
+                                    сум
+
+                                </span>
+
+                            @else
+
+                                <span class="text-muted">
+                                    0 сум
+                                </span>
+
+                            @endif
+
+                        </td>
+
+                    </tr>
+
+
+                    <tr>
+
+                        <th class="table-light fs-5">
+                            Итоговая стоимость
+                        </th>
+
+                        <td class="text-end">
+
+                            <span class="fw-bold fs-5">
+
+                                {{ number_format(
+                                    $contract->totalAmount,
+                                    0,
+                                    '.',
+                                    ' '
+                                ) }}
+
+                                сум
+
+                            </span>
+
+                        </td>
+
+                    </tr>
+
+                </tbody>
+
+            </table>
 
         </div>
 

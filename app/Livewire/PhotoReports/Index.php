@@ -10,27 +10,21 @@ use App\Models\Region;
 use App\Services\PhotoReportService;
 use Livewire\Component;
 use Livewire\WithPagination;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
 class Index extends Component
 {
+    use AuthorizesRequests;
     use WithPagination;
 
     public string $search = '';
-
     public ?int $regionId = null;
-
     public ?int $cityId = null;
-
     public ?int $photoReportStatusId = null;
-
     public ?string $dateFrom = null;
-
     public ?string $dateTo = null;
-
     public ?int $advertisingTypeId = null;
-
     public bool $showDeleteModal = false;
-
     public ?PhotoReport $photoReportToDelete = null;
 
     public function resetFilters(): void
@@ -55,6 +49,8 @@ class Index extends Component
 
     public function confirmDelete(PhotoReport $photoReport): void
     {
+        $this->authorize('delete', $photoReport);
+
         $this->photoReportToDelete = $photoReport->load([
             'advertisingObject',
             'photos',
@@ -74,6 +70,11 @@ class Index extends Component
         if (! $this->photoReportToDelete) {
             return;
         }
+
+        $this->authorize(
+            'delete',
+            $this->photoReportToDelete
+        );
 
         $photoReportService->delete(
             $this->photoReportToDelete

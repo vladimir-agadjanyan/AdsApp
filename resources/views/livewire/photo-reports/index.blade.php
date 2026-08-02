@@ -11,10 +11,12 @@
     <div class="row align-items-center mb-3">
 
         <div class="col-lg-auto mb-3 mb-lg-0">
-            <a href="{{ route('photo-reports.create') }}" class="btn btn-primary">
-                <i class="bi bi-plus-lg"></i>
-                Новый фотоотчет
-            </a>
+            @can('create', \App\Models\PhotoReport::class)
+                <a  href="{{ route('photo-reports.create') }}" wire:navigate class="btn btn-primary">
+                    <i class="bi bi-plus-lg me-1"></i>
+                    Новый фотоотчет
+                </a>
+            @endcan
         </div>
 
         <div class="col-lg-5">
@@ -195,13 +197,17 @@
                                 <i class="bi bi-eye"></i>
                             </a>
 
-                            <a href="{{ route('photo-reports.edit', $photoReport) }}" wire:navigate class="btn btn-sm btn-outline-primary" title="Редактировать">
-                                <i class="bi bi-pencil"></i>
-                            </a>
+                            @can('update', $photoReport)
+                                <a href="{{ route('photo-reports.edit', $photoReport) }}" wire:navigate class="btn btn-sm btn-outline-primary" title="Редактировать">
+                                    <i class="bi bi-pencil"></i>
+                                </a>
+                            @endcan
 
-                            <button type="button" class="btn btn-sm btn-outline-danger" wire:click="confirmDelete({{ $photoReport->id }})" title="Удалить">
-                                <i class="bi bi-trash"></i>
-                            </button>
+                            @can('delete', $photoReport)
+                                <button type="button" class="btn btn-sm btn-outline-danger" wire:click="confirmDelete({{ $photoReport->id }})" title="Удалить">
+                                    <i class="bi bi-trash"></i>
+                                </button>
+                            @endcan
 
                     </td>
 

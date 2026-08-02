@@ -9,12 +9,14 @@ use App\Models\Photo;
 use App\Models\PhotoReport;
 use App\Models\Region;
 use App\Services\PhotoReportService;
-use DomainException;
 use Livewire\Component;
 use Livewire\WithFileUploads;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use DomainException;
 
 class Edit extends Component
 {
+    use AuthorizesRequests;
     use WithFileUploads;
 
     public PhotoReport $photoReport;
@@ -35,6 +37,8 @@ class Edit extends Component
         PhotoReport $photoReport,
         PhotoReportService $photoReportService
     ): void {
+        $this->authorize('update', $photoReport);
+
         $this->photoReport = $photoReport->load([
             'advertisingObject.city.region',
             'advertisingObject.advertisingType',
@@ -82,6 +86,8 @@ class Edit extends Component
 
     public function save(PhotoReportService $photoReportService): void
     {
+            $this->authorize('update', $this->photoReport);
+
         $validated = $this->validate([
             'advertisingObjectId' => [
                 'required',

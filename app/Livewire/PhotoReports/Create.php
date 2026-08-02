@@ -9,16 +9,25 @@ use App\Models\Region;
 use App\Services\PhotoReportService;
 use Livewire\Component;
 use Livewire\Features\SupportFileUploads\WithFileUploads;
+use App\Models\PhotoReport;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
 class Create extends Component
 {
+    use AuthorizesRequests;
     use WithFileUploads;
+
     public ?int $regionId = null;
     public ?int $cityId = null;
     public ?int $advertisingTypeId = null;
     public ?int $advertisingObjectId = null;
     public ?string $comment = null;
     public array $photos = [];
+
+    public function mount(): void
+    {
+        $this->authorize('create', PhotoReport::class);
+    }
 
     protected function rules(): array
     {
@@ -54,18 +63,20 @@ class Create extends Component
 
     public function save(PhotoReportService $service)
     {
+        $this->authorize('create', PhotoReport::class);
+    
         $this->validate();
-
+    
         $service->create([
             'advertising_object_id' => $this->advertisingObjectId,
             'comment' => $this->comment,
         ], $this->photos);
-
+    
         session()->flash(
             'success',
             'Фотоотчет успешно создан.'
         );
-
+    
         return redirect()->route('photo-reports.index');
     }
 

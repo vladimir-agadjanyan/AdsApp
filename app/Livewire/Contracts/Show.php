@@ -5,7 +5,7 @@ namespace App\Livewire\Contracts;
 use App\Models\Contract;
 use App\Models\ContractAddendum;
 use App\Models\ContractFile;
-use App\Services\ContractFileService;
+use App\Services\Contract\ContractFileService;
 use Livewire\Attributes\Validate;
 use Livewire\Component;
 use Livewire\WithFileUploads;
@@ -37,6 +37,13 @@ class Show extends Component
         ]);
     }
 
+    public function openDocument(ContractFile $file, ContractFileService $contractFileService)
+    {
+        abort_unless($file->contract_id === $this->contract->id, 404);
+
+        return $contractFileService->download($file);
+    }
+
     public function upload(ContractFileService $contractFileService): void
     {
         $this->validate();
@@ -63,24 +70,16 @@ class Show extends Component
 
     public function download( ContractFile $file,  ContractFileService $contractFileService ): BinaryFileResponse
     {
-        abort_unless(
-            $file->contract_id === $this->contract->id,
-            404
-        );
+        abort_unless($file->contract_id === $this->contract->id, 404);
 
         return $contractFileService->download($file);
     }
 
-    public function deleteFile(
-        int $id,
-        ContractFileService $contractFileService
-    ): void {
+    public function deleteFile(int $id, ContractFileService $contractFileService): void
+    {
         $file = ContractFile::findOrFail($id);
 
-        abort_unless(
-            $file->contract_id === $this->contract->id,
-            404
-        );
+        abort_unless($file->contract_id === $this->contract->id, 404);
 
         $contractFileService->delete($file);
 
@@ -100,10 +99,7 @@ class Show extends Component
     {
         $contractAddendum = ContractAddendum::findOrFail($id);
 
-        abort_unless(
-            $contractAddendum->contract_id === $this->contract->id,
-            404
-        );
+        abort_unless($contractAddendum->contract_id === $this->contract->id, 404);
 
         $number = $contractAddendum->number;
 

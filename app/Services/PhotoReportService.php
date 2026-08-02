@@ -51,11 +51,44 @@ class PhotoReportService
         return $photoReport->photoReportStatus->name !== 'Одобрен';
     }
 
-    public function update(
-        PhotoReport $photoReport,
-        array $data,
-        array $photos = []
-    ): PhotoReport {
+    public function approve(PhotoReport $photoReport, int $checkedBy, ?string $reviewComment = null): PhotoReport
+    {
+            if ($photoReport->photoReportStatus->name !== 'На проверке') {
+                throw new DomainException(
+                    'Проверить можно только фотоотчет со статусом «На проверке».'
+                );
+            }
+
+            $photoReport->update([
+                'photo_report_status_id' => 2,
+                'checked_by' => $checkedBy,
+                'checked_at' => now(),
+                'review_comment' => $reviewComment,
+            ]);
+
+        return $photoReport->refresh();
+    }
+
+    public function reject(PhotoReport $photoReport, int $checkedBy, string $reviewComment): PhotoReport
+    {
+        if ($photoReport->photoReportStatus->name !== 'На проверке') {
+            throw new DomainException(
+                'Проверить можно только фотоотчет со статусом «На проверке».'
+            );
+        }
+
+        $photoReport->update([
+            'photo_report_status_id' => 3,
+            'checked_by' => $checkedBy,
+            'checked_at' => now(),
+            'review_comment' => $reviewComment,
+        ]);
+
+        return $photoReport->refresh();
+    }
+
+    public function update(PhotoReport $photoReport, array $data, array $photos = []): PhotoReport
+    {
         if (! $this->canEdit($photoReport)) {
             throw new DomainException(
                 'Одобренный фотоотчет нельзя редактировать.'
@@ -64,6 +97,15 @@ class PhotoReportService
 
         return DB::transaction(
             function () use ($photoReport, $data, $photos) {
+
+                $wasRejected =
+                    $photoReport->photoReportStatus->name === 'Отклонен';
+
+                if ($wasRejected && empty($photos)) {
+                    throw new DomainException(
+                        'Для повторной отправки отклоненного фотоотчета необходимо добавить новую фотографию.'
+                    );
+                }
 
                 $photoReport->update($data);
 
@@ -90,15 +132,22 @@ class PhotoReportService
                     ]);
                 }
 
+                if ($wasRejected) {
+                    $photoReport->update([
+                        'photo_report_status_id' => 1,
+                        'checked_by' => null,
+                        'checked_at' => null,
+                        'review_comment' => null,
+                    ]);
+                }
+
                 return $photoReport->refresh();
             }
         );
     }
 
-    public function deletePhoto(
-        PhotoReport $photoReport,
-        Photo $photo
-    ): void {
+    public function deletePhoto(PhotoReport $photoReport, Photo $photo): void
+    {
         if (! $this->canEdit($photoReport)) {
             throw new DomainException(
                 'Нельзя изменять фотографии одобренного фотоотчета.'

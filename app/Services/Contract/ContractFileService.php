@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services;
+namespace App\Services\Contract;
 
 use App\Models\Contract;
 use App\Models\ContractFile;

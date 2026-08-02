@@ -6,11 +6,14 @@ use App\Models\Contract;
 use App\Models\ContractAddendum;
 use App\Models\Counterparty;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Validation\Rule;
 use Livewire\Component;
 
 class Edit extends Component
 {
+    use AuthorizesRequests;
+
     public Contract $contract;
 
     public Collection $counterparties;
@@ -82,6 +85,8 @@ class Edit extends Component
 
     public function mount(Contract $contract): void
     {
+        $this->authorize('update', $contract);
+
         $this->contract = $contract;
 
         $this->counterparties = Counterparty::query()
@@ -99,6 +104,11 @@ class Edit extends Component
 
     public function update(): void
     {
+        $this->authorize(
+            'update',
+            $this->contract
+        );
+
         $validated = $this->validate();
 
         $this->contract->update($validated);
@@ -116,6 +126,11 @@ class Edit extends Component
 
     public function deleteAddendum(int $id): void
     {
+        $this->authorize(
+            'update',
+            $this->contract
+        );
+
         $contractAddendum = ContractAddendum::findOrFail($id);
 
         if ($contractAddendum->contract_id !== $this->contract->id) {

@@ -4,7 +4,7 @@ namespace App\Livewire\Contracts;
 
 use App\Models\Contract;
 use App\Models\Counterparty;
-use App\Services\ContractFileService;
+use App\Services\Contract\ContractFileService;
 use Illuminate\Database\Eloquent\Collection;
 use Livewire\Attributes\Validate;
 use Livewire\Component;

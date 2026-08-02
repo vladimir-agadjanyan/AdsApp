@@ -32,8 +32,31 @@ class User extends Authenticatable
         ];
     }
 
+    /**
+     * @return BelongsTo<Role, $this>
+     */
     public function role(): BelongsTo
     {
         return $this->belongsTo(Role::class);
+    }
+
+    public function hasRole(string $role): bool
+    {
+        return $this->role?->name === $role;
+    }
+
+    public function isAdmin(): bool
+    {
+        return $this->hasRole('Администратор');
+    }
+
+    public function isManager(): bool
+    {
+        return $this->hasRole('Менеджер');
+    }
+
+    public function isSecurity(): bool
+    {
+        return $this->hasRole('Проверяющий');
     }
 }
