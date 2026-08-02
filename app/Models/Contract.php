@@ -44,7 +44,9 @@ class Contract extends Model
             'amount' => 'decimal:2',
         ];
     }
-
+    /**
+     * @return BelongsTo<Counterparty, $this>
+     */
     public function counterparty(): BelongsTo
     {
         return $this->belongsTo(Counterparty::class);

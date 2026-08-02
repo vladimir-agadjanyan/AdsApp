@@ -118,7 +118,7 @@
 
                     <tr>
                         <th class="table-light">
-                            Статус
+                            Статус объекта
                         </th>
 
                         <td>
@@ -340,23 +340,23 @@
 
                                     {{-- Документы соглашения --}}
                                     <td>
-                                    
+
                                         @if($addendum->files->isEmpty())
-                                    
+
                                             <span class="text-muted">
                                                 —
                                             </span>
-                                        
+
                                         @else
-                                        
+
                                             <div class="d-flex flex-column gap-2">
-                                            
+
                                                 @foreach($addendum->files as $file)
-                                            
+
                                                     <div class="border rounded px-2 py-2">
-                                                    
+
                                                         <div class="fw-semibold text-truncate">
-                                                        
+
                                                             <button
                                                                 type="button"
                                                                 class="btn btn-link p-0 fw-semibold text-decoration-none text-start"
@@ -365,13 +365,13 @@
                                                             >
                                                                 {{ $file->original_name }}
                                                             </button>
-                                                        
+
                                                         </div>
-                                                    
+
                                                         <div class="small text-muted mt-1">
-                                                        
+
                                                             {{ $file->created_at?->format('d.m.Y H:i') ?? '—' }}
-                                                        
+
                                                             @if($file->file_size)
                                                                 ·
                                                                 {{ number_format(
@@ -380,17 +380,17 @@
                                                                 ) }}
                                                                 КБ
                                                             @endif
-                                                                
+
                                                         </div>
-                                                    
+
                                                     </div>
-                                                
+
                                                 @endforeach
-                                                
+
                                             </div>
-                                        
+
                                         @endif
-                                        
+
                                     </td>
 
                                 </tr>

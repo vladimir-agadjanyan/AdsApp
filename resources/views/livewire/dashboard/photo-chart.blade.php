@@ -1,4 +1,5 @@
 <div class="card shadow-sm h-100">
+
     <div class="card-header">
         <h5 class="mb-0">
             <i class="bi bi-pie-chart-fill me-2"></i>
@@ -11,43 +12,42 @@
             <canvas id="photoChart"></canvas>
         </div>
     </div>
+
 </div>
 
 @script
 <script>
-    const ctx = document.getElementById('photoChart');
+    const canvas = document.getElementById('photoChart');
 
-    new Chart(ctx, {
-        type: 'doughnut',
-        data: {
-            labels: @json($chartData['labels']),
-            datasets: [{
-                data: @json($chartData['data']),
-                backgroundColor: [
-                    '#28a745',
-                    '#ffc107',
-                    '#dc3545',
-                ],
-                borderWidth: 2,
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-
-            plugins: {
-                legend: {
-                    position: 'bottom',
-                    labels: {
-                        usePointStyle: true,
-                        pointStyle: 'circle',
-                        padding: 20,
-                    }
-                }
+    if (canvas) {
+        new Chart(canvas, {
+            type: 'doughnut',
+            data: {
+                labels: @js($chartData['labels']),
+                datasets: [{
+                    data: @js($chartData['data']),
+                    backgroundColor: @js($chartData['colors']),
+                    borderColor: '#ffffff',
+                    borderWidth: 2,
+                }]
             },
 
-            cutout: '60%',
-        }
-    });
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                cutout: '60%',
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            usePointStyle: true,
+                            pointStyle: 'circle',
+                            padding: 20,
+                        }
+                    }
+                }
+            }
+        });
+    }
 </script>
 @endscript

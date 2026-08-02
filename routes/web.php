@@ -23,11 +23,10 @@ use App\Livewire\PhotoReports\Create as PhotoReportsCreate;
 use App\Livewire\PhotoReports\Show as PhotoReportsShow;
 use App\Livewire\PhotoReports\Edit as PhotoReportsEdit;
 
-
+use App\Livewire\Map\Index as MapIndex;
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
-
 
 
 Route::middleware('guest')->group(function () {
@@ -59,6 +58,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/photo-reports/create', PhotoReportsCreate::class)->name('photo-reports.create');
     Route::get('/photo-reports/{photoReport}', PhotoReportsShow::class)->name('photo-reports.show');
     Route::get('/photo-reports/{photoReport}/edit', PhotoReportsEdit::class)->name('photo-reports.edit');
+
+    Route::get('/map', MapIndex::class)->name('map.index');
 
     Route::post('/logout', function () {
         Auth::logout();

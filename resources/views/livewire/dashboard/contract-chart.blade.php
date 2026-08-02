@@ -48,13 +48,21 @@
                     'Скоро заканчиваются',
                     'Просрочены'
                 ],
-
                 datasets: [{
                     data: [
                         @js($chartData['active']),
                         @js($chartData['expiring']),
                         @js($chartData['expired'])
-                    ]
+                    ],
+                                
+                    backgroundColor: [
+                        '#22c55e', // Активные — зеленый
+                        '#f59e0b', // Истекают — желтый
+                        '#ef4444'  // Просрочены — красный
+                    ],
+                                
+                    borderColor: '#ffffff',
+                    borderWidth: 2
                 }]
             },
 

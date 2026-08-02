@@ -1,4 +1,9 @@
-<div x-data="{ showFilters: false }">
+@props([
+    'open' => false,
+    'title' => 'Фильтры',
+])
+
+<div x-data="{ showFilters: @js($open) }">
 
     <div class="mb-4">
         <button
@@ -11,7 +16,7 @@
                 :class="showFilters ? 'bi-chevron-up' : 'bi-chevron-down'"
             ></i>
 
-            {{ $title ?? 'Фильтры' }}
+            {{ $title }}
         </button>
     </div>
 

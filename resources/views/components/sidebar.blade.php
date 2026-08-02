@@ -15,7 +15,7 @@
         </a>
 
         <a href="{{ route('contracts.index') }}" class="sidebar-link {{ request()->routeIs('contracts.*') ? 'active' : '' }}">
-            <i class="bi bi-file-earmark-text me-2"></i>
+            <i class="bi bi-file-earmark-text"></i>
              Договоры
          </a>
 
@@ -29,12 +29,12 @@
             <span>Объекты</span>
         </a>
 
-        <a href="{{ route('photo-reports.index') }}"  class="sidebar-link {{ request()->routeIs('advertising-objects.*') ? 'active' : '' }}">
+        <a href="{{ route('photo-reports.index') }}"  class="sidebar-link {{ request()->routeIs('photo-reports.*') ? 'active' : '' }}">
             <i class="bi bi-camera"></i>
             <span>Фотоотчеты</span>
         </a>
 
-        <a href="#" class="sidebar-link">
+        <a href="{{ route('map.index') }}"  class="sidebar-link {{ request()->routeIs('map.*') ? 'active' : '' }}">
             <i class="bi bi-map"></i>
             <span>Карта</span>
         </a>
