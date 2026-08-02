@@ -9,6 +9,7 @@ use App\Models\Counterparty;
 use App\Models\ObjectStatus;
 use App\Models\Region;
 use App\Services\AdvertisingObjectService;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use DomainException;
 
 
@@ -18,6 +19,7 @@ use Livewire\WithPagination;
 class Index extends Component
 {
     use WithPagination;
+    use AuthorizesRequests;
 
     public string $search = '';
 
@@ -29,6 +31,17 @@ class Index extends Component
     public bool $showDeleteModal = false;
 
     public ?AdvertisingObject $advertisingObjectToDelete = null;
+
+    public function mount(): void
+    {
+        $this->authorize('viewAny', AdvertisingObject::class);
+    }
+
+    public function updatedRegionId(): void
+    {
+        $this->cityId = null;
+        $this->resetPage();
+    }
 
     public function updating(): void
     {
@@ -49,11 +62,13 @@ class Index extends Component
         $this->resetPage();
     }
 
-    public function confirmDelete(AdvertisingObject $advertisingObject): void
-    {
-        $this->advertisingObjectToDelete = $advertisingObject;
-        $this->showDeleteModal = true;
-    }
+public function confirmDelete(AdvertisingObject $advertisingObject): void
+{
+    $this->authorize('delete', $advertisingObject);
+
+    $this->advertisingObjectToDelete = $advertisingObject;
+    $this->showDeleteModal = true;
+}
 
     public function cancelDelete(): void
     {
@@ -63,12 +78,13 @@ class Index extends Component
 
     public function delete(AdvertisingObjectService $service): void
     {
+        $this->authorize('delete', $this->advertisingObjectToDelete);
+        
         if (! $this->advertisingObjectToDelete) {
             return;
         }
 
-        try {
-            $service->delete($this->advertisingObjectToDelete);
+        try {$service->delete($this->advertisingObjectToDelete);
 
             session()->flash(
                 'success',

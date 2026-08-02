@@ -4,25 +4,38 @@
 
     {{-- Заголовок --}}
     <div class="d-flex justify-content-between align-items-center mb-4">
-        <h2>Рекламные объекты</h2>
+        <h2 class="section-title mb-0">
+            Рекламные объекты
+        </h2>
     </div>
 
-    {{-- Поиск + кнопка --}}
+    {{-- Кнопка + поиск --}}
     <div class="row align-items-center mb-3">
-        <div class="col-lg-auto mb-3 mb-lg-0">
-            <a href="{{ route('advertising-objects.create') }}" class="btn btn-primary">
-                <i class="bi bi-plus-lg"></i>
-                Новый объект
-            </a>
-        </div>
+
+        @can('create', \App\Models\AdvertisingObject::class)
+            <div class="col-lg-auto mb-3 mb-lg-0">
+                <a href="{{ route('advertising-objects.create') }}" wire:navigate class="btn btn-primary">
+                    <i class="bi bi-plus-lg me-1"></i>
+                    Новый объект
+                </a>
+            </div>
+        @endcan
+
         <div class="col-lg-5">
             <div class="input-group">
-                <input type="text" class="form-control" placeholder="Поиск..." wire:model.live.debounce.300ms="search">
+                <input
+                    type="text"
+                    class="form-control"
+                    wire:model.live.debounce.300ms="search"
+                    placeholder="Поиск по названию, адресу, договору..."
+                >
+
                 <span class="input-group-text">
                     <i class="bi bi-search"></i>
                 </span>
             </div>
         </div>
+
     </div>
 
     {{-- Фильтры --}}
@@ -39,7 +52,9 @@
                     class="form-select"
                     wire:model.live="advertisingTypeId"
                 >
-                    <option value="">Все типы</option>
+                    <option value="">
+                        Все типы
+                    </option>
 
                     @foreach($advertisingTypes as $type)
                         <option value="{{ $type->id }}">
@@ -58,7 +73,9 @@
                     class="form-select"
                     wire:model.live="counterpartyId"
                 >
-                    <option value="">Все контрагенты</option>
+                    <option value="">
+                        Все контрагенты
+                    </option>
 
                     @foreach($counterparties as $counterparty)
                         <option value="{{ $counterparty->id }}">
@@ -77,7 +94,9 @@
                     class="form-select"
                     wire:model.live="objectStatusId"
                 >
-                    <option value="">Все статусы</option>
+                    <option value="">
+                        Все статусы
+                    </option>
 
                     @foreach($objectStatuses as $status)
                         <option value="{{ $status->id }}">
@@ -100,7 +119,9 @@
                     class="form-select"
                     wire:model.live="regionId"
                 >
-                    <option value="">Все регионы</option>
+                    <option value="">
+                        Все регионы
+                    </option>
 
                     @foreach($regions as $region)
                         <option value="{{ $region->id }}">
@@ -110,8 +131,6 @@
                 </select>
             </div>
 
-
-
             <div class="col-lg-4">
                 <label class="form-label">
                     Город
@@ -120,8 +139,11 @@
                 <select
                     class="form-select"
                     wire:model.live="cityId"
+                    @disabled(!$regionId)
                 >
-                    <option value="">Все города</option>
+                    <option value="">
+                        {{ $regionId ? 'Все города' : 'Сначала выберите регион' }}
+                    </option>
 
                     @foreach($cities as $city)
                         <option value="{{ $city->id }}">
@@ -146,10 +168,12 @@
 
     </x-filters-panel>
 
+    {{-- Таблица --}}
     <div class="table-responsive">
 
-        <table class="table table-hover align-middle">
-            <thead>
+        <table class="table table-hover align-middle mb-0">
+
+            <thead class="table-light">
                 <tr>
                     <th>Название</th>
                     <th>Контрагент</th>
@@ -157,56 +181,111 @@
                     <th>Город</th>
                     <th>Тип</th>
                     <th>Статус</th>
-                    <th width="120">Действия</th>
+                    <th>Действия</th>
                 </tr>
             </thead>
+
             <tbody>
 
-            @forelse($advertisingObjects as $object)
+                @forelse($advertisingObjects as $object)
 
-                <tr>
+                    <tr>
 
-                    <td>
-                        <a href="{{ route('advertising-objects.show', $object) }}" wire:navigate>
-                            {{ $object->name }}
-                        </a>
-                    </td>
-                    <td>{{ $object->contract->counterparty->name }}</td>
-                    <td>{{ $object->city->region->name }}</td>
-                    <td>{{ $object->city->name }}</td>
-                    <td>{{ $object->advertisingType->name }}</td>
-                    <td>
-                        <span class="badge text-bg-{{ $object->objectStatus->color }}">
-                            {{ $object->objectStatus->name }}
-                        </span>
-                    </td>
-                    <td>
+                        {{-- Название --}}
+                        <td>
+                            <a
+                                href="{{ route('advertising-objects.show', $object) }}"
+                                wire:navigate
+                            >
+                                {{ $object->name }}
+                            </a>
+                        </td>
 
-                        <div class="btn-group">
+                        {{-- Контрагент --}}
+                        <td>
+                            {{ $object->contract->counterparty->name }}
+                        </td>
 
-                            <a href="{{ route('advertising-objects.edit', $object) }}" class="btn btn-sm btn-outline-primary">
-                                <i class="bi bi-pencil"></i>
+                        {{-- Регион --}}
+                        <td>
+                            {{ $object->city->region->name }}
+                        </td>
+
+                        {{-- Город --}}
+                        <td>
+                            {{ $object->city->name }}
+                        </td>
+
+                        {{-- Тип --}}
+                        <td>
+                            {{ $object->advertisingType->name }}
+                        </td>
+
+                        {{-- Статус --}}
+                        <td>
+                            <span class="badge text-bg-{{ $object->objectStatus->color }}">
+                                {{ $object->objectStatus->name }}
+                            </span>
+                        </td>
+
+                        {{-- Действия --}}
+                        <td class="text-start">
+
+                            <a
+                                href="{{ route('advertising-objects.show', $object) }}"
+                                wire:navigate
+                                class="btn btn-sm btn-outline-primary"
+                                title="Просмотр"
+                            >
+                                <i class="bi bi-eye"></i>
                             </a>
 
-                            <button type="button" class="btn btn-sm btn-outline-danger" wire:click="confirmDelete({{ $object->id }})">
-                                <i class="bi bi-trash"></i>
-                            </button>
+                            @can('update', $object)
+                                <a
+                                    href="{{ route('advertising-objects.edit', $object) }}"
+                                    wire:navigate
+                                    class="btn btn-sm btn-outline-primary"
+                                    title="Редактировать"
+                                >
+                                    <i class="bi bi-pencil"></i>
+                                </a>
+                            @endcan
 
-                        </div>
+                            @can('delete', $object)
+                                <button
+                                    type="button"
+                                    class="btn btn-sm btn-outline-danger"
+                                    wire:click="confirmDelete({{ $object->id }})"
+                                    title="Удалить"
+                                >
+                                    <i class="bi bi-trash"></i>
+                                </button>
+                            @endcan
 
-                    </td>
+                        </td>
 
-                </tr>
+                    </tr>
 
-            @empty
+                @empty
 
-                <tr>
-                    <td colspan="7" class="text-center text-muted py-5">
-                        Рекламные объекты не найдены.
-                    </td>
-                </tr>
+                    <tr>
+                        <td
+                            colspan="7"
+                            class="text-center py-5"
+                        >
+                            <i class="bi bi-pin-map fs-1 text-secondary d-block mb-3"></i>
 
-            @endforelse
+                            <h5 class="mb-2">
+                                Рекламные объекты не найдены
+                            </h5>
+
+                            <p class="text-muted mb-0">
+                                Измените параметры поиска или создайте новый объект.
+                            </p>
+                        </td>
+                    </tr>
+
+                @endforelse
 
             </tbody>
 
@@ -214,12 +293,21 @@
 
     </div>
 
-    @if ($showDeleteModal)
-        <div class="modal fade show d-block" tabindex="-1" style="background: rgba(0, 0, 0, .5);">
+    {{-- Модальное окно удаления --}}
+    @if($showDeleteModal)
+
+        <div
+            class="modal fade show d-block"
+            tabindex="-1"
+            style="background: rgba(0, 0, 0, .5);"
+        >
+
             <div class="modal-dialog">
+
                 <div class="modal-content">
 
                     <div class="modal-header">
+
                         <h5 class="modal-title">
                             Удалить рекламный объект
                         </h5>
@@ -229,6 +317,7 @@
                             class="btn-close"
                             wire:click="cancelDelete"
                         ></button>
+
                     </div>
 
                     <div class="modal-body">
@@ -241,11 +330,13 @@
                             {{ $advertisingObjectToDelete?->name }}
                         </p>
 
-                        @if ($advertisingObjectToDelete?->contract?->counterparty)
+                        @if($advertisingObjectToDelete?->contract?->counterparty)
+
                             <p class="text-muted mb-3">
                                 Контрагент:
                                 {{ $advertisingObjectToDelete->contract->counterparty->name }}
                             </p>
+
                         @endif
 
                         <div class="alert alert-warning mb-0">
@@ -276,10 +367,14 @@
                     </div>
 
                 </div>
+
             </div>
+
         </div>
+
     @endif
 
-    <x-pagination :paginator="$advertisingObjects"/>
+    {{-- Пагинация --}}
+    <x-pagination :paginator="$advertisingObjects" />
 
 </div>

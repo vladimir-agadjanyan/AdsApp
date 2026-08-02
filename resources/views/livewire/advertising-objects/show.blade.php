@@ -9,16 +9,18 @@
             Рекламный объект
         </h2>
 
-        <div class="btn-group">
+        <div class="d-flex gap-2">
 
-            <a
-                href="{{ route('advertising-objects.edit', $advertisingObject) }}"
-                wire:navigate
-                class="btn btn-primary"
-            >
-                <i class="bi bi-pencil me-1"></i>
-                Редактировать
-            </a>
+            @can('update', $advertisingObject)
+                <a
+                    href="{{ route('advertising-objects.edit', $advertisingObject) }}"
+                    wire:navigate
+                    class="btn btn-primary"
+                >
+                    <i class="bi bi-pencil me-1"></i>
+                    Редактировать
+                </a>
+            @endcan
 
             <a
                 href="{{ route('advertising-objects.index') }}"
@@ -44,6 +46,7 @@
 
             <div class="row g-4">
 
+                {{-- Название --}}
                 <div class="col-md-6">
                     <label class="form-label text-muted">
                         Название
@@ -54,26 +57,7 @@
                     </div>
                 </div>
 
-                <div class="col-md-6">
-                    <label class="form-label text-muted">
-                        Контрагент
-                    </label>
-
-                    <div>
-                        {{ $advertisingObject->contract->counterparty->name }}
-                    </div>
-                </div>
-
-                <div class="col-md-6">
-                    <label class="form-label text-muted">
-                        Тип рекламы
-                    </label>
-
-                    <div>
-                        {{ $advertisingObject->advertisingType->name }}
-                    </div>
-                </div>
-
+                {{-- Статус --}}
                 <div class="col-md-6">
                     <label class="form-label text-muted">
                         Статус
@@ -86,6 +70,73 @@
                     </div>
                 </div>
 
+                {{-- Контрагент --}}
+                <div class="col-md-6">
+                    <label class="form-label text-muted">
+                        Контрагент
+                    </label>
+
+                    <div>
+                        {{ $advertisingObject->contract->counterparty->name }}
+                    </div>
+                </div>
+
+                {{-- Договор --}}
+                <div class="col-md-6">
+                    <label class="form-label text-muted">
+                        Договор
+                    </label>
+
+                    <div>
+                        <a
+                            href="{{ route('contracts.show', $advertisingObject->contract) }}"
+                            wire:navigate
+                        >
+                            № {{ $advertisingObject->contract->number }}
+                        </a>
+                    </div>
+                </div>
+
+                {{-- Тип рекламы --}}
+                <div class="col-md-6">
+                    <label class="form-label text-muted">
+                        Тип рекламы
+                    </label>
+
+                    <div>
+                        {{ $advertisingObject->advertisingType->name }}
+                    </div>
+                </div>
+
+                {{-- Примечание --}}
+                <div class="col-md-6">
+                    <label class="form-label text-muted">
+                        Примечание
+                    </label>
+
+                    <div>
+                        {{ $advertisingObject->note ?: '—' }}
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    {{-- Местоположение --}}
+    <div class="card shadow-sm mb-4">
+
+        <div class="card-header">
+            <strong>Местоположение</strong>
+        </div>
+
+        <div class="card-body">
+
+            <div class="row g-4">
+
+                {{-- Регион --}}
                 <div class="col-md-6">
                     <label class="form-label text-muted">
                         Регион
@@ -96,6 +147,7 @@
                     </div>
                 </div>
 
+                {{-- Город --}}
                 <div class="col-md-6">
                     <label class="form-label text-muted">
                         Город
@@ -106,7 +158,8 @@
                     </div>
                 </div>
 
-                <div class="col-md-6">
+                {{-- Адрес --}}
+                <div class="col-12">
                     <label class="form-label text-muted">
                         Адрес
                     </label>
@@ -116,33 +169,25 @@
                     </div>
                 </div>
 
-                <div class="col-md-3">
+                {{-- Широта --}}
+                <div class="col-md-6">
                     <label class="form-label text-muted">
                         Широта
                     </label>
 
                     <div>
-                        {{ $advertisingObject->latitude }}
+                        {{ $advertisingObject->latitude ?? '—' }}
                     </div>
                 </div>
 
-                <div class="col-md-3">
+                {{-- Долгота --}}
+                <div class="col-md-6">
                     <label class="form-label text-muted">
                         Долгота
                     </label>
 
                     <div>
-                        {{ $advertisingObject->longitude }}
-                    </div>
-                </div>
-
-                <div class="col-12">
-                    <label class="form-label text-muted">
-                        Примечание
-                    </label>
-
-                    <div>
-                        {{ $advertisingObject->note ?: '—' }}
+                        {{ $advertisingObject->longitude ?? '—' }}
                     </div>
                 </div>
 
@@ -163,8 +208,7 @@
 
             <table class="table table-hover align-middle mb-0">
 
-                <thead>
-
+                <thead class="table-light">
                     <tr>
                         <th>Дата</th>
                         <th>Статус</th>
@@ -175,66 +219,67 @@
                             Действия
                         </th>
                     </tr>
-
                 </thead>
 
                 <tbody>
 
-                @forelse($advertisingObject->photoReports as $photoReport)
+                    @forelse($advertisingObject->photoReports as $photoReport)
 
-                    <tr>
+                        <tr>
 
-                        <td>
-                            {{ $photoReport->created_at->format('d.m.Y') }}
-                        </td>
+                            <td>
+                                {{ $photoReport->created_at->format('d.m.Y') }}
+                            </td>
 
-                        <td>
+                            <td>
+                                <span class="badge text-bg-{{ $photoReport->photoReportStatus->color }}">
+                                    {{ $photoReport->photoReportStatus->name }}
+                                </span>
+                            </td>
 
-                            <span class="badge text-bg-{{ $photoReport->photoReportStatus->color }}">
-                                {{ $photoReport->photoReportStatus->name }}
-                            </span>
+                            <td class="text-center">
+                                {{ $photoReport->photos->count() }}
+                            </td>
 
-                        </td>
+                            <td>
 
-                        <td class="text-center">
-                            {{ $photoReport->photos->count() }}
-                        </td>
+                                <a
+                                    href="{{ route('photo-reports.show', $photoReport) }}"
+                                    wire:navigate
+                                    class="btn btn-sm btn-outline-primary"
+                                    title="Просмотр"
+                                >
+                                    <i class="bi bi-eye"></i>
+                                </a>
 
-                        <td>
+                            </td>
 
-                            <a
-                                href="{{ route('photo-reports.show', $photoReport) }}"
-                                wire:navigate
-                                class="btn btn-sm btn-outline-primary"
+                        </tr>
+
+                    @empty
+
+                        <tr>
+
+                            <td
+                                colspan="4"
+                                class="text-center py-5"
                             >
-                                <i class="bi bi-eye"></i>
-                            </a>
 
-                        </td>
+                                <i class="bi bi-images fs-1 text-secondary d-block mb-3"></i>
 
-                    </tr>
+                                <h5 class="mb-2">
+                                    Фотоотчетов пока нет
+                                </h5>
 
-                @empty
+                                <p class="text-muted mb-0">
+                                    Для данного рекламного объекта еще не создано ни одного фотоотчета.
+                                </p>
 
-                    <tr>
+                            </td>
 
-                        <td colspan="4" class="text-center py-5">
+                        </tr>
 
-                            <i class="bi bi-images fs-1 text-secondary d-block mb-3"></i>
-
-                            <h5 class="mb-2">
-                                Фотоотчетов пока нет
-                            </h5>
-
-                            <p class="text-muted mb-0">
-                                Для данного рекламного объекта еще не создано ни одного фотоотчета.
-                            </p>
-
-                        </td>
-
-                    </tr>
-
-                @endforelse
+                    @endforelse
 
                 </tbody>
 

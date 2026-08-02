@@ -41,14 +41,6 @@ class AdvertisingObject extends Model
     }
 
     /**
-     * @return BelongsTo<Region, $this>
-     */
-    public function region(): BelongsTo
-    {
-        return $this->belongsTo(Region::class);
-    }
-
-    /**
      * @return BelongsTo<City, $this>
      */
     public function city(): BelongsTo

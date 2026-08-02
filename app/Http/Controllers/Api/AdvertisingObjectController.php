@@ -19,8 +19,7 @@ class AdvertisingObjectController extends Controller
         $objects = AdvertisingObject::with([
             'contract',
             'advertisingType',
-            'region',
-            'city',
+            'city.region',
             'objectStatus',
             'createdBy',
         ])->paginate();
@@ -39,8 +38,7 @@ class AdvertisingObjectController extends Controller
         $advertisingObject->load([
             'contract',
             'advertisingType',
-            'region',
-            'city',
+            'city.region',
             'objectStatus',
             'createdBy',
         ]);
@@ -55,8 +53,7 @@ class AdvertisingObjectController extends Controller
         $advertisingObject->load([
             'contract',
             'advertisingType',
-            'region',
-            'city',
+            'city.region',
             'objectStatus',
             'createdBy',
         ]);
@@ -71,8 +68,7 @@ class AdvertisingObjectController extends Controller
         $advertisingObject->load([
             'contract',
             'advertisingType',
-            'region',
-            'city',
+            'city.region',
             'objectStatus',
             'createdBy',
         ]);
