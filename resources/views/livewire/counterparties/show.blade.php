@@ -11,14 +11,18 @@
 
         <div class="btn-group">
 
-            <a
-                href="{{ route('counterparties.edit', $counterparty) }}"
-                wire:navigate
-                class="btn btn-primary"
-            >
-                <i class="bi bi-pencil me-1"></i>
-                Редактировать
-            </a>
+            @can('update', $counterparty)
+
+                <a
+                    href="{{ route('counterparties.edit', $counterparty) }}"
+                    wire:navigate
+                    class="btn btn-primary"
+                >
+                    <i class="bi bi-pencil me-1"></i>
+                    Редактировать
+                </a>
+
+            @endcan
 
             <a
                 href="{{ route('counterparties.index') }}"
@@ -45,6 +49,7 @@
             <div class="row g-4">
 
                 <div class="col-md-6">
+
                     <label class="form-label text-muted">
                         Название
                     </label>
@@ -52,9 +57,11 @@
                     <div class="fw-semibold">
                         {{ $counterparty->name }}
                     </div>
+
                 </div>
 
                 <div class="col-md-6">
+
                     <label class="form-label text-muted">
                         ИНН
                     </label>
@@ -62,9 +69,11 @@
                     <div>
                         {{ $counterparty->inn }}
                     </div>
+
                 </div>
 
                 <div class="col-md-6">
+
                     <label class="form-label text-muted">
                         Телефон
                     </label>
@@ -72,9 +81,11 @@
                     <div>
                         {{ $counterparty->phone ?: '—' }}
                     </div>
+
                 </div>
 
                 <div class="col-md-6">
+
                     <label class="form-label text-muted">
                         Email
                     </label>
@@ -82,9 +93,11 @@
                     <div>
                         {{ $counterparty->email ?: '—' }}
                     </div>
+
                 </div>
 
                 <div class="col-md-6">
+
                     <label class="form-label text-muted">
                         Контактное лицо
                     </label>
@@ -92,9 +105,11 @@
                     <div>
                         {{ $counterparty->contact_person ?: '—' }}
                     </div>
+
                 </div>
 
                 <div class="col-md-6">
+
                     <label class="form-label text-muted">
                         Адрес
                     </label>
@@ -102,9 +117,11 @@
                     <div>
                         {{ $counterparty->address ?: '—' }}
                     </div>
+
                 </div>
 
                 <div class="col-12">
+
                     <label class="form-label text-muted">
                         Примечание
                     </label>
@@ -112,6 +129,7 @@
                     <div>
                         {{ $counterparty->note ?: '—' }}
                     </div>
+
                 </div>
 
             </div>
@@ -146,76 +164,92 @@
 
                 <tbody>
 
-                @forelse($counterparty->contracts as $contract)
+                    @forelse($counterparty->contracts as $contract)
 
-                    <tr>
+                        <tr>
 
-                        <td>
+                            <td>
 
-                            <a
-                                href="{{ route('contracts.show', $contract) }}"
-                                wire:navigate
+                                @can('view', $contract)
+
+                                    <a
+                                        href="{{ route('contracts.show', $contract) }}"
+                                        wire:navigate
+                                    >
+                                        {{ $contract->number }}
+                                    </a>
+
+                                @else
+
+                                    {{ $contract->number }}
+
+                                @endcan
+
+                            </td>
+
+                            <td>
+                                {{ $contract->contract_date?->format('d.m.Y') ?? '—' }}
+                            </td>
+
+                            <td>
+                                {{ $contract->start_date?->format('d.m.Y') ?? '—' }}
+                            </td>
+
+                            <td>
+                                {{ $contract->end_date?->format('d.m.Y') ?? '—' }}
+                            </td>
+
+                            <td>
+
+                                <span class="badge bg-{{ $contract->statusClass }}">
+                                    {{ $contract->statusLabel }}
+                                </span>
+
+                            </td>
+
+                            <td>
+
+                                @can('view', $contract)
+
+                                    <a
+                                        href="{{ route('contracts.show', $contract) }}"
+                                        wire:navigate
+                                        class="btn btn-sm btn-outline-primary"
+                                        title="Просмотр"
+                                    >
+                                        <i class="bi bi-eye"></i>
+                                    </a>
+
+                                @endcan
+
+                            </td>
+
+                        </tr>
+
+                    @empty
+
+                        <tr>
+
+                            <td
+                                colspan="6"
+                                class="text-center py-5"
                             >
-                                {{ $contract->number }}
-                            </a>
 
-                        </td>
+                                <i class="bi bi-folder2-open fs-1 text-secondary d-block mb-3"></i>
 
-                        <td>
-                            {{ $contract->contract_date?->format('d.m.Y') }}
-                        </td>
+                                <h5 class="mb-2">
+                                    Договоров пока нет
+                                </h5>
 
-                        <td>
-                            {{ $contract->start_date?->format('d.m.Y') }}
-                        </td>
+                                <p class="text-muted mb-0">
+                                    У данного контрагента отсутствуют договоры.
+                                </p>
 
-                        <td>
-                            {{ $contract->end_date?->format('d.m.Y') }}
-                        </td>
+                            </td>
 
-                        <td>
+                        </tr>
 
-                            <span class="badge bg-{{ $contract->statusClass }}">
-                                {{ $contract->statusLabel }}
-                            </span>
-
-                        </td>
-
-                        <td>
-
-                            <a
-                                href="{{ route('contracts.show', $contract) }}"
-                                wire:navigate
-                                class="btn btn-sm btn-outline-primary"
-                            >
-                                <i class="bi bi-eye"></i>
-                            </a>
-
-                        </td>
-
-                    </tr>
-
-                @empty
-
-                    <tr>
-
-                        <td colspan="6" class="text-center py-5">
-
-                            <i class="bi bi-folder2-open fs-1 text-secondary d-block mb-3"></i>
-
-                            <h5 class="mb-2">
-                                Договоров пока нет
-                            </h5>
-
-                            <p class="text-muted mb-0">
-                                У данного контрагента отсутствуют договоры.
-                            </p>
-
-                        </td>
-
-                    </tr>
-
-                @endforelse
+                    @endforelse
 
                 </tbody>
 

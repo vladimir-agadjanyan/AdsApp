@@ -1,8 +1,12 @@
 <div class="counterparties-page">
 
     <div class="d-flex justify-content-between align-items-center mb-4">
+
         <div>
-            <h1 class="h3 mb-1">Новый контрагент</h1>
+            <h1 class="h3 mb-1">
+                Новый контрагент
+            </h1>
+
             <p class="text-body-secondary mb-0">
                 Заполните информацию о новом контрагенте.
             </p>
@@ -16,19 +20,23 @@
             <i class="bi bi-arrow-left me-1"></i>
             Назад
         </a>
+
     </div>
 
     <form wire:submit="save">
 
         <div class="card shadow-sm border-0">
+
             <div class="card-body">
 
                 <div class="row g-4">
 
                     {{-- Название --}}
                     <div class="col-md-6">
+
                         <label class="form-label">
-                            Название компании <span class="text-danger">*</span>
+                            Название компании
+                            <span class="text-danger">*</span>
                         </label>
 
                         <input
@@ -38,14 +46,19 @@
                         >
 
                         @error('name')
-                            <div class="invalid-feedback">{{ $message }}</div>
+                            <div class="invalid-feedback">
+                                {{ $message }}
+                            </div>
                         @enderror
+
                     </div>
 
                     {{-- ИНН --}}
                     <div class="col-md-6">
+
                         <label class="form-label">
-                            ИНН <span class="text-danger">*</span>
+                            ИНН
+                            <span class="text-danger">*</span>
                         </label>
 
                         <input
@@ -55,14 +68,19 @@
                         >
 
                         @error('inn')
-                            <div class="invalid-feedback">{{ $message }}</div>
+                            <div class="invalid-feedback">
+                                {{ $message }}
+                            </div>
                         @enderror
+
                     </div>
 
                     {{-- Контактное лицо --}}
                     <div class="col-md-6">
+
                         <label class="form-label">
-                            Контактное лицо <span class="text-danger">*</span>
+                            Контактное лицо
+                            <span class="text-danger">*</span>
                         </label>
 
                         <input
@@ -72,14 +90,19 @@
                         >
 
                         @error('contact_person')
-                            <div class="invalid-feedback">{{ $message }}</div>
+                            <div class="invalid-feedback">
+                                {{ $message }}
+                            </div>
                         @enderror
+
                     </div>
 
                     {{-- Телефон --}}
                     <div class="col-md-6">
+
                         <label class="form-label">
-                            Телефон <span class="text-danger">*</span>
+                            Телефон
+                            <span class="text-danger">*</span>
                         </label>
 
                         <input
@@ -89,12 +112,16 @@
                         >
 
                         @error('phone')
-                            <div class="invalid-feedback">{{ $message }}</div>
+                            <div class="invalid-feedback">
+                                {{ $message }}
+                            </div>
                         @enderror
+
                     </div>
 
                     {{-- Email --}}
                     <div class="col-md-6">
+
                         <label class="form-label">
                             Email
                         </label>
@@ -106,12 +133,16 @@
                         >
 
                         @error('email')
-                            <div class="invalid-feedback">{{ $message }}</div>
+                            <div class="invalid-feedback">
+                                {{ $message }}
+                            </div>
                         @enderror
+
                     </div>
 
                     {{-- Адрес --}}
                     <div class="col-md-6">
+
                         <label class="form-label">
                             Адрес
                         </label>
@@ -123,12 +154,16 @@
                         >
 
                         @error('address')
-                            <div class="invalid-feedback">{{ $message }}</div>
+                            <div class="invalid-feedback">
+                                {{ $message }}
+                            </div>
                         @enderror
+
                     </div>
 
                     {{-- Примечание --}}
                     <div class="col-12">
+
                         <label class="form-label">
                             Примечание
                         </label>
@@ -140,8 +175,11 @@
                         ></textarea>
 
                         @error('note')
-                            <div class="invalid-feedback">{{ $message }}</div>
+                            <div class="invalid-feedback">
+                                {{ $message }}
+                            </div>
                         @enderror
+
                     </div>
 
                 </div>
@@ -149,6 +187,7 @@
             </div>
 
             <div class="card-footer bg-white border-0">
+
                 <div class="d-flex justify-content-end gap-2">
 
                     <a
@@ -162,13 +201,34 @@
                     <button
                         type="submit"
                         class="btn btn-primary"
+                        wire:loading.attr="disabled"
+                        wire:target="save"
                     >
-                        <i class="bi bi-check-lg me-1"></i>
-                        Создать
+                        <span
+                            wire:loading.remove
+                            wire:target="save"
+                        >
+                            <i class="bi bi-check-lg me-1"></i>
+                            Создать
+                        </span>
+
+                        <span
+                            wire:loading
+                            wire:target="save"
+                        >
+                            <span
+                                class="spinner-border spinner-border-sm me-1"
+                                role="status"
+                            ></span>
+
+                            Создание...
+                        </span>
                     </button>
 
                 </div>
+
             </div>
+
         </div>
 
     </form>

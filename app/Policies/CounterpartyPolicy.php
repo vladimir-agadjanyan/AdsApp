@@ -2,10 +2,10 @@
 
 namespace App\Policies;
 
-use App\Models\PhotoReport;
+use App\Models\Counterparty;
 use App\Models\User;
 
-class PhotoReportPolicy
+class CounterpartyPolicy
 {
     public function viewAny(User $user): bool
     {
@@ -14,7 +14,7 @@ class PhotoReportPolicy
             || $user->isSecurity();
     }
 
-    public function view(User $user, PhotoReport $photoReport): bool
+    public function view(User $user, Counterparty $counterparty): bool
     {
         return $user->isAdmin()
             || $user->isManager()
@@ -27,23 +27,23 @@ class PhotoReportPolicy
             || $user->isManager();
     }
 
-    public function update(User $user, PhotoReport $photoReport): bool
+    public function update(User $user, Counterparty $counterparty): bool
     {
         return $user->isAdmin()
             || $user->isManager();
     }
 
-    public function delete(User $user, PhotoReport $photoReport): bool
+    public function delete(User $user, Counterparty $counterparty): bool
     {
         return $user->isAdmin();
     }
 
-    public function restore(User $user, PhotoReport $photoReport): bool
+    public function restore(User $user, Counterparty $counterparty): bool
     {
         return false;
     }
 
-    public function forceDelete(User $user, PhotoReport $photoReport): bool
+    public function forceDelete(User $user, Counterparty $counterparty): bool
     {
         return false;
     }

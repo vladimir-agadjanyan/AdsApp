@@ -4,22 +4,34 @@ namespace App\Livewire\Counterparties;
 
 use App\Models\Counterparty;
 use App\Services\CounterpartyService;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Validation\Rule;
 use Livewire\Component;
 
 class Edit extends Component
 {
+    use AuthorizesRequests;
+
     public Counterparty $counterparty;
+
     public string $name = '';
+
     public string $inn = '';
+
     public string $contact_person = '';
+
     public string $phone = '';
+
     public string $email = '';
+
     public string $address = '';
+
     public string $note = '';
 
     public function mount(Counterparty $counterparty): void
     {
+        $this->authorize('update', $counterparty);
+
         $this->counterparty = $counterparty;
 
         $this->name = $counterparty->name;
@@ -34,25 +46,73 @@ class Edit extends Component
     protected function rules(): array
     {
         return [
-            'name' => ['required', 'string', 'max:255', Rule::unique('counterparties', 'name')->ignore($this->counterparty)],
-            'inn' => ['required', 'string', 'max:255', Rule::unique('counterparties', 'inn')->ignore($this->counterparty)],
-            'contact_person' => ['required', 'string', 'max:255'],
-            'phone' => ['required', 'string', 'max:255'],
-            'email' => ['nullable', 'email','max:255'],
-            'address' => ['nullable', 'string', 'max:255'],
-            'note' => ['nullable', 'string'],
+            'name' => [
+                'required',
+                'string',
+                'max:255',
+                Rule::unique('counterparties', 'name')
+                    ->ignore($this->counterparty),
+            ],
+
+            'inn' => [
+                'required',
+                'string',
+                'max:20',
+                Rule::unique('counterparties', 'inn')
+                    ->ignore($this->counterparty),
+            ],
+
+            'contact_person' => [
+                'required',
+                'string',
+                'max:255',
+            ],
+
+            'phone' => [
+                'required',
+                'string',
+                'max:30',
+            ],
+
+            'email' => [
+                'nullable',
+                'email',
+                'max:255',
+            ],
+
+            'address' => [
+                'nullable',
+                'string',
+                'max:255',
+            ],
+
+            'note' => [
+                'nullable',
+                'string',
+            ],
         ];
     }
 
     public function save(CounterpartyService $service): void
     {
+        $this->authorize('update', $this->counterparty);
+
         $validated = $this->validate();
 
-        $service->update($this->counterparty, $validated);
+        $service->update(
+            $this->counterparty,
+            $validated
+        );
 
-        session()->flash('success', 'Контрагент успешно обновлен.');
+        session()->flash(
+            'success',
+            'Контрагент успешно обновлен.'
+        );
 
-        $this->redirectRoute('counterparties.index', navigate: true);
+        $this->redirectRoute(
+            'counterparties.index',
+            navigate: true
+        );
     }
 
     public function render()
