@@ -25,6 +25,12 @@ use App\Livewire\PhotoReports\Edit as PhotoReportsEdit;
 
 use App\Livewire\Map\Index as MapIndex;
 
+use App\Livewire\Reports\Index as ReportsIndex;
+use App\Livewire\Reports\Contracts as ContractsReport;
+use App\Livewire\Reports\AdvertisingObjects as AdvertisingObjectsReport;
+use App\Livewire\Reports\PhotoReports as PhotoReportsReport;
+use App\Livewire\Reports\Summary as SummaryReport;
+
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 
@@ -60,6 +66,12 @@ Route::middleware('auth')->group(function () {
     Route::get('/photo-reports/{photoReport}/edit', PhotoReportsEdit::class)->name('photo-reports.edit');
 
     Route::get('/map', MapIndex::class)->name('map.index');
+
+    Route::get('/reports', ReportsIndex::class)->name('reports.index');
+    Route::get('/reports/contracts', ContractsReport::class)->name('reports.contracts');
+    Route::get('/reports/advertising-objects', AdvertisingObjectsReport::class)->name('reports.advertising-objects');
+    Route::get('/reports/photo-reports', PhotoReportsReport::class)->name('reports.photo-reports');
+    Route::get('/reports/summary', SummaryReport::class)->name('reports.summary');
 
     Route::post('/logout', function () {
         Auth::logout();

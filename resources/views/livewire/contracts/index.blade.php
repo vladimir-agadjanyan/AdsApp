@@ -15,11 +15,7 @@
         {{-- Кнопка создания --}}
         @can('create', \App\Models\Contract::class)
             <div class="col-lg-auto mb-3 mb-lg-0">
-                <a
-                    href="{{ route('contracts.create') }}"
-                    wire:navigate
-                    class="btn btn-primary"
-                >
+                <a href="{{ route('contracts.create') }}" wire:navigate class="btn btn-primary">
                     <i class="bi bi-plus-lg me-1"></i>
                     Новый договор
                 </a>
@@ -29,13 +25,7 @@
         {{-- Поиск --}}
         <div class="col-lg-5">
             <div class="input-group">
-                <input
-                    type="text"
-                    class="form-control"
-                    wire:model.live.debounce.300ms="search"
-                    placeholder="Поиск по номеру договора..."
-                >
-
+                <input type="text" class="form-control" wire:model.live.debounce.300ms="search" placeholder="Поиск по номеру договора...">
                 <span class="input-group-text">
                     <i class="bi bi-search"></i>
                 </span>
@@ -54,10 +44,7 @@
                     Контрагент
                 </label>
 
-                <select
-                    class="form-select"
-                    wire:model.live="counterpartyId"
-                >
+                <select class="form-select" wire:model.live="counterpartyId">
                     <option value="">
                         Все контрагенты
                     </option>
@@ -75,10 +62,7 @@
                     Статус
                 </label>
 
-                <select
-                    class="form-select"
-                    wire:model.live="status"
-                >
+                <select class="form-select" wire:model.live="status">
                     <option value="">
                         Все статусы
                     </option>
@@ -106,11 +90,7 @@
                     Дата договора от
                 </label>
 
-                <input
-                    type="date"
-                    class="form-control"
-                    wire:model.live="contractDateFrom"
-                >
+                <input type="date" class="form-control" wire:model.live="contractDateFrom">
             </div>
 
             <div class="col-lg-3">
@@ -118,11 +98,7 @@
                     Дата договора до
                 </label>
 
-                <input
-                    type="date"
-                    class="form-control"
-                    wire:model.live="contractDateTo"
-                >
+                <input type="date" class="form-control" wire:model.live="contractDateTo">
             </div>
 
             <div class="col-lg-3 d-flex align-items-end">

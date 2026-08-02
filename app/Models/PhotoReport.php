@@ -48,11 +48,17 @@ class PhotoReport extends Model
         return $this->belongsTo(PhotoReportStatus::class);
     }
 
+    /**
+     * @return BelongsTo<User, $this>
+     */
     public function createdBy(): BelongsTo
     {
         return $this->belongsTo(User::class, 'created_by');
     }
-
+    
+    /**
+     * @return BelongsTo<User, $this>
+     */
     public function checkedBy(): BelongsTo
     {
         return $this->belongsTo(User::class, 'checked_by');
