@@ -1,0 +1,46 @@
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: .375rem;
+
+    min-height: $btn-height;
+    padding: $btn-padding-y $btn-padding-x;
+
+    font-size: $btn-font-size;
+    font-weight: $btn-font-weight;
+    line-height: 1.25;
+
+    border-radius: $btn-radius;
+
+    transition:
+        background-color $transition-base,
+        border-color $transition-base,
+        color $transition-base,
+        box-shadow $transition-base,
+        transform $transition-base;
+
+    i {
+        font-size: 1rem;
+        line-height: 1;
+    }
+
+    &:focus-visible {
+        box-shadow: 0 0 0 .2rem rgba($app-primary, .2);
+    }
+
+    &:active {
+        transform: translateY(1px);
+    }
+}
+
+.btn-sm {
+    min-height: $btn-height-sm;
+    padding: $btn-padding-y-sm $btn-padding-x-sm;
+    font-size: $btn-font-size-sm;
+}
+
+.btn-lg {
+    min-height: $btn-height-lg;
+    padding: $btn-padding-y-lg $btn-padding-x-lg;
+}
