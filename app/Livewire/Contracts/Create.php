@@ -54,29 +54,18 @@ class Create extends Component
     public function save(ContractFileService $contractFileService): void
     {
         $validated = $this->validate();
-
         $contract = Contract::create([
             ...$validated,
             'created_by' => auth()->id(),
         ]);
 
         foreach ($this->documents as $document) {
-            $contractFileService->upload(
-                contract: $contract,
-                file: $document,
-                uploadedBy: auth()->id(),
-            );
+            $contractFileService->upload(contract: $contract, file: $document, uploadedBy: auth()->id());
         }
 
-        session()->flash(
-            'success',
-            'Договор успешно создан.'
-        );
+        session()->flash('success', 'Договор успешно создан.');
 
-        $this->redirectRoute(
-            'contracts.index',
-            navigate: true
-        );
+        $this->redirectRoute('contracts.index', navigate: true);
     }
 
     public function render()

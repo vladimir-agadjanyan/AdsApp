@@ -27,28 +27,17 @@ class Documents extends Component
     {
         $this->validate();
 
-        $contractFileService->upload(
-            contract: $this->contract,
-            file: $this->document,
-            uploadedBy: auth()->id(),
-        );
+        $contractFileService->upload(contract: $this->contract, file: $this->document, uploadedBy: auth()->id(),);
 
         $this->reset('document');
-
         $this->contract->load('files.uploadedBy');
 
-        session()->flash(
-            'success',
-            'Файл успешно загружен.'
-        );
+        session()->flash('success', 'Файл успешно загружен.');
     }
 
     public function download(ContractFile $file)
     {
-        abort_unless(
-            $file->contract_id === $this->contract->id,
-            404
-        );
+        abort_unless($file->contract_id === $this->contract->id, 404);
 
         return app(ContractFileService::class)
             ->download($file);
@@ -56,20 +45,14 @@ class Documents extends Component
 
     public function delete(ContractFile $file): void
     {
-        abort_unless(
-            $file->contract_id === $this->contract->id,
-            404
-        );
+        abort_unless($file->contract_id === $this->contract->id, 404);
 
         app(ContractFileService::class)
             ->delete($file);
 
         $this->contract->load('files.uploader');
 
-        session()->flash(
-            'success',
-            'Файл удалён.'
-        );
+        session()->flash('success', 'Файл удалён.');
     }
 
     public function render()

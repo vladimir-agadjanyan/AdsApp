@@ -2,19 +2,21 @@
 
 namespace App\Services;
 
+use App\Models\Notification;
 use App\Models\Photo;
 use App\Models\PhotoReport;
-use DomainException;
+use App\Models\User;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+use DomainException;
 use RuntimeException;
 
 class PhotoReportService
 {
     public function create(array $data, array $photos): PhotoReport
     {
-        return DB::transaction(function () use ($data, $photos) {
+        $photoReport = DB::transaction(function () use ($data, $photos) {
 
             $photoReport = PhotoReport::create([
                 'advertising_object_id' => $data['advertising_object_id'],
@@ -44,6 +46,20 @@ class PhotoReportService
 
             return $photoReport;
         });
+
+        $photoReport->load('advertisingObject');
+
+        $this->notifyRole(
+            'Проверяющий',
+            $photoReport,
+            'Создан новый фотоотчет',
+            sprintf(
+                'Создан новый фотоотчет по объекту «%s».',
+                $photoReport->advertisingObject->name
+            )
+        );
+
+        return $photoReport;
     }
 
     public function canEdit(PhotoReport $photoReport): bool
@@ -53,20 +69,33 @@ class PhotoReportService
 
     public function approve(PhotoReport $photoReport, int $checkedBy, ?string $reviewComment = null): PhotoReport
     {
-            if ($photoReport->photoReportStatus->name !== 'На проверке') {
-                throw new DomainException(
-                    'Проверить можно только фотоотчет со статусом «На проверке».'
-                );
-            }
+        if ($photoReport->photoReportStatus->name !== 'На проверке') {
+            throw new DomainException(
+                'Проверить можно только фотоотчет со статусом «На проверке».'
+            );
+        }
 
-            $photoReport->update([
-                'photo_report_status_id' => 2,
-                'checked_by' => $checkedBy,
-                'checked_at' => now(),
-                'review_comment' => $reviewComment,
-            ]);
+        $photoReport->update([
+            'photo_report_status_id' => 2,
+            'checked_by' => $checkedBy,
+            'checked_at' => now(),
+            'review_comment' => $reviewComment,
+        ]);
 
-        return $photoReport->refresh();
+        $photoReport->refresh();
+        $photoReport->load('advertisingObject');
+
+        $this->notifyRole(
+            'Менеджер',
+            $photoReport,
+            'Фотоотчет одобрен',
+            sprintf(
+                'Фотоотчет по объекту «%s» одобрен.',
+                $photoReport->advertisingObject->name
+            )
+        );
+
+        return $photoReport;
     }
 
     public function reject(PhotoReport $photoReport, int $checkedBy, string $reviewComment): PhotoReport
@@ -84,7 +113,21 @@ class PhotoReportService
             'review_comment' => $reviewComment,
         ]);
 
-        return $photoReport->refresh();
+        $photoReport->refresh();
+        $photoReport->load('advertisingObject');
+
+        $this->notifyRole(
+            'Менеджер',
+            $photoReport,
+            'Фотоотчет отклонен',
+            sprintf(
+                'Фотоотчет по объекту «%s» отклонен. Причина: %s',
+                $photoReport->advertisingObject->name,
+                $reviewComment
+            )
+        );
+
+        return $photoReport;
     }
 
     public function update(PhotoReport $photoReport, array $data, array $photos = []): PhotoReport
@@ -95,12 +138,16 @@ class PhotoReportService
             );
         }
 
-        return DB::transaction(
-            function () use ($photoReport, $data, $photos) {
+        $wasRejected =
+            $photoReport->photoReportStatus->name === 'Отклонен';
 
-                $wasRejected =
-                    $photoReport->photoReportStatus->name === 'Отклонен';
-
+        $photoReport = DB::transaction(
+            function () use (
+                $photoReport,
+                $data,
+                $photos,
+                $wasRejected
+            ) {
                 if ($wasRejected && empty($photos)) {
                     throw new DomainException(
                         'Для повторной отправки отклоненного фотоотчета необходимо добавить новую фотографию.'
@@ -144,6 +191,22 @@ class PhotoReportService
                 return $photoReport->refresh();
             }
         );
+
+        if ($wasRejected) {
+            $photoReport->load('advertisingObject');
+
+            $this->notifyRole(
+                'Проверяющий',
+                $photoReport,
+                'Фотоотчет повторно отправлен на проверку',
+                sprintf(
+                    'Исправленный фотоотчет по объекту «%s» повторно отправлен на проверку.',
+                    $photoReport->advertisingObject->name
+                )
+            );
+        }
+
+        return $photoReport;
     }
 
     public function deletePhoto(PhotoReport $photoReport, Photo $photo): void
@@ -203,5 +266,28 @@ class PhotoReportService
 
             $photoReport->delete();
         });
+    }
+
+    private function notifyRole(string $roleName, PhotoReport $photoReport, string $title, string $message): void
+    {
+        $users = User::query()
+            ->whereHas(
+                'role',
+                fn ($query) => $query->where(
+                    'name',
+                    $roleName
+                )
+            )
+            ->get();
+
+        foreach ($users as $user) {
+            Notification::query()->create([
+                'user_id' => $user->id,
+                'advertising_object_id' => $photoReport->advertising_object_id,
+                'photo_report_id' => $photoReport->id,
+                'title' => $title,
+                'message' => $message,
+            ]);
+        }
     }
 }

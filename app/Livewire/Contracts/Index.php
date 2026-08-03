@@ -50,7 +50,6 @@ class Index extends Component
     public function confirmDelete(Contract $contract): void
     {
         $this->authorize('delete', $contract);
-
         $this->contractToDelete = $contract;
         $this->showDeleteModal = true;
     }
@@ -61,9 +60,8 @@ class Index extends Component
         $this->contractToDelete = null;
     }
 
-    public function delete(
-        ContractService $service
-    ): void {
+    public function delete(ContractService $service): void 
+    {
         if (! $this->contractToDelete) {
             return;
         }
@@ -74,19 +72,10 @@ class Index extends Component
         );
 
         try {
-            $service->delete(
-                $this->contractToDelete
-            );
-
-            session()->flash(
-                'success',
-                'Договор успешно удален.'
-            );
+            $service->delete($this->contractToDelete);
+            session()->flash('success', 'Договор успешно удален.');
         } catch (RuntimeException $e) {
-            session()->flash(
-                'error',
-                $e->getMessage()
-            );
+            session()->flash('error', $e->getMessage());
         }
 
         $this->cancelDelete();
@@ -164,7 +153,6 @@ class Index extends Component
 
         return view('livewire.contracts.index', [
             'contracts' => $contracts,
-
             'counterparties' => Counterparty::query()
                 ->orderBy('name')
                 ->get(),

@@ -17,27 +17,18 @@ class Addendums extends Component
     use WithFileUploads;
 
     public Contract $contract;
-
     public bool $showForm = false;
-
     public ?int $editingAddendumId = null;
-
     public string $number = '';
-
     public ?string $signed_at = null;
-
     public ?string $end_date = null;
-
     public ?string $amount_change = null;
-
     public ?string $note = null;
-
     public $document = null;
 
     public function mount(Contract $contract): void
     {
         $this->contract = $contract;
-
         $this->loadAddendums();
     }
 
@@ -124,25 +115,17 @@ class Addendums extends Component
     public function create(): void
     {
         $this->authorize('update', $this->contract);
-
         $this->resetForm();
-
         $this->showForm = true;
     }
 
-    public function edit(
-        int $id,
-        ContractAddendumService $service
-    ): void {
+    public function edit(int $id, ContractAddendumService $service): void 
+    {
         $this->authorize('update', $this->contract);
 
-        $addendum = $service->findForContract(
-            $this->contract,
-            $id
-        );
+        $addendum = $service->findForContract($this->contract, $id);
 
         $this->editingAddendumId = $addendum->id;
-
         $this->number = $addendum->number;
 
         $this->signed_at = $addendum
@@ -154,20 +137,14 @@ class Addendums extends Component
             ?->format('Y-m-d');
 
         $this->amount_change = (string) $addendum->amount_change;
-
         $this->note = $addendum->note;
-
         $this->document = null;
-
         $this->showForm = true;
-
         $this->resetValidation();
     }
 
-    public function save(
-        ContractAddendumService $addendumService,
-        ContractFileService $fileService
-    ): void {
+    public function save(ContractAddendumService $addendumService, ContractFileService $fileService): void 
+    {
         $this->authorize('update', $this->contract);
 
         $validated = $this->validate();
@@ -200,15 +177,9 @@ class Addendums extends Component
                 );
             }
 
-            session()->flash(
-                'success',
-                'Дополнительное соглашение успешно обновлено.'
-            );
+            session()->flash('success', 'Дополнительное соглашение успешно обновлено.');
         } else {
-            $addendum = $addendumService->create(
-                $this->contract,
-                $data
-            );
+            $addendum = $addendumService->create($this->contract, $data);
 
             if ($this->document) {
                 $fileService->upload(
@@ -219,54 +190,36 @@ class Addendums extends Component
                 );
             }
 
-            session()->flash(
-                'success',
-                'Дополнительное соглашение успешно добавлено.'
-            );
+            session()->flash('success', 'Дополнительное соглашение успешно добавлено.');
         }
 
         $this->resetForm();
-
         $this->loadAddendums();
     }
 
-    public function downloadDocument(
-        int $fileId,
-        ContractFileService $fileService
-    ) {
+    public function downloadDocument( int $fileId, ContractFileService $fileService) 
+    {
         $file = $this->findAddendumFile($fileId);
-
         return $fileService->download($file);
     }
 
-    public function deleteDocument(
-        int $fileId,
-        ContractFileService $fileService
-    ): void {
+    public function deleteDocument( int $fileId, ContractFileService $fileService): void 
+    {
         $this->authorize('update', $this->contract);
 
         $file = $this->findAddendumFile($fileId);
-
         $fileService->delete($file);
 
         $this->loadAddendums();
 
-        session()->flash(
-            'success',
-            'Документ дополнительного соглашения удалён.'
-        );
+        session()->flash('success', 'Документ дополнительного соглашения удалён.');
     }
 
-    public function delete(
-        int $id,
-        ContractAddendumService $service
-    ): void {
+    public function delete(int $id, ContractAddendumService $service): void 
+    {
         $this->authorize('update', $this->contract);
 
-        $addendum = $service->findForContract(
-            $this->contract,
-            $id
-        );
+        $addendum = $service->findForContract($this->contract, $id);
 
         $service->delete($addendum);
 
@@ -276,10 +229,7 @@ class Addendums extends Component
 
         $this->loadAddendums();
 
-        session()->flash(
-            'success',
-            'Дополнительное соглашение успешно удалено.'
-        );
+        session()->flash('success', 'Дополнительное соглашение успешно удалено.');
     }
 
     public function cancel(): void

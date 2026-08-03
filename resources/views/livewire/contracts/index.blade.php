@@ -1,5 +1,5 @@
 <div x-data="{ showFilters: false }" class="contracts-page">
-
+    
     <x-alerts />
 
     {{-- Заголовок --}}
@@ -11,7 +11,6 @@
 
     {{-- Поиск + кнопка --}}
     <div class="row align-items-center mb-3">
-
         {{-- Кнопка создания --}}
         @can('create', \App\Models\Contract::class)
             <div class="col-lg-auto mb-3 mb-lg-0">
@@ -21,7 +20,6 @@
                 </a>
             </div>
         @endcan
-
         {{-- Поиск --}}
         <div class="col-lg-5">
             <div class="input-group">
@@ -31,12 +29,10 @@
                 </span>
             </div>
         </div>
-
     </div>
 
     {{-- Фильтры --}}
     <x-filters-panel>
-
         <div class="row g-3">
 
             <div class="col-lg-4">
@@ -84,7 +80,6 @@
         </div>
 
         <div class="row g-3 mt-3">
-
             <div class="col-lg-3">
                 <label class="form-label">
                     Дата договора от
@@ -92,7 +87,6 @@
 
                 <input type="date" class="form-control" wire:model.live="contractDateFrom">
             </div>
-
             <div class="col-lg-3">
                 <label class="form-label">
                     Дата договора до
@@ -100,27 +94,18 @@
 
                 <input type="date" class="form-control" wire:model.live="contractDateTo">
             </div>
-
             <div class="col-lg-3 d-flex align-items-end">
-                <button
-                    type="button"
-                    class="btn btn-outline-secondary"
-                    wire:click="resetFilters"
-                >
+                <button type="button" class="btn btn-outline-secondary" wire:click="resetFilters">
                     <i class="bi bi-arrow-clockwise me-1"></i>
                     Сбросить
                 </button>
             </div>
-
         </div>
-
     </x-filters-panel>
 
     {{-- Таблица --}}
     <div class="table-responsive">
-
         <table class="table table-hover align-middle mb-0">
-
             <thead class="table-light">
                 <tr>
                     <th>№ договора</th>
@@ -132,93 +117,57 @@
                     <th>Действия</th>
                 </tr>
             </thead>
-
             <tbody>
-
                 @forelse($contracts as $contract)
-
                     <tr>
-
                         <td>
-                            <a
-                                href="{{ route('contracts.show', $contract) }}"
-                                wire:navigate
-                            >
+                            <a href="{{ route('contracts.show', $contract) }}" wire:navigate>
                                 {{ $contract->number }}
                             </a>
                         </td>
-
                         <td>
                             {{ $contract->counterparty->name }}
                         </td>
-
                         <td>
                             {{ $contract->contract_date?->format('d.m.Y') }}
                         </td>
-
                         <td>
                             {{ $contract->start_date?->format('d.m.Y') }}
                         </td>
-
                         <td>
                             {{ $contract->end_date?->format('d.m.Y') }}
                         </td>
-
                         <td>
                             <span class="badge bg-{{ $contract->statusClass }}">
                                 {{ $contract->statusLabel }}
                             </span>
                         </td>
-
                         <td class="text-start">
-
                             {{-- Просмотр --}}
                             @can('view', $contract)
-                                <a
-                                    href="{{ route('contracts.show', $contract) }}"
-                                    wire:navigate
-                                    class="btn btn-sm btn-outline-primary"
-                                    title="Просмотр"
-                                >
+                                <a href="{{ route('contracts.show', $contract) }}" wire:navigate class="btn btn-sm btn-outline-primary" title="Просмотр">
                                     <i class="bi bi-eye"></i>
                                 </a>
                             @endcan
 
                             {{-- Редактирование --}}
                             @can('update', $contract)
-                                <a
-                                    href="{{ route('contracts.edit', $contract) }}"
-                                    wire:navigate
-                                    class="btn btn-sm btn-outline-primary"
-                                    title="Редактировать"
-                                >
+                                <a href="{{ route('contracts.edit', $contract) }}" wire:navigate class="btn btn-sm btn-outline-primary" title="Редактировать">
                                     <i class="bi bi-pencil"></i>
                                 </a>
                             @endcan
 
                             {{-- Удаление --}}
                             @can('delete', $contract)
-                                <button
-                                    type="button"
-                                    class="btn btn-sm btn-outline-danger"
-                                    wire:click="confirmDelete({{ $contract->id }})"
-                                    title="Удалить"
-                                >
+                                <button type="button" class="btn btn-sm btn-outline-danger" wire:click="confirmDelete({{ $contract->id }})" title="Удалить">
                                     <i class="bi bi-trash"></i>
                                 </button>
                             @endcan
-
                         </td>
-
                     </tr>
-
                 @empty
-
                     <tr>
-                        <td
-                            colspan="7"
-                            class="text-center py-5"
-                        >
+                        <td colspan="7" class="text-center py-5">
                             <i class="bi bi-folder2-open fs-1 text-secondary d-block mb-3"></i>
 
                             <h5 class="mb-2">
@@ -230,100 +179,59 @@
                             </p>
                         </td>
                     </tr>
-
                 @endforelse
-
             </tbody>
-
         </table>
-
     </div>
 
     {{-- Модальное окно удаления --}}
     @if($showDeleteModal)
-
         @can('delete', $contractToDelete)
-
-            <div
-                class="modal fade show d-block"
-                tabindex="-1"
-                style="background: rgba(0, 0, 0, .5);"
-            >
-
+            <div class="modal fade show d-block" tabindex="-1" style="background: rgba(0, 0, 0, .5);">
                 <div class="modal-dialog">
-
                     <div class="modal-content">
-
                         <div class="modal-header">
-
                             <h5 class="modal-title">
                                 Удалить договор
                             </h5>
 
-                            <button
-                                type="button"
-                                class="btn-close"
-                                wire:click="cancelDelete"
-                            ></button>
-
+                            <button type="button" class="btn-close" wire:click="cancelDelete"></button>
                         </div>
 
                         <div class="modal-body">
-
                             <p class="mb-2">
                                 Вы действительно хотите удалить договор:
                             </p>
-
                             <p class="fw-semibold mb-3">
                                 № {{ $contractToDelete?->number }}
                             </p>
 
                             @if($contractToDelete?->counterparty)
-
                                 <p class="text-muted mb-3">
                                     Контрагент:
                                     {{ $contractToDelete->counterparty->name }}
                                 </p>
-
                             @endif
 
                             <div class="alert alert-warning mb-0">
                                 Действие необратимо.
                             </div>
-
                         </div>
 
                         <div class="modal-footer">
-
-                            <button
-                                type="button"
-                                class="btn btn-secondary"
-                                wire:click="cancelDelete"
-                            >
+                            <button type="button" class="btn btn-secondary" wire:click="cancelDelete">
                                 Отмена
                             </button>
 
-                            <button
-                                type="button"
-                                class="btn btn-danger"
-                                wire:click="delete"
-                                wire:loading.attr="disabled"
-                                wire:target="delete"
-                            >
+                            <button type="button" class="btn btn-danger" wire:click="delete" wire:loading.attr="disabled" wire:target="delete">
                                 <i class="bi bi-trash me-1"></i>
                                 Удалить
                             </button>
-
                         </div>
-
                     </div>
-
                 </div>
-
             </div>
-
         @endcan
-
     @endif
 
     {{-- Пагинация --}}

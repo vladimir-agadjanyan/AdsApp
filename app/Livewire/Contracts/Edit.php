@@ -15,21 +15,13 @@ class Edit extends Component
     use AuthorizesRequests;
 
     public Contract $contract;
-
     public Collection $counterparties;
-
     public string $number = '';
-
     public ?int $counterparty_id = null;
-
     public ?string $contract_date = null;
-
     public ?string $start_date = null;
-
     public ?string $end_date = null;
-
     public ?string $amount = null;
-
     public ?string $note = null;
 
     protected function rules(): array
@@ -86,9 +78,7 @@ class Edit extends Component
     public function mount(Contract $contract): void
     {
         $this->authorize('update', $contract);
-
         $this->contract = $contract;
-
         $this->counterparties = Counterparty::query()
             ->orderBy('name')
             ->get();
@@ -104,33 +94,18 @@ class Edit extends Component
 
     public function update(): void
     {
-        $this->authorize(
-            'update',
-            $this->contract
-        );
-
+        $this->authorize('update', $this->contract );
         $validated = $this->validate();
-
         $this->contract->update($validated);
 
-        session()->flash(
-            'success',
-            'Договор успешно обновлен.'
-        );
+        session()->flash('success', 'Договор успешно обновлен.');
 
-        $this->redirectRoute(
-            'contracts.index',
-            navigate: true
-        );
+        $this->redirectRoute('contracts.index', navigate: true);
     }
 
     public function deleteAddendum(int $id): void
     {
-        $this->authorize(
-            'update',
-            $this->contract
-        );
-
+        $this->authorize('update', $this->contract);
         $contractAddendum = ContractAddendum::findOrFail($id);
 
         if ($contractAddendum->contract_id !== $this->contract->id) {
@@ -138,7 +113,6 @@ class Edit extends Component
         }
 
         $number = $contractAddendum->number;
-
         $contractAddendum->delete();
 
         $this->contract->load([
@@ -146,10 +120,7 @@ class Edit extends Component
             'addendums',
         ]);
 
-        session()->flash(
-            'success',
-            "Дополнительное соглашение №{$number} успешно удалено."
-        );
+        session()->flash('success', "Дополнительное соглашение №{$number} успешно удалено.");
     }
 
     public function render()

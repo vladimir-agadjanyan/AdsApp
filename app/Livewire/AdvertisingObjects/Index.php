@@ -62,13 +62,13 @@ class Index extends Component
         $this->resetPage();
     }
 
-public function confirmDelete(AdvertisingObject $advertisingObject): void
-{
-    $this->authorize('delete', $advertisingObject);
+    public function confirmDelete(AdvertisingObject $advertisingObject): void
+    {
+        $this->authorize('delete', $advertisingObject);
 
-    $this->advertisingObjectToDelete = $advertisingObject;
-    $this->showDeleteModal = true;
-}
+        $this->advertisingObjectToDelete = $advertisingObject;
+        $this->showDeleteModal = true;
+    }
 
     public function cancelDelete(): void
     {
@@ -79,7 +79,7 @@ public function confirmDelete(AdvertisingObject $advertisingObject): void
     public function delete(AdvertisingObjectService $service): void
     {
         $this->authorize('delete', $this->advertisingObjectToDelete);
-        
+
         if (! $this->advertisingObjectToDelete) {
             return;
         }
