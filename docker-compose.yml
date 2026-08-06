@@ -28,6 +28,7 @@ services:
 
     depends_on:
       - app
+
   mysql:
     image: mysql:8.4
 
@@ -36,16 +37,17 @@ services:
     restart: unless-stopped
 
     environment:
-      MYSQL_DATABASE: adsapp
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_USER: adsapp
-      MYSQL_PASSWORD: secret
+      MYSQL_DATABASE: ${DB_DATABASE:-adsapp}
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:-root}
+      MYSQL_USER: ${DB_USERNAME:-adsapp}
+      MYSQL_PASSWORD: ${DB_PASSWORD:-secret}
 
     ports:
       - "3306:3306"
 
     volumes:
       - mysql_data:/var/lib/mysql
+
   phpmyadmin:
     image: phpmyadmin:5-apache
 
@@ -59,9 +61,10 @@ services:
     environment:
       PMA_HOST: mysql
       PMA_PORT: 3306
-      MYSQL_ROOT_PASSWORD: root
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:-root}
 
     depends_on:
       - mysql
+
 volumes:
   mysql_data:
