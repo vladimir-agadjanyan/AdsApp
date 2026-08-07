@@ -2,44 +2,61 @@
 
 namespace App\Services\Contract;
 
+use App\DTO\ContractAddendums\CreateContractAddendumData;
+use App\DTO\ContractAddendums\UpdateContractAddendumData;
 use App\Models\Contract;
 use App\Models\ContractAddendum;
+use App\Repositories\ContractAddendumRepository;
 use Illuminate\Support\Facades\DB;
 
 class ContractAddendumService
 {
-    public function create(Contract $contract, array $data): ContractAddendum
+    public function __construct(
+        private readonly ContractAddendumRepository $contractAddendumRepository,
+    ) {
+    }
+
+    public function create(CreateContractAddendumData $data): ContractAddendum
     {
-        return DB::transaction(function () use ($contract, $data): ContractAddendum {
-            return ContractAddendum::create([
-                ...$data,
-                'contract_id' => $contract->id,
-                'created_by' => auth()->id(),
-            ]);
+        return DB::transaction(function () use ($data): ContractAddendum {
+
+            return $this->contractAddendumRepository->create($data);
+
         });
     }
 
-    public function update(ContractAddendum $contractAddendum, array $data): ContractAddendum
+    public function update(ContractAddendum $contractAddendum, UpdateContractAddendumData $data): ContractAddendum
     {
-        return DB::transaction( function () use ($contractAddendum, $data): ContractAddendum {
-                $contractAddendum->update($data);
+        return DB::transaction(function () use (
+            $contractAddendum,
+            $data,
+        ): ContractAddendum {
 
-                return $contractAddendum->refresh();
-            }
-        );
+            $contractAddendum = $this->contractAddendumRepository->update(
+                $contractAddendum,
+                $data,
+            );
+
+            return $contractAddendum->refresh();
+        });
     }
 
     public function delete(ContractAddendum $contractAddendum): void
     {
         DB::transaction(function () use ($contractAddendum): void {
-            $contractAddendum->delete();
+
+            $this->contractAddendumRepository->delete(
+                $contractAddendum
+            );
+
         });
     }
 
     public function findForContract(Contract $contract, int $id): ContractAddendum
     {
-        return ContractAddendum::query()
-            ->where('contract_id', $contract->id)
-            ->findOrFail($id);
+        return $this->contractAddendumRepository->findForContract(
+            $contract,
+            $id,
+        );
     }
 }
