@@ -2,6 +2,8 @@
 
 namespace App\Livewire\Contracts;
 
+use App\DTO\Contracts\UpdateContractData;
+use App\Services\Contract\ContractService;
 use App\Models\Contract;
 use App\Models\ContractAddendum;
 use App\Models\Counterparty;
@@ -92,11 +94,23 @@ class Edit extends Component
         $this->note = $contract->note;
     }
 
-    public function update(): void
+    public function update(ContractService $contractService): void
     {
-        $this->authorize('update', $this->contract );
-        $validated = $this->validate();
-        $this->contract->update($validated);
+        $this->authorize('update', $this->contract);
+
+        $this->validate();
+
+        $data = new UpdateContractData(
+            counterpartyId: $this->counterparty_id,
+            number: $this->number,
+            contractDate: $this->contract_date,
+            startDate: $this->start_date,
+            endDate: $this->end_date,
+            amount: (float) $this->amount,
+            note: $this->note,
+        );
+
+        $this->contract = $contractService->update($this->contract, $data);
 
         session()->flash('success', 'Договор успешно обновлен.');
 

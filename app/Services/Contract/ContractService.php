@@ -2,26 +2,32 @@
 
 namespace App\Services\Contract;
 
+use App\DTO\Contracts\CreateContractData;
+use App\DTO\Contracts\UpdateContractData;
+use App\Repositories\ContractRepository;
 use App\Models\Contract;
 use RuntimeException;
 
 class ContractService
 {
-    public function create(array $data): Contract
-    {
-        return Contract::create($data);
+    public function __construct(
+        private readonly ContractRepository $contractRepository,
+    ) {
     }
 
-    public function update(Contract $contract, array $data): Contract
+    public function create(CreateContractData $data): Contract
     {
-        $contract->update($data);
+        return $this->contractRepository->create($data);
+    }
 
-        return $contract;
+    public function update(Contract $contract, UpdateContractData $data): Contract
+    {
+        return $this->contractRepository->update($contract, $data);
     }
 
     public function find(int $id): Contract
     {
-        return Contract::findOrFail($id);
+        return $this->contractRepository->find($id);
     }
 
     public function canDelete(Contract $contract): bool
@@ -37,6 +43,6 @@ class ContractService
             );
         }
 
-        $contract->delete();
+        $this->contractRepository->delete($contract);
     }
 }

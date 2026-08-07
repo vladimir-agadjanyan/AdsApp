@@ -2,13 +2,15 @@
 
 namespace App\Livewire\Contracts;
 
-use App\Models\Contract;
+use App\DTO\Contracts\CreateContractData;
+use App\Services\Contract\ContractService;
 use App\Models\Counterparty;
 use App\Services\Contract\ContractFileService;
 use Illuminate\Database\Eloquent\Collection;
 use Livewire\Attributes\Validate;
 use Livewire\Component;
 use Livewire\WithFileUploads;
+use Illuminate\Support\Facades\Auth;
 
 class Create extends Component
 {
@@ -51,16 +53,25 @@ class Create extends Component
         ];
     }
 
-    public function save(ContractFileService $contractFileService): void
+    public function save(ContractService $contractService, ContractFileService $contractFileService): void
     {
-        $validated = $this->validate();
-        $contract = Contract::create([
-            ...$validated,
-            'created_by' => auth()->id(),
-        ]);
+        $this->validate();
+
+        $data = new CreateContractData(
+            counterpartyId: $this->counterparty_id,
+            number: $this->number,
+            contractDate: $this->contract_date,
+            startDate: $this->start_date,
+            endDate: $this->end_date,
+            amount: 0,
+            note: $this->note,
+            createdBy: (int) Auth::id(),
+        );
+
+        $contract = $contractService->create($data);
 
         foreach ($this->documents as $document) {
-            $contractFileService->upload(contract: $contract, file: $document, uploadedBy: auth()->id());
+            $contractFileService->upload(contract: $contract, file: $document, uploadedBy: (int) Auth::id());
         }
 
         session()->flash('success', 'Договор успешно создан.');
