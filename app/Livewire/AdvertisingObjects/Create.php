@@ -2,6 +2,7 @@
 
 namespace App\Livewire\AdvertisingObjects;
 
+use App\DTO\AdvertisingObjects\CreateAdvertisingObjectData;
 use App\Models\AdvertisingObject;
 use App\Models\AdvertisingType;
 use App\Models\City;
@@ -20,57 +21,47 @@ class Create extends Component
     use AuthorizesRequests;
 
     public ?int $counterpartyId = null;
-
     public ?int $contract_id = null;
-
     public string $name = '';
-
     public ?int $advertising_type_id = null;
-
     public ?int $object_status_id = null;
-
     public ?int $regionId = null;
-
     public ?int $city_id = null;
-
     public string $address = '';
-
     public ?float $latitude = null;
-
     public ?float $longitude = null;
-
     public string $note = '';
 
     public function mount(): void
     {
-        $this->authorize(
-            'create',
-            AdvertisingObject::class
-        );
+        $this->authorize('create',  AdvertisingObject::class);
     }
 
-    public function save(
-        AdvertisingObjectService $advertisingObjectService
-    ) {
-        $this->authorize(
-            'create',
-            AdvertisingObject::class
+    public function save(AdvertisingObjectService $advertisingObjectService): mixed
+    {
+        $this->authorize('create', AdvertisingObject::class);
+
+        $this->validate();
+
+        $data = new CreateAdvertisingObjectData(
+            name: $this->name,
+            contractId: $this->contract_id,
+            advertisingTypeId: $this->advertising_type_id,
+            cityId: $this->city_id,
+            address: $this->address,
+            latitude: (float) ($this->latitude ?? 0),
+            longitude: (float) ($this->longitude ?? 0),
+            objectStatusId: $this->object_status_id,
+            createdBy: (int) Auth::id(),
+            note: $this->note ?: null,
         );
 
-        $validated = $this->validate();
+        $advertisingObjectService->create($data);
 
-        $validated['created_by'] = Auth::id();
-
-        $advertisingObjectService->create($validated);
-
-        session()->flash(
-            'success',
-            'Рекламный объект успешно создан.'
+        session()->flash('success','Рекламный объект успешно создан.'
         );
 
-        return redirect()->route(
-            'advertising-objects.index'
-        );
+        return redirect()->route('advertising-objects.index');
     }
 
     protected function rules(): array
