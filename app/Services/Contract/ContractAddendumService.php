@@ -13,8 +13,7 @@ class ContractAddendumService
 {
     public function __construct(
         private readonly ContractAddendumRepository $contractAddendumRepository,
-    ) {
-    }
+    ) {}
 
     public function create(CreateContractAddendumData $data): ContractAddendum
     {

@@ -52,8 +52,7 @@ class PhotoList extends Component
 
                 'city' => $object->city->name,
 
-                'counterparty' =>
-                    $object->contract->counterparty->name,
+                'counterparty' => $object->contract->counterparty->name,
 
                 'days_without_photo' => (int) $object->created_at
                     ->startOfDay()

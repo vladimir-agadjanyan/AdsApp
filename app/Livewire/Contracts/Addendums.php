@@ -9,10 +9,10 @@ use App\Models\ContractFile;
 use App\Services\Contract\ContractAddendumService;
 use App\Services\Contract\ContractFileService;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
 use Livewire\Component;
 use Livewire\WithFileUploads;
-use Illuminate\Support\Facades\Auth;
 
 class Addendums extends Component
 {
@@ -20,13 +20,21 @@ class Addendums extends Component
     use WithFileUploads;
 
     public Contract $contract;
+
     public bool $showForm = false;
+
     public ?int $editingAddendumId = null;
+
     public string $number = '';
+
     public ?string $signed_at = null;
+
     public ?string $end_date = null;
+
     public ?string $amount_change = null;
+
     public ?string $note = null;
+
     public $document = null;
 
     public function mount(Contract $contract): void
@@ -86,32 +94,23 @@ class Addendums extends Component
     protected function messages(): array
     {
         return [
-            'number.required' =>
-                'Укажите номер соглашения.',
+            'number.required' => 'Укажите номер соглашения.',
 
-            'number.unique' =>
-                'Дополнительное соглашение с таким номером уже существует.',
+            'number.unique' => 'Дополнительное соглашение с таким номером уже существует.',
 
-            'signed_at.required' =>
-                'Укажите дату подписания.',
+            'signed_at.required' => 'Укажите дату подписания.',
 
-            'end_date.required' =>
-                'Укажите дату окончания.',
+            'end_date.required' => 'Укажите дату окончания.',
 
-            'end_date.after_or_equal' =>
-                'Дата окончания не может быть раньше даты подписания.',
+            'end_date.after_or_equal' => 'Дата окончания не может быть раньше даты подписания.',
 
-            'amount_change.numeric' =>
-                'Изменение стоимости должно быть числом.',
+            'amount_change.numeric' => 'Изменение стоимости должно быть числом.',
 
-            'document.file' =>
-                'Не удалось загрузить документ.',
+            'document.file' => 'Не удалось загрузить документ.',
 
-            'document.max' =>
-                'Размер документа не должен превышать 10 МБ.',
+            'document.max' => 'Размер документа не должен превышать 10 МБ.',
 
-            'document.mimes' =>
-                'Допустимые форматы: PDF, DOC, DOCX, XLS, XLSX, JPG, JPEG, PNG.',
+            'document.mimes' => 'Допустимые форматы: PDF, DOC, DOCX, XLS, XLSX, JPG, JPEG, PNG.',
         ];
     }
 
@@ -215,13 +214,14 @@ class Addendums extends Component
         $this->loadAddendums();
     }
 
-    public function downloadDocument( int $fileId, ContractFileService $fileService)
+    public function downloadDocument(int $fileId, ContractFileService $fileService)
     {
         $file = $this->findAddendumFile($fileId);
+
         return $fileService->download($file);
     }
 
-    public function deleteDocument( int $fileId, ContractFileService $fileService): void
+    public function deleteDocument(int $fileId, ContractFileService $fileService): void
     {
         $this->authorize('update', $this->contract);
 

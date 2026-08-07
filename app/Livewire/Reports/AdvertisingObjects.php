@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Reports;
 
+use App\Exports\AdvertisingObjectsReportExport;
 use App\Models\AdvertisingObject;
 use App\Models\AdvertisingType;
 use App\Models\City;
@@ -11,7 +12,6 @@ use App\Models\Region;
 use Illuminate\Contracts\View\View;
 use Illuminate\Database\Eloquent\Builder;
 use Livewire\Component;
-use App\Exports\AdvertisingObjectsReportExport;
 use Maatwebsite\Excel\Facades\Excel;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
@@ -109,8 +109,8 @@ class AdvertisingObjects extends Component
                 advertisingTypeId: $this->advertisingTypeId,
                 objectStatusId: $this->objectStatusId,
             ),
-            'advertising-objects-report-' .
-                now()->format('Y-m-d') .
+            'advertising-objects-report-'.
+                now()->format('Y-m-d').
                 '.xlsx'
         );
     }

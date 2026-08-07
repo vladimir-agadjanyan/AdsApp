@@ -11,6 +11,5 @@ final readonly class CreatePhotoData
         public ?string $mimeType,
         public int $fileSize,
         public int $sortOrder,
-    ) {
-    }
+    ) {}
 }

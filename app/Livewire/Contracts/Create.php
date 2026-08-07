@@ -3,25 +3,31 @@
 namespace App\Livewire\Contracts;
 
 use App\DTO\Contracts\CreateContractData;
-use App\Services\Contract\ContractService;
 use App\Models\Counterparty;
 use App\Services\Contract\ContractFileService;
+use App\Services\Contract\ContractService;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\Validate;
 use Livewire\Component;
 use Livewire\WithFileUploads;
-use Illuminate\Support\Facades\Auth;
 
 class Create extends Component
 {
     use WithFileUploads;
 
     public Collection $counterparties;
+
     public string $number = '';
+
     public ?int $counterparty_id = null;
+
     public ?string $contract_date = null;
+
     public ?string $start_date = null;
+
     public ?string $end_date = null;
+
     public ?string $note = null;
 
     #[Validate([

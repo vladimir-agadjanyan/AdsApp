@@ -9,9 +9,7 @@ use Illuminate\Database\Eloquent\Collection;
 
 class ContractRepository
 {
-    public function __construct(private readonly Contract $contract)
-    {
-    }
+    public function __construct(private readonly Contract $contract) {}
 
     public function create(CreateContractData $data): Contract
     {
@@ -44,6 +42,9 @@ class ContractRepository
         return $contract->refresh();
     }
 
+       /**
+    * @return Collection<int, Contract>
+    */
     public function getExpiringContracts(int $days): Collection
     {
         return $this->contract

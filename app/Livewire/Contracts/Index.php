@@ -16,12 +16,19 @@ class Index extends Component
     use WithPagination;
 
     public string $search = '';
+
     public ?int $counterpartyId = null;
+
     public ?string $status = null;
+
     public ?string $contractDateFrom = null;
+
     public ?string $contractDateTo = null;
+
     public string $paginationTheme = 'bootstrap';
+
     public ?Contract $contractToDelete = null;
+
     public bool $showDeleteModal = false;
 
     public function mount(): void
@@ -60,7 +67,7 @@ class Index extends Component
         $this->contractToDelete = null;
     }
 
-    public function delete(ContractService $service): void 
+    public function delete(ContractService $service): void
     {
         if (! $this->contractToDelete) {
             return;

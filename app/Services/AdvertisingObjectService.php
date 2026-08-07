@@ -10,9 +10,7 @@ use DomainException;
 
 class AdvertisingObjectService
 {
-    public function __construct(private readonly AdvertisingObjectRepository $advertisingObjectRepository)
-    {
-    }
+    public function __construct(private readonly AdvertisingObjectRepository $advertisingObjectRepository) {}
 
     public function create(CreateAdvertisingObjectData $data): AdvertisingObject
     {

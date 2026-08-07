@@ -2,17 +2,17 @@
 
 namespace App\Livewire\PhotoReports;
 
+use App\DTO\PhotoReports\CreatePhotoReportData;
 use App\Models\AdvertisingObject;
 use App\Models\AdvertisingType;
 use App\Models\City;
+use App\Models\PhotoReport;
 use App\Models\Region;
 use App\Services\PhotoReportService;
-use App\DTO\PhotoReports\CreatePhotoReportData;
-use Livewire\Component;
-use Livewire\Features\SupportFileUploads\WithFileUploads;
-use App\Models\PhotoReport;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Support\Facades\Auth;
+use Livewire\Component;
+use Livewire\Features\SupportFileUploads\WithFileUploads;
 
 class Create extends Component
 {
@@ -20,10 +20,15 @@ class Create extends Component
     use WithFileUploads;
 
     public ?int $regionId = null;
+
     public ?int $cityId = null;
+
     public ?int $advertisingTypeId = null;
+
     public ?int $advertisingObjectId = null;
+
     public ?string $comment = null;
+
     public array $photos = [];
 
     public function mount(): void
@@ -93,7 +98,7 @@ class Create extends Component
             'cities' => City::query()
                 ->when(
                     $this->regionId,
-                    fn($query) => $query->where('region_id', $this->regionId)
+                    fn ($query) => $query->where('region_id', $this->regionId)
                 )
                 ->orderBy('name')
                 ->get(),
@@ -105,11 +110,11 @@ class Create extends Component
             'advertisingObjects' => AdvertisingObject::query()
                 ->when(
                     $this->cityId,
-                    fn($query) => $query->where('city_id', $this->cityId)
+                    fn ($query) => $query->where('city_id', $this->cityId)
                 )
                 ->when(
                     $this->advertisingTypeId,
-                    fn($query) => $query->where('advertising_type_id', $this->advertisingTypeId)
+                    fn ($query) => $query->where('advertising_type_id', $this->advertisingTypeId)
                 )
                 ->orderBy('name')
                 ->get(),

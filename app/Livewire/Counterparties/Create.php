@@ -14,11 +14,17 @@ class Create extends Component
     use AuthorizesRequests;
 
     public string $name = '';
+
     public string $inn = '';
+
     public string $phone = '';
+
     public string $email = '';
+
     public string $contact_person = '';
+
     public string $address = '';
+
     public string $note = '';
 
     public function mount(): void
@@ -91,7 +97,7 @@ class Create extends Component
 
         $service->create($data);
 
-        session()->flash('success','Контрагент успешно создан.');
+        session()->flash('success', 'Контрагент успешно создан.');
 
         $this->redirectRoute('counterparties.index', navigate: true);
     }

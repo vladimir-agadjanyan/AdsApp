@@ -12,6 +12,5 @@ readonly class UpdateCounterpartyData
         public ?string $address,
         public string $contactPerson,
         public ?string $note,
-    ) {
-    }
+    ) {}
 }

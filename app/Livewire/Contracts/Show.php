@@ -11,11 +11,10 @@ use Livewire\Component;
 use Livewire\WithFileUploads;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
-
 class Show extends Component
 {
     use WithFileUploads;
-    
+
     public Contract $contract;
 
     #[Validate([
@@ -40,13 +39,14 @@ class Show extends Component
     public function openDocument(ContractFile $file, ContractFileService $contractFileService)
     {
         abort_unless($file->contract_id === $this->contract->id, 404);
+
         return $contractFileService->download($file);
     }
 
     public function upload(ContractFileService $contractFileService): void
     {
         $this->validate();
-        $contractFileService->upload(contract: $this->contract, file: $this->document, uploadedBy: auth()->id(),);
+        $contractFileService->upload(contract: $this->contract, file: $this->document, uploadedBy: auth()->id());
         $this->reset('document');
         $this->contract->load([
             'counterparty',
@@ -60,9 +60,10 @@ class Show extends Component
         );
     }
 
-    public function download( ContractFile $file,  ContractFileService $contractFileService ): BinaryFileResponse
+    public function download(ContractFile $file, ContractFileService $contractFileService): BinaryFileResponse
     {
         abort_unless($file->contract_id === $this->contract->id, 404);
+
         return $contractFileService->download($file);
     }
 
@@ -77,7 +78,7 @@ class Show extends Component
             'files.uploadedBy',
         ]);
 
-        session()->flash('success','Документ успешно удален.');
+        session()->flash('success', 'Документ успешно удален.');
     }
 
     public function deleteAddendum(int $id): void

@@ -3,10 +3,10 @@
 namespace App\Livewire\Contracts;
 
 use App\DTO\Contracts\UpdateContractData;
-use App\Services\Contract\ContractService;
 use App\Models\Contract;
 use App\Models\ContractAddendum;
 use App\Models\Counterparty;
+use App\Services\Contract\ContractService;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Validation\Rule;
@@ -17,13 +17,21 @@ class Edit extends Component
     use AuthorizesRequests;
 
     public Contract $contract;
+
     public Collection $counterparties;
+
     public string $number = '';
+
     public ?int $counterparty_id = null;
+
     public ?string $contract_date = null;
+
     public ?string $start_date = null;
+
     public ?string $end_date = null;
+
     public ?string $amount = null;
+
     public ?string $note = null;
 
     protected function rules(): array

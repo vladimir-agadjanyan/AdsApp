@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Reports;
 
+use App\Exports\PhotoReportsReportExport;
 use App\Models\City;
 use App\Models\Counterparty;
 use App\Models\PhotoReport;
@@ -10,17 +11,21 @@ use App\Models\Region;
 use Illuminate\Contracts\View\View;
 use Illuminate\Database\Eloquent\Builder;
 use Livewire\Component;
-use App\Exports\PhotoReportsReportExport;
 use Maatwebsite\Excel\Facades\Excel;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 class PhotoReports extends Component
 {
     public ?int $regionId = null;
+
     public ?int $cityId = null;
+
     public ?int $counterpartyId = null;
+
     public ?int $photoReportStatusId = null;
+
     public ?string $dateFrom = null;
+
     public ?string $dateTo = null;
 
     public function updatedRegionId(): void
@@ -108,7 +113,7 @@ class PhotoReports extends Component
             )
             ->latest('created_at');
     }
-    
+
     public function exportExcel(): BinaryFileResponse
     {
         return Excel::download(
@@ -120,8 +125,8 @@ class PhotoReports extends Component
                 dateFrom: $this->dateFrom,
                 dateTo: $this->dateTo,
             ),
-            'photo-reports-report-' .
-                now()->format('Y-m-d') .
+            'photo-reports-report-'.
+                now()->format('Y-m-d').
                 '.xlsx'
         );
     }

@@ -15,8 +15,7 @@ class NotificationService
         private readonly ContractRepository $contractRepository,
         private readonly UserRepository $userRepository,
         private readonly AdvertisingObjectRepository $advertisingObjectRepository,
-    ) {
-    }
+    ) {}
 
     public function notifyExpiringContracts(): void
     {

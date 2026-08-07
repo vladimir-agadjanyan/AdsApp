@@ -14,12 +14,19 @@ class Edit extends Component
     use AuthorizesRequests;
 
     public Counterparty $counterparty;
+
     public string $name = '';
+
     public string $inn = '';
+
     public string $contact_person = '';
+
     public string $phone = '';
+
     public string $email = '';
+
     public string $address = '';
+
     public string $note = '';
 
     public function mount(Counterparty $counterparty): void

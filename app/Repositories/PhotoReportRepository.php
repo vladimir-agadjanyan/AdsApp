@@ -2,17 +2,19 @@
 
 namespace App\Repositories;
 
-use App\DTO\PhotoReports\CreatePhotoReportData;
-use App\DTO\PhotoReports\UpdatePhotoReportData;
 use App\DTO\PhotoReports\ApprovePhotoReportData;
+use App\DTO\PhotoReports\CreatePhotoReportData;
 use App\DTO\PhotoReports\RejectPhotoReportData;
+use App\DTO\PhotoReports\UpdatePhotoReportData;
 use App\Models\PhotoReport;
 
 class PhotoReportRepository
 {
+    public function __construct(private readonly PhotoReport $photoReport) {}
+
     public function create(CreatePhotoReportData $data, int $statusId): PhotoReport
     {
-        return PhotoReport::create([
+        return $this->photoReport->create([
             'advertising_object_id' => $data->advertisingObjectId,
             'photo_report_status_id' => $statusId,
             'created_by' => $data->createdBy,
@@ -68,12 +70,13 @@ class PhotoReportRepository
 
     public function find(int $id): PhotoReport
     {
-        return PhotoReport::findOrFail($id);
+        return $this->photoReport
+            ->newQuery()
+            ->findOrFail($id);
     }
 
     public function delete(PhotoReport $photoReport): void
     {
         $photoReport->delete();
     }
-
 }

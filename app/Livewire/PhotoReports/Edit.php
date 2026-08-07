@@ -2,6 +2,7 @@
 
 namespace App\Livewire\PhotoReports;
 
+use App\DTO\PhotoReports\UpdatePhotoReportData;
 use App\Models\AdvertisingObject;
 use App\Models\AdvertisingType;
 use App\Models\City;
@@ -9,11 +10,10 @@ use App\Models\Photo;
 use App\Models\PhotoReport;
 use App\Models\Region;
 use App\Services\PhotoReportService;
-use App\DTO\PhotoReports\UpdatePhotoReportData;
+use DomainException;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Livewire\Component;
 use Livewire\WithFileUploads;
-use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
-use DomainException;
 
 class Edit extends Component
 {
@@ -23,8 +23,11 @@ class Edit extends Component
     public PhotoReport $photoReport;
 
     public ?int $regionId = null;
+
     public ?int $cityId = null;
+
     public ?int $advertisingTypeId = null;
+
     public ?int $advertisingObjectId = null;
 
     public ?string $comment = null;
@@ -113,7 +116,7 @@ class Edit extends Component
         );
 
         try {
-            $photoReportService->update($this->photoReport, $data, $validated['photos'] ?? [],);
+            $photoReportService->update($this->photoReport, $data, $validated['photos'] ?? []);
         } catch (DomainException $e) {
             session()->flash(
                 'error',

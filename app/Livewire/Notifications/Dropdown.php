@@ -14,7 +14,7 @@ class Dropdown extends Component
     {
         $this->isOpen = ! $this->isOpen;
     }
-    
+
     public function markAsRead(int $notificationId): void
     {
         Notification::query()

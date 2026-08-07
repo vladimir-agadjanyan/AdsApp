@@ -13,12 +13,7 @@ use Maatwebsite\Excel\Concerns\WithTitle;
 /**
  * @implements WithMapping<AdvertisingObject>
  */
-class AdvertisingObjectsReportExport implements
-    FromQuery,
-    WithHeadings,
-    WithMapping,
-    ShouldAutoSize,
-    WithTitle
+class AdvertisingObjectsReportExport implements FromQuery, ShouldAutoSize, WithHeadings, WithMapping, WithTitle
 {
     public function __construct(
         private readonly ?int $regionId = null,
@@ -26,8 +21,7 @@ class AdvertisingObjectsReportExport implements
         private readonly ?int $counterpartyId = null,
         private readonly ?int $advertisingTypeId = null,
         private readonly ?int $objectStatusId = null,
-    ) {
-    }
+    ) {}
 
     /**
      * @return Builder<AdvertisingObject>

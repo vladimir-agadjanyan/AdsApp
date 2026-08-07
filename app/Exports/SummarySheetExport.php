@@ -15,16 +15,12 @@ use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\ShouldAutoSize;
 use Maatwebsite\Excel\Concerns\WithTitle;
 
-class SummarySheetExport implements
-    FromCollection,
-    ShouldAutoSize,
-    WithTitle
+class SummarySheetExport implements FromCollection, ShouldAutoSize, WithTitle
 {
     public function __construct(
         private readonly ?int $regionId = null,
         private readonly ?int $counterpartyId = null,
-    ) {
-    }
+    ) {}
 
     /**
      * @return Builder<AdvertisingObject>
@@ -128,8 +124,7 @@ class SummarySheetExport implements
             ->with('addendums')
             ->get()
             ->sum(
-                fn (Contract $contract): float =>
-                    $contract->total_amount
+                fn (Contract $contract): float => $contract->total_amount
             );
 
         $advertisingObjectsCount = (clone $objectsQuery)->count();

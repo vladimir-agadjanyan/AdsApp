@@ -21,20 +21,30 @@ class Create extends Component
     use AuthorizesRequests;
 
     public ?int $counterpartyId = null;
+
     public ?int $contract_id = null;
+
     public string $name = '';
+
     public ?int $advertising_type_id = null;
+
     public ?int $object_status_id = null;
+
     public ?int $regionId = null;
+
     public ?int $city_id = null;
+
     public string $address = '';
+
     public ?float $latitude = null;
+
     public ?float $longitude = null;
+
     public string $note = '';
 
     public function mount(): void
     {
-        $this->authorize('create',  AdvertisingObject::class);
+        $this->authorize('create', AdvertisingObject::class);
     }
 
     public function save(AdvertisingObjectService $advertisingObjectService): mixed
@@ -58,7 +68,7 @@ class Create extends Component
 
         $advertisingObjectService->create($data);
 
-        session()->flash('success','Рекламный объект успешно создан.'
+        session()->flash('success', 'Рекламный объект успешно создан.'
         );
 
         return redirect()->route('advertising-objects.index');

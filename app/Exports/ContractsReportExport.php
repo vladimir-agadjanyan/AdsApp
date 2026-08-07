@@ -13,12 +13,7 @@ use Maatwebsite\Excel\Concerns\WithTitle;
 /**
  * @implements WithMapping<Contract>
  */
-class ContractsReportExport implements
-    FromQuery,
-    WithHeadings,
-    WithMapping,
-    ShouldAutoSize,
-    WithTitle
+class ContractsReportExport implements FromQuery, ShouldAutoSize, WithHeadings, WithMapping, WithTitle
 {
     public function __construct(
         private readonly ?int $regionId = null,
@@ -26,8 +21,7 @@ class ContractsReportExport implements
         private readonly ?string $status = null,
         private readonly ?string $dateFrom = null,
         private readonly ?string $dateTo = null,
-    ) {
-    }
+    ) {}
 
     /**
      * @return Builder<Contract>

@@ -14,6 +14,5 @@ readonly class UpdateAdvertisingObjectData
         public float $longitude,
         public int $objectStatusId,
         public ?string $note,
-    ) {
-    }
+    ) {}
 }

@@ -6,13 +6,22 @@ use App\Models\ContractFile;
 
 class ContractFileRepository
 {
+    public function __construct(private readonly ContractFile $contractFile) {}
+
     public function create(array $data): ContractFile
     {
-        return ContractFile::create($data);
+        return $this->contractFile->create($data);
     }
 
-    public function delete(ContractFile $file): void
+    public function find(int $id): ContractFile
     {
-        $file->delete();
+        return $this->contractFile
+            ->newQuery()
+            ->findOrFail($id);
+    }
+
+    public function delete(ContractFile $contractFile): void
+    {
+        $contractFile->delete();
     }
 }

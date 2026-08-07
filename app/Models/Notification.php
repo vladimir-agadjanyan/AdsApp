@@ -48,9 +48,9 @@ class Notification extends Model
         return $this->belongsTo(Contract::class);
     }
 
-     /**
-    * @return BelongsTo<PhotoReport, $this>
-    */
+    /**
+     * @return BelongsTo<PhotoReport, $this>
+     */
     public function photoReport(): BelongsTo
     {
         return $this->belongsTo(PhotoReport::class);

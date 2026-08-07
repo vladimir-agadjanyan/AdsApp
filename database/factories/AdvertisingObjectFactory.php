@@ -29,7 +29,7 @@ class AdvertisingObjectFactory extends Factory
         $city = City::query()->inRandomOrder(null)->firstOrFail();
         $status = ObjectStatus::query()->inRandomOrder(null)->firstOrFail();
         $user = User::query()->inRandomOrder(null)->firstOrFail();
-        
+
         return [
             'name' => fake()->randomElement([
                 'LED-экран',
@@ -38,7 +38,7 @@ class AdvertisingObjectFactory extends Factory
                 'Остановка',
                 'Брандмауэр',
                 'Лайтбокс',
-            ]) . ' №' . fake()->numberBetween(1, 999),
+            ]).' №'.fake()->numberBetween(1, 999),
 
             'contract_id' => Contract::query()->inRandomOrder()->value('id'),
             'advertising_type_id' => AdvertisingType::query()->inRandomOrder()->value('id'),

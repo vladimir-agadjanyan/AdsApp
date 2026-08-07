@@ -10,16 +10,15 @@ use RuntimeException;
 
 class CounterpartyService
 {
-    public function __construct(private readonly CounterpartyRepository $counterpartyRepository)
-    {
-    }
+    public function __construct(private readonly CounterpartyRepository $counterpartyRepository) {}
 
     public function create(CreateCounterpartyData $data): Counterparty
     {
         return $this->counterpartyRepository->create($data);
     }
 
-    public function update(Counterparty $counterparty, UpdateCounterpartyData $data): Counterparty {
+    public function update(Counterparty $counterparty, UpdateCounterpartyData $data): Counterparty
+    {
         return $this->counterpartyRepository->update($counterparty, $data);
     }
 

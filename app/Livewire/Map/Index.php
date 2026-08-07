@@ -16,9 +16,13 @@ use Livewire\Component;
 class Index extends Component
 {
     public ?int $regionId = null;
+
     public ?int $cityId = null;
+
     public ?int $counterpartyId = null;
+
     public ?int $advertisingTypeId = null;
+
     public ?int $objectStatusId = null;
 
     public function updatedRegionId(): void
@@ -145,20 +149,15 @@ class Index extends Component
                 'latitude' => $object->latitude,
                 'longitude' => $object->longitude,
 
-                'counterparty' =>
-                    $object->contract->counterparty->name,
+                'counterparty' => $object->contract->counterparty->name,
 
-                'region' =>
-                    $object->city->region->name,
+                'region' => $object->city->region->name,
 
-                'city' =>
-                    $object->city->name,
+                'city' => $object->city->name,
 
-                'type' =>
-                    $object->advertisingType->name,
+                'type' => $object->advertisingType->name,
 
-                'status' =>
-                    $object->objectStatus->name,
+                'status' => $object->objectStatus->name,
 
                 'url' => route(
                     'advertising-objects.show',
@@ -176,8 +175,7 @@ class Index extends Component
     public function render(): View
     {
         return view('livewire.map.index', [
-            'advertisingObjects' =>
-                $this->getAdvertisingObjects(),
+            'advertisingObjects' => $this->getAdvertisingObjects(),
 
             'regions' => Region::query()
                 ->orderBy('name')

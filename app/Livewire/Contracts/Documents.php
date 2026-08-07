@@ -27,7 +27,7 @@ class Documents extends Component
     {
         $this->validate();
 
-        $contractFileService->upload(contract: $this->contract, file: $this->document, uploadedBy: auth()->id(),);
+        $contractFileService->upload(contract: $this->contract, file: $this->document, uploadedBy: auth()->id());
 
         $this->reset('document');
         $this->contract->load('files.uploadedBy');

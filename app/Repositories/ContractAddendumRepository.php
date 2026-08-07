@@ -9,9 +9,11 @@ use App\Models\ContractAddendum;
 
 class ContractAddendumRepository
 {
+    public function __construct(private readonly ContractAddendum $contractAddendum) {}
+
     public function create(CreateContractAddendumData $data): ContractAddendum
     {
-        return ContractAddendum::create([
+        return $this->contractAddendum->create([
             'contract_id' => $data->contractId,
             'number' => $data->number,
             'signed_at' => $data->signedAt,
@@ -37,7 +39,8 @@ class ContractAddendumRepository
 
     public function findForContract(Contract $contract, int $id): ContractAddendum
     {
-        return ContractAddendum::query()
+        return $this->contractAddendum
+            ->newQuery()
             ->where('contract_id', $contract->id)
             ->findOrFail($id);
     }

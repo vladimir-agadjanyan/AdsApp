@@ -2,21 +2,23 @@
 
 namespace App\Livewire\PhotoReports;
 
-use App\Models\PhotoReport;
-use App\Services\PhotoReportService;
 use App\DTO\PhotoReports\ApprovePhotoReportData;
 use App\DTO\PhotoReports\RejectPhotoReportData;
-use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
-use Livewire\Component;
-use Illuminate\Support\Facades\Auth;
+use App\Models\PhotoReport;
+use App\Services\PhotoReportService;
 use DomainException;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use Illuminate\Support\Facades\Auth;
+use Livewire\Component;
 
 class Show extends Component
 {
     use AuthorizesRequests;
 
     public PhotoReport $photoReport;
+
     public bool $canEdit = false;
+
     public ?string $reviewComment = null;
 
     public function mount(PhotoReport $photoReport, PhotoReportService $photoReportService): void
@@ -77,12 +79,11 @@ class Show extends Component
                 'max:2000',
             ],
         ], [
-            'reviewComment.required' =>
-                'Укажите причину отклонения фотоотчета.',
+            'reviewComment.required' => 'Укажите причину отклонения фотоотчета.',
         ]);
 
         try {
-            
+
             $data = new RejectPhotoReportData(checkedBy: (int) Auth::id(), reviewComment: $this->reviewComment);
             $photoReportService->reject($this->photoReport, $data);
 

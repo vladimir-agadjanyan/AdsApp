@@ -2,21 +2,22 @@
 
 namespace App\Services;
 
+use App\DTO\PhotoReports\ApprovePhotoReportData;
+use App\DTO\PhotoReports\CreatePhotoReportData;
+use App\DTO\PhotoReports\RejectPhotoReportData;
+use App\DTO\PhotoReports\UpdatePhotoReportData;
+use App\DTO\Notifications\CreateNotificationData;
+use App\DTO\Photos\CreatePhotoData;
 use App\Models\Photo;
 use App\Models\PhotoReport;
-use App\DTO\PhotoReports\CreatePhotoReportData;
-use App\DTO\PhotoReports\UpdatePhotoReportData;
-use App\DTO\PhotoReports\ApprovePhotoReportData;
-use App\DTO\PhotoReports\RejectPhotoReportData;
-use App\DTO\Photos\CreatePhotoData;
+use App\Repositories\NotificationRepository;
 use App\Repositories\PhotoReportRepository;
 use App\Repositories\PhotoRepository;
 use App\Repositories\UserRepository;
-use App\Repositories\NotificationRepository;
+use DomainException;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
-use DomainException;
 use RuntimeException;
 
 class PhotoReportService
@@ -26,41 +27,38 @@ class PhotoReportService
         private readonly PhotoRepository $photoRepository,
         private readonly UserRepository $userRepository,
         private readonly NotificationRepository $notificationRepository,
-    ) {
-    }
+    ) {}
 
     public function create(CreatePhotoReportData $data, array $photos): PhotoReport
     {
         $statusId = 1;
 
-        $photoReport = DB::transaction(function () use ($data, $photos, $statusId)
-        {
+        $photoReport = DB::transaction(function () use ($data, $photos, $statusId) {
 
-                $photoReport = $this->photoReportRepository->create($data, $statusId);
+            $photoReport = $this->photoReportRepository->create($data, $statusId);
 
-                foreach ($photos as $index => $photo) {
+            foreach ($photos as $index => $photo) {
 
-                    /** @var UploadedFile $photo */
+                /** @var UploadedFile $photo */
+                $path = $photo->store(
+                    'photo-reports',
+                    'public'
+                );
 
-                    $path = $photo->store(
-                        'photo-reports',
-                        'public'
-                    );
+                $photoData = new CreatePhotoData(
+                    photoReportId: $photoReport->id,
+                    originalName: $photo->getClientOriginalName(),
+                    filePath: $path,
+                    mimeType: $photo->getMimeType(),
+                    fileSize: $photo->getSize(),
+                    sortOrder: $index + 1,
+                );
 
-                    $photoData = new CreatePhotoData(
-                        photoReportId: $photoReport->id,
-                        originalName: $photo->getClientOriginalName(),
-                        filePath: $path,
-                        mimeType: $photo->getMimeType(),
-                        fileSize: $photo->getSize(),
-                        sortOrder: $index + 1,
-                    );
-
-                    $this->photoRepository->create($photoData);
-                }
-
-                return $photoReport;
+                $this->photoRepository->create($photoData);
             }
+
+            return $photoReport;
+        }
         );
 
         $photoReport->load('advertisingObject');
@@ -153,47 +151,45 @@ class PhotoReportService
         $wasRejected =
             $photoReport->photoReportStatus->name === 'Отклонен';
 
-        $photoReport = DB::transaction(function () use ($photoReport, $data, $photos, $wasRejected)
-        {
-                if ($wasRejected && empty($photos)) {
-                    throw new DomainException(
-                        'Для повторной отправки отклоненного фотоотчета необходимо добавить новую фотографию.'
-                    );
-                }
-
-                $photoReport = $this->photoReportRepository->update($photoReport, $data);
-
-                $sortOrder = (int) $photoReport
-                    ->photos()
-                    ->max('sort_order');
-
-                foreach ($photos as $photo) {
-
-                    /** @var UploadedFile $photo */
-
-                    $path = $photo->store('photo-reports', 'public');
-
-                    $photoData = new CreatePhotoData(
-                        photoReportId: $photoReport->id,
-                        originalName: $photo->getClientOriginalName(),
-                        filePath: $path,
-                        mimeType: $photo->getMimeType(),
-                        fileSize: $photo->getSize(),
-                        sortOrder: ++$sortOrder,
-                    );
-
-                    $this->photoRepository->create($photoData);
-                }
-
-                if ($wasRejected) {
-                    $photoReport = $this->photoReportRepository->resubmitForReview(
-                        $photoReport,
-                        1
-                    );
-                }
-
-                return $photoReport->refresh();
+        $photoReport = DB::transaction(function () use ($photoReport, $data, $photos, $wasRejected) {
+            if ($wasRejected && empty($photos)) {
+                throw new DomainException(
+                    'Для повторной отправки отклоненного фотоотчета необходимо добавить новую фотографию.'
+                );
             }
+
+            $photoReport = $this->photoReportRepository->update($photoReport, $data);
+
+            $sortOrder = (int) $photoReport
+                ->photos()
+                ->max('sort_order');
+
+            foreach ($photos as $photo) {
+
+                /** @var UploadedFile $photo */
+                $path = $photo->store('photo-reports', 'public');
+
+                $photoData = new CreatePhotoData(
+                    photoReportId: $photoReport->id,
+                    originalName: $photo->getClientOriginalName(),
+                    filePath: $path,
+                    mimeType: $photo->getMimeType(),
+                    fileSize: $photo->getSize(),
+                    sortOrder: ++$sortOrder,
+                );
+
+                $this->photoRepository->create($photoData);
+            }
+
+            if ($wasRejected) {
+                $photoReport = $this->photoReportRepository->resubmitForReview(
+                    $photoReport,
+                    1
+                );
+            }
+
+            return $photoReport->refresh();
+        }
         );
 
         if ($wasRejected) {
@@ -277,11 +273,13 @@ class PhotoReportService
 
         foreach ($users as $user) {
             $this->notificationRepository->create(
-                userId: $user->id,
-                advertisingObjectId: $photoReport->advertising_object_id,
-                photoReportId: $photoReport->id,
-                title: $title,
-                message: $message,
+                new CreateNotificationData(
+                    userId: $user->id,
+                    advertisingObjectId: $photoReport->advertising_object_id,
+                    photoReportId: $photoReport->id,
+                    title: '...',
+                    message: '...',
+                )
             );
         }
     }

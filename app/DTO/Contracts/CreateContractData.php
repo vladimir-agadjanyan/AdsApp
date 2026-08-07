@@ -13,6 +13,5 @@ final readonly class CreateContractData
         public float $amount,
         public ?string $note,
         public int $createdBy,
-    ) {
-    }
+    ) {}
 }

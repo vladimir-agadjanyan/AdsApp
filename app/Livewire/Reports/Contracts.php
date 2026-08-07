@@ -2,13 +2,12 @@
 
 namespace App\Livewire\Reports;
 
+use App\Exports\ContractsReportExport;
 use App\Models\Contract;
 use App\Models\Counterparty;
 use Illuminate\Contracts\View\View;
 use Illuminate\Database\Eloquent\Builder;
 use Livewire\Component;
-
-use App\Exports\ContractsReportExport;
 use Maatwebsite\Excel\Facades\Excel;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
@@ -89,7 +88,7 @@ class Contracts extends Component
                 dateFrom: $this->dateFrom,
                 dateTo: $this->dateTo,
             ),
-            'contracts-report-' . now()->format('Y-m-d') . '.xlsx'
+            'contracts-report-'.now()->format('Y-m-d').'.xlsx'
         );
     }
 

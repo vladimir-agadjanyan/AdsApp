@@ -12,6 +12,5 @@ final readonly class UpdateContractData
         public ?string $endDate,
         public float $amount,
         public ?string $note,
-    ) {
-    }
+    ) {}
 }

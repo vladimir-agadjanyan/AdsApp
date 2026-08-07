@@ -20,16 +20,27 @@ class Edit extends Component
     use AuthorizesRequests;
 
     public AdvertisingObject $advertisingObject;
+
     public ?int $counterpartyId = null;
+
     public ?int $contract_id = null;
+
     public string $name = '';
+
     public ?int $advertising_type_id = null;
+
     public ?int $object_status_id = null;
+
     public ?int $regionId = null;
+
     public ?int $city_id = null;
+
     public string $address = '';
+
     public ?float $latitude = null;
+
     public ?float $longitude = null;
+
     public string $note = '';
 
     public function mount(AdvertisingObject $advertisingObject): void

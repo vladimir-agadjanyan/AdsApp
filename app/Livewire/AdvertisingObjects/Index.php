@@ -9,25 +9,28 @@ use App\Models\Counterparty;
 use App\Models\ObjectStatus;
 use App\Models\Region;
 use App\Services\AdvertisingObjectService;
-use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use DomainException;
-
-
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Livewire\Component;
 use Livewire\WithPagination;
 
 class Index extends Component
 {
-    use WithPagination;
     use AuthorizesRequests;
+    use WithPagination;
 
     public string $search = '';
 
     public ?int $advertisingTypeId = null;
+
     public ?int $counterpartyId = null;
+
     public ?int $objectStatusId = null;
+
     public ?int $regionId = null;
+
     public ?int $cityId = null;
+
     public bool $showDeleteModal = false;
 
     public ?AdvertisingObject $advertisingObjectToDelete = null;
@@ -84,7 +87,8 @@ class Index extends Component
             return;
         }
 
-        try {$service->delete($this->advertisingObjectToDelete);
+        try {
+            $service->delete($this->advertisingObjectToDelete);
 
             session()->flash(
                 'success',
@@ -101,7 +105,6 @@ class Index extends Component
 
         $this->resetPage();
     }
-
 
     public function render()
     {
@@ -145,8 +148,6 @@ class Index extends Component
             })
             ->latest()
             ->paginate(10);
-
-
 
         return view('livewire.advertising-objects.index', [
             'advertisingObjects' => $advertisingObjects,

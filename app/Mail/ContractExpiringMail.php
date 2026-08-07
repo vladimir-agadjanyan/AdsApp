@@ -14,9 +14,7 @@ class ContractExpiringMail extends Mailable
     use Queueable;
     use SerializesModels;
 
-    public function __construct(public readonly Contract $contract, public readonly int $days)
-    {
-    }
+    public function __construct(public readonly Contract $contract, public readonly int $days) {}
 
     public function envelope(): Envelope
     {

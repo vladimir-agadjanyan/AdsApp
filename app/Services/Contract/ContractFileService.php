@@ -2,9 +2,9 @@
 
 namespace App\Services\Contract;
 
-use App\Repositories\ContractFileRepository;
 use App\Models\Contract;
 use App\Models\ContractFile;
+use App\Repositories\ContractFileRepository;
 use Illuminate\Support\Facades\Storage;
 use Livewire\Features\SupportFileUploads\TemporaryUploadedFile;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
@@ -13,8 +13,7 @@ class ContractFileService
 {
     public function __construct(
         private readonly ContractFileRepository $contractFileRepository,
-    ) {
-    }
+    ) {}
 
     public function upload(Contract $contract, TemporaryUploadedFile $file, ?int $contractAddendumId = null, ?int $uploadedBy = null): ContractFile
     {

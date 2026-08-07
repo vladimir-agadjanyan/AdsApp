@@ -7,12 +7,10 @@ use App\DTO\AdvertisingObjects\UpdateAdvertisingObjectData;
 use App\Models\AdvertisingObject;
 use Illuminate\Database\Eloquent\Collection;
 
-
 class AdvertisingObjectRepository
 {
-    public function __construct(private readonly AdvertisingObject $advertisingObject)
-    {
-    }
+    public function __construct(private readonly AdvertisingObject $advertisingObject) {}
+
     public function create(CreateAdvertisingObjectData $data): AdvertisingObject
     {
         return $this->advertisingObject->create([
@@ -46,9 +44,9 @@ class AdvertisingObjectRepository
         return $advertisingObject;
     }
 
-       /**
-    * @return Collection<int, AdvertisingObject>
-    */
+    /**
+     * @return Collection<int, AdvertisingObject>
+     */
     public function getWithoutTodayPhotoReport(): Collection
     {
         return $this->advertisingObject

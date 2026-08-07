@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Reports;
 
+use App\Exports\SummaryReportExport;
 use App\Models\AdvertisingObject;
 use App\Models\AdvertisingType;
 use App\Models\Contract;
@@ -12,7 +13,6 @@ use App\Models\Region;
 use Illuminate\Contracts\View\View;
 use Illuminate\Database\Eloquent\Builder;
 use Livewire\Component;
-use App\Exports\SummaryReportExport;
 use Maatwebsite\Excel\Facades\Excel;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
@@ -110,7 +110,7 @@ class Summary extends Component
                 )
             );
     }
-    
+
     public function exportExcel(): BinaryFileResponse
     {
         return Excel::download(
@@ -118,7 +118,7 @@ class Summary extends Component
                 regionId: $this->regionId,
                 counterpartyId: $this->counterpartyId,
             ),
-            'summary-report-' . now()->format('Y-m-d') . '.xlsx'
+            'summary-report-'.now()->format('Y-m-d').'.xlsx'
         );
     }
 
@@ -132,7 +132,7 @@ class Summary extends Component
         $contractsAmount = (clone $contractsQuery)
             ->with('addendums')
             ->get()
-            ->sum(fn (Contract $contract): float =>  $contract->total_amount);
+            ->sum(fn (Contract $contract): float => $contract->total_amount);
 
         $advertisingObjectsCount = (clone $objectsQuery)->count();
         $photoReportsCount = (clone $photoReportsQuery)->count();
@@ -187,7 +187,6 @@ class Summary extends Component
             ->orderBy('name')
             ->get();
 
-
         /*
         |----------------------------------------------------------------------
         | Объекты по типам рекламы
@@ -212,11 +211,10 @@ class Summary extends Component
                     if ($this->counterpartyId) {
                         $query->whereHas(
                             'contract',
-                            fn (Builder $contract) =>
-                                $contract->where(
-                                    'counterparty_id',
-                                    $this->counterpartyId
-                                )
+                            fn (Builder $contract) => $contract->where(
+                                'counterparty_id',
+                                $this->counterpartyId
+                            )
                         );
                     }
                 },
@@ -248,11 +246,10 @@ class Summary extends Component
                     if ($this->counterpartyId) {
                         $query->whereHas(
                             'advertisingObject.contract',
-                            fn (Builder $contract) =>
-                                $contract->where(
-                                    'counterparty_id',
-                                    $this->counterpartyId
-                                )
+                            fn (Builder $contract) => $contract->where(
+                                'counterparty_id',
+                                $this->counterpartyId
+                            )
                         );
                     }
                 },

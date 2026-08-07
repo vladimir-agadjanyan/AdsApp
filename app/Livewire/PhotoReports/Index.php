@@ -8,9 +8,9 @@ use App\Models\PhotoReport;
 use App\Models\PhotoReportStatus;
 use App\Models\Region;
 use App\Services\PhotoReportService;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Livewire\Component;
 use Livewire\WithPagination;
-use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
 class Index extends Component
 {
@@ -18,13 +18,21 @@ class Index extends Component
     use WithPagination;
 
     public string $search = '';
+
     public ?int $regionId = null;
+
     public ?int $cityId = null;
+
     public ?int $photoReportStatusId = null;
+
     public ?string $dateFrom = null;
+
     public ?string $dateTo = null;
+
     public ?int $advertisingTypeId = null;
+
     public bool $showDeleteModal = false;
+
     public ?PhotoReport $photoReportToDelete = null;
 
     public function resetFilters(): void

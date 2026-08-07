@@ -8,9 +8,7 @@ use App\Models\Counterparty;
 
 class CounterpartyRepository
 {
-    public function __construct(private readonly Counterparty $counterparty)
-    {
-    }
+    public function __construct(private readonly Counterparty $counterparty) {}
 
     public function create(CreateCounterpartyData $data): Counterparty
     {

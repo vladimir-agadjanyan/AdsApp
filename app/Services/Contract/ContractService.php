@@ -4,16 +4,15 @@ namespace App\Services\Contract;
 
 use App\DTO\Contracts\CreateContractData;
 use App\DTO\Contracts\UpdateContractData;
-use App\Repositories\ContractRepository;
 use App\Models\Contract;
+use App\Repositories\ContractRepository;
 use RuntimeException;
 
 class ContractService
 {
     public function __construct(
         private readonly ContractRepository $contractRepository,
-    ) {
-    }
+    ) {}
 
     public function create(CreateContractData $data): Contract
     {

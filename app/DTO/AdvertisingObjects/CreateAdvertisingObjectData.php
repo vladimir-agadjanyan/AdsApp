@@ -15,6 +15,5 @@ readonly class CreateAdvertisingObjectData
         public int $objectStatusId,
         public int $createdBy,
         public ?string $note,
-    ) {
-    }
+    ) {}
 }

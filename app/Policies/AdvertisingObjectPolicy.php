@@ -38,7 +38,7 @@ class AdvertisingObjectPolicy
         return $user->isAdmin();
     }
 
-    public function restore( User $user, AdvertisingObject $advertisingObject): bool
+    public function restore(User $user, AdvertisingObject $advertisingObject): bool
     {
         return false;
     }

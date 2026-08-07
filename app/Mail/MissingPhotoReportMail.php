@@ -16,8 +16,7 @@ class MissingPhotoReportMail extends Mailable
 
     public function __construct(
         public readonly AdvertisingObject $advertisingObject,
-    ) {
-    }
+    ) {}
 
     public function envelope(): Envelope
     {

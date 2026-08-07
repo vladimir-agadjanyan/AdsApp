@@ -2,18 +2,21 @@
 
 namespace App\Repositories;
 
+use App\DTO\Notifications\CreateNotificationData;
 use App\Models\Notification;
 
 class NotificationRepository
 {
-    public function create(int $userId, int $advertisingObjectId, int $photoReportId, string $title, string $message): Notification
+    public function __construct(private readonly Notification $notification) {}
+
+    public function create(CreateNotificationData $data): Notification
     {
-        return Notification::query()->create([
-            'user_id' => $userId,
-            'advertising_object_id' => $advertisingObjectId,
-            'photo_report_id' => $photoReportId,
-            'title' => $title,
-            'message' => $message,
+        return $this->notification->create([
+            'user_id' => $data->userId,
+            'advertising_object_id' => $data->advertisingObjectId,
+            'photo_report_id' => $data->photoReportId,
+            'title' => $data->title,
+            'message' => $data->message,
         ]);
     }
 }

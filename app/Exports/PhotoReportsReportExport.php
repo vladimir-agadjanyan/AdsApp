@@ -13,12 +13,7 @@ use Maatwebsite\Excel\Concerns\WithTitle;
 /**
  * @implements WithMapping<PhotoReport>
  */
-class PhotoReportsReportExport implements
-    FromQuery,
-    WithHeadings,
-    WithMapping,
-    ShouldAutoSize,
-    WithTitle
+class PhotoReportsReportExport implements FromQuery, ShouldAutoSize, WithHeadings, WithMapping, WithTitle
 {
     public function __construct(
         private readonly ?int $regionId = null,
@@ -27,8 +22,7 @@ class PhotoReportsReportExport implements
         private readonly ?int $photoReportStatusId = null,
         private readonly ?string $dateFrom = null,
         private readonly ?string $dateTo = null,
-    ) {
-    }
+    ) {}
 
     /**
      * @return Builder<PhotoReport>
