@@ -2,34 +2,31 @@
 
 namespace App\Services;
 
+use App\DTO\Counterparties\CreateCounterpartyData;
+use App\DTO\Counterparties\UpdateCounterpartyData;
 use App\Models\Counterparty;
+use App\Repositories\CounterpartyRepository;
+use RuntimeException;
 
 class CounterpartyService
 {
-    public function __construct(protected Counterparty $counterparty) {
+    public function __construct(
+        private readonly CounterpartyRepository $counterpartyRepository,
+    ) {
     }
 
-    public function create(array $data): Counterparty
+    public function create(CreateCounterpartyData $data): Counterparty
     {
-        return $this->counterparty->create($data);
+        return $this->counterpartyRepository->create($data);
     }
 
-    public function update(Counterparty $counterparty, array $data): Counterparty
-    {
-        $counterparty->update($data);
-
-        return $counterparty->refresh();
+    public function update(Counterparty $counterparty, UpdateCounterpartyData $data): Counterparty {
+        return $this->counterpartyRepository->update($counterparty, $data);
     }
 
-    public function delete(Counterparty $counterparty): void
+    public function find(int $id): Counterparty
     {
-        if (! $this->canDelete($counterparty)) {
-            throw new \RuntimeException(
-                'Невозможно удалить контрагента, так как он используется в договорах.'
-            );
-        }
-
-        $counterparty->delete();
+        return $this->counterpartyRepository->find($id);
     }
 
     public function canDelete(Counterparty $counterparty): bool
@@ -37,8 +34,14 @@ class CounterpartyService
         return ! $counterparty->contracts()->exists();
     }
 
-    public function find(int $id): Counterparty
+    public function delete(Counterparty $counterparty): void
     {
-        return $this->counterparty->newQuery()->findOrFail($id);
+        if (! $this->canDelete($counterparty)) {
+            throw new RuntimeException(
+                'Невозможно удалить контрагента, так как он используется в договорах.'
+            );
+        }
+
+        $this->counterpartyRepository->delete($counterparty);
     }
 }

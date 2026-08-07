@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Counterparties;
 
+use App\DTO\Counterparties\CreateCounterpartyData;
 use App\Models\Counterparty;
 use App\Services\CounterpartyService;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
@@ -13,25 +14,16 @@ class Create extends Component
     use AuthorizesRequests;
 
     public string $name = '';
-
     public string $inn = '';
-
     public string $phone = '';
-
     public string $email = '';
-
     public string $contact_person = '';
-
     public string $address = '';
-
     public string $note = '';
 
     public function mount(): void
     {
-        $this->authorize(
-            'create',
-            Counterparty::class
-        );
+        $this->authorize('create', Counterparty::class);
     }
 
     protected function rules(): array
@@ -84,24 +76,24 @@ class Create extends Component
 
     public function save(CounterpartyService $service): void
     {
-        $this->authorize(
-            'create',
-            Counterparty::class
+        $this->authorize('create', Counterparty::class);
+        $this->validate();
+
+        $data = new CreateCounterpartyData(
+            name: $this->name,
+            inn: $this->inn,
+            phone: $this->phone,
+            email: $this->email ?: null,
+            address: $this->address ?: null,
+            contactPerson: $this->contact_person,
+            note: $this->note ?: null,
         );
 
-        $validated = $this->validate();
+        $service->create($data);
 
-        $service->create($validated);
+        session()->flash('success','Контрагент успешно создан.');
 
-        session()->flash(
-            'success',
-            'Контрагент успешно создан.'
-        );
-
-        $this->redirectRoute(
-            'counterparties.index',
-            navigate: true
-        );
+        $this->redirectRoute('counterparties.index', navigate: true);
     }
 
     public function render()

@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Counterparties;
 
+use App\DTO\Counterparties\UpdateCounterpartyData;
 use App\Models\Counterparty;
 use App\Services\CounterpartyService;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
@@ -13,27 +14,18 @@ class Edit extends Component
     use AuthorizesRequests;
 
     public Counterparty $counterparty;
-
     public string $name = '';
-
     public string $inn = '';
-
     public string $contact_person = '';
-
     public string $phone = '';
-
     public string $email = '';
-
     public string $address = '';
-
     public string $note = '';
 
     public function mount(Counterparty $counterparty): void
     {
         $this->authorize('update', $counterparty);
-
         $this->counterparty = $counterparty;
-
         $this->name = $counterparty->name;
         $this->inn = $counterparty->inn;
         $this->contact_person = $counterparty->contact_person;
@@ -97,22 +89,23 @@ class Edit extends Component
     {
         $this->authorize('update', $this->counterparty);
 
-        $validated = $this->validate();
+        $this->validate();
 
-        $service->update(
-            $this->counterparty,
-            $validated
+        $data = new UpdateCounterpartyData(
+            name: $this->name,
+            inn: $this->inn,
+            phone: $this->phone,
+            email: $this->email ?: null,
+            address: $this->address ?: null,
+            contactPerson: $this->contact_person,
+            note: $this->note ?: null,
         );
 
-        session()->flash(
-            'success',
-            'Контрагент успешно обновлен.'
-        );
+        $this->counterparty = $service->update($this->counterparty, $data);
 
-        $this->redirectRoute(
-            'counterparties.index',
-            navigate: true
-        );
+        session()->flash('success', 'Контрагент успешно обновлен.');
+
+        $this->redirectRoute('counterparties.index', navigate: true);
     }
 
     public function render()
