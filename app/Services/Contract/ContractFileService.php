@@ -2,6 +2,7 @@
 
 namespace App\Services\Contract;
 
+use App\Repositories\ContractFileRepository;
 use App\Models\Contract;
 use App\Models\ContractFile;
 use Illuminate\Support\Facades\Storage;
@@ -10,15 +11,13 @@ use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 class ContractFileService
 {
-    /**
-     * Загружает файл договора и создает запись в БД.
-     */
-    public function upload(
-        Contract $contract,
-        TemporaryUploadedFile $file,
-        ?int $contractAddendumId = null,
-        ?int $uploadedBy = null,
-    ): ContractFile {
+    public function __construct(
+        private readonly ContractFileRepository $contractFileRepository,
+    ) {
+    }
+
+    public function upload(Contract $contract, TemporaryUploadedFile $file, ?int $contractAddendumId = null, ?int $uploadedBy = null): ContractFile
+    {
         $originalName = $file->getClientOriginalName();
         $mimeType = $file->getMimeType();
         $fileSize = $file->getSize();
@@ -28,7 +27,7 @@ class ContractFileService
             'local'
         );
         try {
-            return ContractFile::create([
+            return $this->contractFileRepository->create([
                 'contract_id' => $contract->id,
                 'contract_addendum_id' => $contractAddendumId,
                 'original_name' => $originalName,
@@ -62,6 +61,6 @@ class ContractFileService
     {
         Storage::disk('local')->delete($file->file_path);
 
-        $file->delete();
+        $this->contractFileRepository->delete($file);
     }
 }
