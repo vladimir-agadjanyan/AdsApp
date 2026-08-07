@@ -10,9 +10,8 @@ use RuntimeException;
 
 class CounterpartyService
 {
-    public function __construct(
-        private readonly CounterpartyRepository $counterpartyRepository,
-    ) {
+    public function __construct(private readonly CounterpartyRepository $counterpartyRepository)
+    {
     }
 
     public function create(CreateCounterpartyData $data): Counterparty
