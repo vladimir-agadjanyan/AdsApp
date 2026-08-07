@@ -9,6 +9,7 @@ use App\Models\Photo;
 use App\Models\PhotoReport;
 use App\Models\Region;
 use App\Services\PhotoReportService;
+use App\DTO\PhotoReports\UpdatePhotoReportData;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
@@ -33,10 +34,8 @@ class Edit extends Component
      */
     public array $photos = [];
 
-    public function mount(
-        PhotoReport $photoReport,
-        PhotoReportService $photoReportService
-    ): void {
+    public function mount(PhotoReport $photoReport, PhotoReportService $photoReportService): void
+    {
         $this->authorize('update', $photoReport);
 
         $this->photoReport = $photoReport->load([
@@ -86,7 +85,7 @@ class Edit extends Component
 
     public function save(PhotoReportService $photoReportService): void
     {
-            $this->authorize('update', $this->photoReport);
+        $this->authorize('update', $this->photoReport);
 
         $validated = $this->validate([
             'advertisingObjectId' => [
@@ -108,31 +107,25 @@ class Edit extends Component
             ],
         ]);
 
+        $data = new UpdatePhotoReportData(
+            advertisingObjectId: (int) $validated['advertisingObjectId'],
+            comment: $validated['comment'] ?? null,
+        );
+
         try {
-            $photoReportService->update(
-                $this->photoReport,
-                [
-                    'advertising_object_id' => $validated['advertisingObjectId'],
-                    'comment' => $validated['comment'] ?? null,
-                ],
-                $validated['photos'] ?? [],
-            );
+            $photoReportService->update($this->photoReport, $data, $validated['photos'] ?? [],);
         } catch (DomainException $e) {
-            session()->flash('error', $e->getMessage());
+            session()->flash(
+                'error',
+                $e->getMessage()
+            );
 
             return;
         }
 
-        session()->flash(
-            'success',
-            'Фотоотчет успешно обновлен.'
-        );
+        session()->flash('success', 'Фотоотчет успешно обновлен.');
 
-        $this->redirectRoute(
-            'photo-reports.show',
-            $this->photoReport,
-            navigate: true
-        );
+        $this->redirectRoute('photo-reports.show', $this->photoReport, navigate: true);
     }
 
     public function deletePhoto(

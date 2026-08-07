@@ -192,23 +192,40 @@
                     </td>
 
                     <td>
+                        <div class="table-actions">
 
-                            <a href="{{ route('photo-reports.show', $photoReport) }}" wire:navigate class="btn btn-sm btn-outline-primary" title="Просмотр">
+                            <a
+                                href="{{ route('photo-reports.show', $photoReport) }}"
+                                wire:navigate
+                                class="btn btn-sm btn-outline-primary"
+                                title="Просмотр"
+                            >
                                 <i class="bi bi-eye"></i>
                             </a>
 
                             @can('update', $photoReport)
-                                <a href="{{ route('photo-reports.edit', $photoReport) }}" wire:navigate class="btn btn-sm btn-outline-primary" title="Редактировать">
+                                <a
+                                    href="{{ route('photo-reports.edit', $photoReport) }}"
+                                    wire:navigate
+                                    class="btn btn-sm btn-outline-primary"
+                                    title="Редактировать"
+                                >
                                     <i class="bi bi-pencil"></i>
                                 </a>
                             @endcan
 
                             @can('delete', $photoReport)
-                                <button type="button" class="btn btn-sm btn-outline-danger" wire:click="confirmDelete({{ $photoReport->id }})" title="Удалить">
+                                <button
+                                    type="button"
+                                    class="btn btn-sm btn-outline-danger"
+                                    wire:click="confirmDelete({{ $photoReport->id }})"
+                                    title="Удалить"
+                                >
                                     <i class="bi bi-trash"></i>
                                 </button>
                             @endcan
 
+                        </div>
                     </td>
 
                 </tr>

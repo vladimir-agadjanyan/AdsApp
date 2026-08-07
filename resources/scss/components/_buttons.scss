@@ -44,3 +44,14 @@
     min-height: $btn-height-lg;
     padding: $btn-padding-y-lg $btn-padding-x-lg;
 }
+
+.table-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    flex-wrap: nowrap;
+
+    .btn {
+        flex: 0 0 auto;
+    }
+}

@@ -7,10 +7,12 @@ use App\Models\AdvertisingType;
 use App\Models\City;
 use App\Models\Region;
 use App\Services\PhotoReportService;
+use App\DTO\PhotoReports\CreatePhotoReportData;
 use Livewire\Component;
 use Livewire\Features\SupportFileUploads\WithFileUploads;
 use App\Models\PhotoReport;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use Illuminate\Support\Facades\Auth;
 
 class Create extends Component
 {
@@ -64,19 +66,19 @@ class Create extends Component
     public function save(PhotoReportService $service)
     {
         $this->authorize('create', PhotoReport::class);
-    
+
         $this->validate();
-    
-        $service->create([
-            'advertising_object_id' => $this->advertisingObjectId,
-            'comment' => $this->comment,
-        ], $this->photos);
-    
-        session()->flash(
-            'success',
-            'Фотоотчет успешно создан.'
+
+        $data = new CreatePhotoReportData(
+            advertisingObjectId: (int) $this->advertisingObjectId,
+            createdBy: (int) Auth::id(),
+            comment: $this->comment,
         );
-    
+
+        $service->create($data, $this->photos);
+
+        session()->flash('success', 'Фотоотчет успешно создан.');
+
         return redirect()->route('photo-reports.index');
     }
 

@@ -4,24 +4,23 @@ namespace App\Livewire\PhotoReports;
 
 use App\Models\PhotoReport;
 use App\Services\PhotoReportService;
-use DomainException;
+use App\DTO\PhotoReports\ApprovePhotoReportData;
+use App\DTO\PhotoReports\RejectPhotoReportData;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Livewire\Component;
+use Illuminate\Support\Facades\Auth;
+use DomainException;
 
 class Show extends Component
 {
     use AuthorizesRequests;
 
     public PhotoReport $photoReport;
-
     public bool $canEdit = false;
-
     public ?string $reviewComment = null;
 
-    public function mount(
-        PhotoReport $photoReport,
-        PhotoReportService $photoReportService
-    ): void {
+    public function mount(PhotoReport $photoReport, PhotoReportService $photoReportService): void
+    {
         $this->authorize('view', $photoReport);
 
         $this->photoReport = $photoReport->load([
@@ -34,20 +33,14 @@ class Show extends Component
             'photos',
         ]);
 
-        $this->canEdit = $photoReportService->canEdit(
-            $this->photoReport
-        );
+        $this->canEdit = $photoReportService->canEdit($this->photoReport);
 
         $this->reviewComment = $this->photoReport->review_comment;
     }
 
-    public function approve(
-        PhotoReportService $photoReportService
-    ): void {
-        $this->authorize(
-            'review',
-            $this->photoReport
-        );
+    public function approve(PhotoReportService $photoReportService): void
+    {
+        $this->authorize('review', $this->photoReport);
 
         $this->validate([
             'reviewComment' => [
@@ -58,37 +51,24 @@ class Show extends Component
         ]);
 
         try {
-            $photoReportService->approve(
-                $this->photoReport,
-                (int) auth()->id(),
-                $this->reviewComment
-            );
+
+            $data = new ApprovePhotoReportData(checkedBy: (int) Auth::id(), reviewComment: $this->reviewComment);
+            $photoReportService->approve($this->photoReport, $data);
+
         } catch (DomainException $e) {
-            session()->flash(
-                'error',
-                $e->getMessage()
-            );
+            session()->flash('error', $e->getMessage());
 
             return;
         }
 
-        $this->refreshPhotoReport(
-            $photoReportService
-        );
+        session()->flash('success', 'Фотоотчет успешно одобрен.');
 
-        session()->flash(
-            'success',
-            'Фотоотчет успешно одобрен.'
-        );
+        $this->redirectRoute('photo-reports.index', navigate: true);
     }
 
-    public function reject(
-        PhotoReportService $photoReportService
-    ): void {
-        $this->authorize(
-            'review',
-            $this->photoReport
-        );
+    public function reject(PhotoReportService $photoReportService): void
+    {
+        $this->authorize('review', $this->photoReport);
 
         $this->validate([
             'reviewComment' => [
@@ -102,50 +82,19 @@ class Show extends Component
         ]);
 
         try {
-            $photoReportService->reject(
-                $this->photoReport,
-                (int) auth()->id(),
-                $this->reviewComment
-            );
+            
+            $data = new RejectPhotoReportData(checkedBy: (int) Auth::id(), reviewComment: $this->reviewComment);
+            $photoReportService->reject($this->photoReport, $data);
+
         } catch (DomainException $e) {
-            session()->flash(
-                'error',
-                $e->getMessage()
-            );
+            session()->flash('error', $e->getMessage());
 
             return;
         }
 
-        $this->refreshPhotoReport(
-            $photoReportService
-        );
+        session()->flash('success', 'Фотоотчет отклонен.');
 
-        session()->flash(
-            'success',
-            'Фотоотчет отклонен.'
-        );
-    }
-
-    private function refreshPhotoReport(
-        PhotoReportService $photoReportService
-    ): void {
-        $this->photoReport->refresh();
-
-        $this->photoReport->load([
-            'advertisingObject.contract.counterparty',
-            'advertisingObject.city.region',
-            'advertisingObject.advertisingType',
-            'photoReportStatus',
-            'createdBy',
-            'checkedBy',
-            'photos',
-        ]);
-
-        $this->canEdit = $photoReportService->canEdit(
-            $this->photoReport
-        );
-
-        $this->reviewComment = $this->photoReport->review_comment;
+        $this->redirectRoute('photo-reports.index', navigate: true);
     }
 
     public function render()
