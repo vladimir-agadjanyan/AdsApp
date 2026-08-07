@@ -4,6 +4,8 @@ namespace App\Repositories;
 
 use App\DTO\Photos\CreatePhotoData;
 use App\Models\Photo;
+use Illuminate\Database\Eloquent\Collection;
+use App\Models\AdvertisingObject;
 
 class PhotoRepository
 {
@@ -29,5 +31,20 @@ class PhotoRepository
         Photo::query()
             ->where('photo_report_id', $photoReportId)
             ->delete();
+    }
+
+    /**
+     * @return Collection<int, AdvertisingObject>
+     */
+    public function getWithoutTodayPhotoReport(): Collection
+    {
+        return AdvertisingObject::query()
+            ->whereHas('objectStatus', function ($query) {
+                $query->where('name', 'Активный');
+            })
+            ->whereDoesntHave('photoReports', function ($query) {
+                $query->whereDate('created_at', today());
+            })
+            ->get();
     }
 }
