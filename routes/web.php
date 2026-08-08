@@ -29,13 +29,13 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware('guest')->group(function () {
-    Route::get('/login', Login::class)->name('login');
+    Route::get('/', Login::class)->name('login');
 });
 
 Route::middleware('auth')->group(function () {
 
-    Route::get('/', Index::class)->name('dashboard');
-
+    Route::get('/dashboard', Index::class)->name('dashboard');
+    
     Route::get('/change-password', ChangePassword::class)->name('password.change');
 
     Route::get('/contracts', ContractIndex::class)->name('contracts.index');

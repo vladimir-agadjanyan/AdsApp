@@ -2,11 +2,12 @@
 
 namespace App\Services;
 
+use App\DTO\AuditLog\CreateAuditLogData;
+use App\DTO\Notifications\CreateNotificationData;
 use App\DTO\PhotoReports\ApprovePhotoReportData;
 use App\DTO\PhotoReports\CreatePhotoReportData;
 use App\DTO\PhotoReports\RejectPhotoReportData;
 use App\DTO\PhotoReports\UpdatePhotoReportData;
-use App\DTO\Notifications\CreateNotificationData;
 use App\DTO\Photos\CreatePhotoData;
 use App\Models\Photo;
 use App\Models\PhotoReport;
@@ -16,6 +17,7 @@ use App\Repositories\PhotoRepository;
 use App\Repositories\UserRepository;
 use DomainException;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use RuntimeException;
@@ -27,22 +29,29 @@ class PhotoReportService
         private readonly PhotoRepository $photoRepository,
         private readonly UserRepository $userRepository,
         private readonly NotificationRepository $notificationRepository,
-    ) {}
+        private readonly AuditLogService $auditLogService,
+    ) {
+    }
 
     public function create(CreatePhotoReportData $data, array $photos): PhotoReport
     {
         $statusId = 1;
 
-        $photoReport = DB::transaction(function () use ($data, $photos, $statusId) {
-
-            $photoReport = $this->photoReportRepository->create($data, $statusId);
+        $photoReport = DB::transaction(function () use (
+            $data,
+            $photos,
+            $statusId,
+        ) {
+            $photoReport = $this->photoReportRepository->create(
+                $data,
+                $statusId,
+            );
 
             foreach ($photos as $index => $photo) {
-
                 /** @var UploadedFile $photo */
                 $path = $photo->store(
                     'photo-reports',
-                    'public'
+                    'public',
                 );
 
                 $photoData = new CreatePhotoData(
@@ -58,10 +67,29 @@ class PhotoReportService
             }
 
             return $photoReport;
-        }
-        );
+        });
 
         $photoReport->load('advertisingObject');
+
+        $this->auditLogService->create(
+            new CreateAuditLogData(
+                userId: Auth::id(),
+                action: 'created',
+                entityType: PhotoReport::class,
+                entityId: $photoReport->id,
+                description: sprintf(
+                    'Создан фотоотчет по объекту «%s»',
+                    $photoReport->advertisingObject->name,
+                ),
+                oldValues: null,
+                newValues: [
+                    'advertising_object_id' => $photoReport->advertising_object_id,
+                    'photo_report_status_id' => $photoReport->photo_report_status_id,
+                    'created_by' => $photoReport->created_by,
+                    'comment' => $photoReport->comment,
+                ],
+            ),
+        );
 
         $this->notifyRole(
             'Проверяющий',
@@ -69,8 +97,8 @@ class PhotoReportService
             'Создан новый фотоотчет',
             sprintf(
                 'Создан новый фотоотчет по объекту «%s».',
-                $photoReport->advertisingObject->name
-            )
+                $photoReport->advertisingObject->name,
+            ),
         );
 
         return $photoReport;
@@ -85,20 +113,41 @@ class PhotoReportService
     {
         if ($photoReport->photoReportStatus->name !== 'На проверке') {
             throw new DomainException(
-                'Проверить можно только фотоотчет со статусом «На проверке».'
+                'Проверить можно только фотоотчет со статусом «На проверке».',
             );
         }
 
+        $oldValues = [
+            'photo_report_status_id' => $photoReport->photo_report_status_id,
+            'checked_by' => $photoReport->checked_by,
+            'checked_at' => $photoReport->checked_at?->format('Y-m-d H:i:s'),
+            'review_comment' => $photoReport->review_comment,
+        ];
+
         $statusId = 2;
-
-        $photoReport = $this->photoReportRepository->approve(
-            $photoReport,
-            $data,
-            $statusId
-        );
-
+        $photoReport = $this->photoReportRepository->approve($photoReport, $data, $statusId);
         $photoReport->refresh();
         $photoReport->load('advertisingObject');
+
+        $this->auditLogService->create(
+            new CreateAuditLogData(
+                userId: Auth::id(),
+                action: 'approved',
+                entityType: PhotoReport::class,
+                entityId: $photoReport->id,
+                description: sprintf(
+                    'Одобрен фотоотчет по объекту «%s»',
+                    $photoReport->advertisingObject->name,
+                ),
+                oldValues: $oldValues,
+                newValues: [
+                    'photo_report_status_id' => $photoReport->photo_report_status_id,
+                    'checked_by' => $photoReport->checked_by,
+                    'checked_at' => $photoReport->checked_at?->format('Y-m-d H:i:s'),
+                    'review_comment' => $photoReport->review_comment,
+                ],
+            ),
+        );
 
         $this->notifyRole(
             'Менеджер',
@@ -106,8 +155,8 @@ class PhotoReportService
             'Фотоотчет одобрен',
             sprintf(
                 'Фотоотчет по объекту «%s» одобрен.',
-                $photoReport->advertisingObject->name
-            )
+                $photoReport->advertisingObject->name,
+            ),
         );
 
         return $photoReport;
@@ -117,14 +166,42 @@ class PhotoReportService
     {
         if ($photoReport->photoReportStatus->name !== 'На проверке') {
             throw new DomainException(
-                'Проверить можно только фотоотчет со статусом «На проверке».'
+                'Проверить можно только фотоотчет со статусом «На проверке».',
             );
         }
+
+        $oldValues = [
+            'photo_report_status_id' => $photoReport->photo_report_status_id,
+            'checked_by' => $photoReport->checked_by,
+            'checked_at' => $photoReport->checked_at?->format('Y-m-d H:i:s'),
+            'review_comment' => $photoReport->review_comment,
+        ];
 
         $statusId = 3;
         $photoReport = $this->photoReportRepository->reject($photoReport, $data, $statusId);
         $photoReport->refresh();
         $photoReport->load('advertisingObject');
+
+        $this->auditLogService->create(
+            new CreateAuditLogData(
+                userId: Auth::id(),
+                action: 'rejected',
+                entityType: PhotoReport::class,
+                entityId: $photoReport->id,
+                description: sprintf(
+                    'Отклонен фотоотчет по объекту «%s». Причина: %s',
+                    $photoReport->advertisingObject->name,
+                    $data->reviewComment,
+                ),
+                oldValues: $oldValues,
+                newValues: [
+                    'photo_report_status_id' => $photoReport->photo_report_status_id,
+                    'checked_by' => $photoReport->checked_by,
+                    'checked_at' => $photoReport->checked_at?->format('Y-m-d H:i:s'),
+                    'review_comment' => $photoReport->review_comment,
+                ],
+            ),
+        );
 
         $this->notifyRole(
             'Менеджер',
@@ -133,8 +210,8 @@ class PhotoReportService
             sprintf(
                 'Фотоотчет по объекту «%s» отклонен. Причина: %s',
                 $photoReport->advertisingObject->name,
-                $data->reviewComment
-            )
+                $data->reviewComment,
+            ),
         );
 
         return $photoReport;
@@ -144,30 +221,48 @@ class PhotoReportService
     {
         if (! $this->canEdit($photoReport)) {
             throw new DomainException(
-                'Одобренный фотоотчет нельзя редактировать.'
+                'Одобренный фотоотчет нельзя редактировать.',
             );
         }
 
-        $wasRejected =
-            $photoReport->photoReportStatus->name === 'Отклонен';
+        $wasRejected = $photoReport->photoReportStatus->name === 'Отклонен';
 
-        $photoReport = DB::transaction(function () use ($photoReport, $data, $photos, $wasRejected) {
+        $oldValues = [
+            'advertising_object_id' => $photoReport->advertising_object_id,
+            'photo_report_status_id' => $photoReport->photo_report_status_id,
+            'comment' => $photoReport->comment,
+            'checked_by' => $photoReport->checked_by,
+            'checked_at' => $photoReport->checked_at?->format('Y-m-d H:i:s'),
+            'review_comment' => $photoReport->review_comment,
+        ];
+
+        $photoReport = DB::transaction(function () use (
+            $photoReport,
+            $data,
+            $photos,
+            $wasRejected,
+        ) {
             if ($wasRejected && empty($photos)) {
                 throw new DomainException(
-                    'Для повторной отправки отклоненного фотоотчета необходимо добавить новую фотографию.'
+                    'Для повторной отправки отклоненного фотоотчета необходимо добавить новую фотографию.',
                 );
             }
 
-            $photoReport = $this->photoReportRepository->update($photoReport, $data);
+            $photoReport = $this->photoReportRepository->update(
+                $photoReport,
+                $data,
+            );
 
             $sortOrder = (int) $photoReport
                 ->photos()
                 ->max('sort_order');
 
             foreach ($photos as $photo) {
-
                 /** @var UploadedFile $photo */
-                $path = $photo->store('photo-reports', 'public');
+                $path = $photo->store(
+                    'photo-reports',
+                    'public',
+                );
 
                 $photoData = new CreatePhotoData(
                     photoReportId: $photoReport->id,
@@ -184,16 +279,37 @@ class PhotoReportService
             if ($wasRejected) {
                 $photoReport = $this->photoReportRepository->resubmitForReview(
                     $photoReport,
-                    1
+                    1,
                 );
             }
 
             return $photoReport->refresh();
-        }
-        );
+        });
+
+        $photoReport->load('advertisingObject');
 
         if ($wasRejected) {
-            $photoReport->load('advertisingObject');
+            $this->auditLogService->create(
+                new CreateAuditLogData(
+                    userId: Auth::id(),
+                    action: 'resubmitted',
+                    entityType: PhotoReport::class,
+                    entityId: $photoReport->id,
+                    description: sprintf(
+                        'Фотоотчет по объекту «%s» повторно отправлен на проверку',
+                        $photoReport->advertisingObject->name,
+                    ),
+                    oldValues: $oldValues,
+                    newValues: [
+                        'advertising_object_id' => $photoReport->advertising_object_id,
+                        'photo_report_status_id' => $photoReport->photo_report_status_id,
+                        'comment' => $photoReport->comment,
+                        'checked_by' => $photoReport->checked_by,
+                        'checked_at' => $photoReport->checked_at?->format('Y-m-d H:i:s'),
+                        'review_comment' => $photoReport->review_comment,
+                    ],
+                ),
+            );
 
             $this->notifyRole(
                 'Проверяющий',
@@ -201,8 +317,8 @@ class PhotoReportService
                 'Фотоотчет повторно отправлен на проверку',
                 sprintf(
                     'Исправленный фотоотчет по объекту «%s» повторно отправлен на проверку.',
-                    $photoReport->advertisingObject->name
-                )
+                    $photoReport->advertisingObject->name,
+                ),
             );
         }
 
@@ -213,24 +329,24 @@ class PhotoReportService
     {
         if (! $this->canEdit($photoReport)) {
             throw new DomainException(
-                'Нельзя изменять фотографии одобренного фотоотчета.'
+                'Нельзя изменять фотографии одобренного фотоотчета.',
             );
         }
 
         if ($photo->photo_report_id !== $photoReport->id) {
             throw new DomainException(
-                'Фотография не принадлежит этому фотоотчету.'
+                'Фотография не принадлежит этому фотоотчету.',
             );
         }
 
         if ($photoReport->photos()->count() <= 1) {
             throw new DomainException(
-                'В фотоотчете должна остаться хотя бы одна фотография.'
+                'В фотоотчете должна остаться хотя бы одна фотография.',
             );
         }
 
         Storage::disk('public')->delete(
-            $photo->file_path
+            $photo->file_path,
         );
 
         $this->photoRepository->delete($photo);
@@ -250,21 +366,56 @@ class PhotoReportService
     {
         if (! $this->canDelete($photoReport)) {
             throw new RuntimeException(
-                'Нельзя удалить фотоотчет.'
+                'Нельзя удалить фотоотчет.',
             );
         }
 
-        DB::transaction(function () use ($photoReport) {
+        $oldValues = [
+            'advertising_object_id' => $photoReport->advertising_object_id,
+            'photo_report_status_id' => $photoReport->photo_report_status_id,
+            'created_by' => $photoReport->created_by,
+            'comment' => $photoReport->comment,
+            'checked_by' => $photoReport->checked_by,
+            'checked_at' => $photoReport->checked_at?->format('Y-m-d H:i:s'),
+            'review_comment' => $photoReport->review_comment,
+        ];
 
+        $photoReportId = $photoReport->id;
+
+        $photoReport->load('advertisingObject');
+
+        $objectName = $photoReport->advertisingObject->name;
+
+        DB::transaction(function () use ($photoReport) {
             foreach ($photoReport->photos as $photo) {
                 Storage::disk('public')->delete(
-                    $photo->file_path
+                    $photo->file_path,
                 );
             }
 
-            $this->photoRepository->deleteByPhotoReportId($photoReport->id);
-            $this->photoReportRepository->delete($photoReport);
+            $this->photoRepository->deleteByPhotoReportId(
+                $photoReport->id,
+            );
+
+            $this->photoReportRepository->delete(
+                $photoReport,
+            );
         });
+
+        $this->auditLogService->create(
+            new CreateAuditLogData(
+                userId: Auth::id(),
+                action: 'deleted',
+                entityType: PhotoReport::class,
+                entityId: $photoReportId,
+                description: sprintf(
+                    'Удален фотоотчет по объекту «%s»',
+                    $objectName,
+                ),
+                oldValues: $oldValues,
+                newValues: null,
+            ),
+        );
     }
 
     private function notifyRole(string $roleName, PhotoReport $photoReport, string $title, string $message): void
@@ -277,9 +428,9 @@ class PhotoReportService
                     userId: $user->id,
                     advertisingObjectId: $photoReport->advertising_object_id,
                     photoReportId: $photoReport->id,
-                    title: '...',
-                    message: '...',
-                )
+                    title: $title,
+                    message: $message,
+                ),
             );
         }
     }

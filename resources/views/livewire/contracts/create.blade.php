@@ -40,6 +40,17 @@
                 <input type="date" class="form-control" wire:model="end_date">
             </div>
 
+            <div class="col-md-4">
+                <label class="form-label">Сумма договора</label>
+                <input type="number" step="0.01" min="0"clsass="form-control @error('amount') is-invalid @enderror" wire:model.blur="amount" placeholder="Введите сумму">
+
+                @error('amount')
+                    <div class="invalid-feedback">
+                        {{ $message }}
+                    </div>
+                @enderror
+            </div>
+
             <div class="col-12">
                 <label class="form-label">Примечание</label>
                 <textarea class="form-control" rows="4" wire:model="note"></textarea>
